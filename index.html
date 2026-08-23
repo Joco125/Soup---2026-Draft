@@ -13,15 +13,22 @@
 box-sizing:border-box
 }
 
-body{
+html,body{
 margin:0;
+width:100%;
+height:100%;
+overflow:hidden
+}
+
+body{
 background:#0b1020;
 color:#fff;
 font-family:Arial,sans-serif
 }
 
 header{
-padding:20px 30px;
+height:82px;
+padding:15px 30px;
 background:#11182b;
 border-bottom:1px solid #293553;
 display:flex;
@@ -35,28 +42,40 @@ font-size:25px
 }
 
 .container{
-max-width:1500px;
+height:calc(100vh - 82px);
+max-width:1700px;
 margin:auto;
-padding:20px
+padding:18px 20px;
+overflow:hidden
 }
 
 .layout{
+height:100%;
 display:grid;
-grid-template-columns:2fr 1fr;
-gap:20px
+grid-template-columns:1.45fr 1fr;
+gap:18px
+}
+
+.left-column,
+.right-column{
+min-height:0;
+display:flex;
+flex-direction:column
 }
 
 .card{
 background:#11182b;
 border:1px solid #293553;
 border-radius:14px;
-padding:20px;
-margin-bottom:20px
+padding:18px;
+margin-bottom:18px
 }
 
 .auction{
+height:230px;
 text-align:center;
-padding:45px 20px
+padding:35px 20px;
+flex-shrink:0
 }
 
 .label{
@@ -130,7 +149,7 @@ gap:10px
 }
 
 .player-list{
-max-height:300px;
+height:150px;
 overflow:auto;
 margin-top:10px
 }
@@ -139,31 +158,24 @@ margin-top:10px
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:10px;
-border-bottom:1px solid #293553;
-gap:15px
+padding:9px 10px;
+border-bottom:1px solid #293553
 }
 
 .player-info{
 display:flex;
 align-items:center;
-gap:8px;
-min-width:0
-}
-
-.player-name{
-font-weight:bold
+gap:10px
 }
 
 .player-team{
 color:#9da9c0;
-font-size:13px;
-font-weight:bold
+font-size:13px
 }
 
-.player-position{
+.player-pos{
 color:#4f8cff;
-font-size:13px;
+font-size:12px;
 font-weight:bold
 }
 
@@ -208,68 +220,101 @@ color:#32c875
 color:#ef5350
 }
 
-
-/* COMMISSIONER MENU */
-
-#commissionerMenu{
-position:relative;
-display:flex;
-align-items:center;
-gap:8px
-}
-
-#commissionerLoginButton{
-background:#26324d;
-color:white;
-font-size:13px;
-padding:9px 13px
-}
-
-#commissionerLoginButton:hover{
-background:#344362
+#commissioner{
+display:none;
+flex-shrink:0
 }
 
 #loginBox{
 display:none;
 position:absolute;
-top:48px;
-right:0;
-width:280px;
-z-index:1000;
-background:#11182b;
-border:1px solid #293553;
-border-radius:12px;
-padding:18px;
+top:72px;
+right:25px;
+width:300px;
+z-index:100;
+text-align:center;
 box-shadow:0 10px 30px rgba(0,0,0,.4)
 }
 
 #commissionerBadge{
-display:none;
-color:#32c875;
-font-weight:bold;
-font-size:13px
-}
-
-#commissioner{
 display:none
 }
 
-@media(max-width:900px){
-
-.layout{
-grid-template-columns:1fr
+.history-card{
+flex:1;
+min-height:0;
+overflow:hidden
 }
 
-.controls{
-grid-template-columns:1fr
+.history-table-wrapper{
+height:calc(100% - 50px);
+overflow:auto
 }
 
-.player{
-font-size:32px
+.team-card{
+height:100%;
+margin-bottom:0;
+display:flex;
+flex-direction:column
+}
+
+.team-table-wrapper{
+flex:1;
+overflow:auto
+}
+
+.team-card table th,
+.team-card table td{
+padding:13px 12px;
+font-size:14px
+}
+
+#search{
+margin-top:5px
+}
+
+.search-help{
+margin-top:6px;
+color:#697792;
+font-size:11px
+}
+
+.commissioner-buttons{
+display:flex;
+gap:10px;
+flex-wrap:wrap
+}
+
+.commissioner-buttons button{
+flex:1
+}
+
+@media(max-width:1000px){
+
+html,body{
+overflow:auto
 }
 
 header{
-padding:15px
+height:auto
+}
+
+.container{
+height:auto;
+overflow:visible
+}
+
+.layout{
+height:auto;
+grid-template-columns:1fr
+}
+
+.auction{
+height:auto
+}
+
+.team-card{
+height:500px
 }
 
 }
@@ -292,33 +337,38 @@ padding:15px
 
 </div>
 
-
-<div id="commissionerMenu">
-
-<span id="commissionerBadge">
-COMMISSIONER
-</span>
+<div style="display:flex;align-items:center;gap:10px">
 
 <button
-id="commissionerLoginButton"
+id="commissionerMenuButton"
+class="blue"
 >
-Commissioner Login
+Commissioner
 </button>
+
+<span id="commissionerBadge" class="status">
+COMMISSIONER
+</span>
 
 <span id="connection" class="status">
 Connecting...
 </span>
 
+</div>
 
-<div id="loginBox">
+</header>
 
-<h3 style="margin-top:0;">
+
+<!-- COMMISSIONER LOGIN POPUP -->
+
+<div
+id="loginBox"
+class="card"
+>
+
+<h3 style="margin-top:0">
 Commissioner Login
 </h3>
-
-<p class="small">
-Enter the Commissioner PIN to control the draft.
-</p>
 
 <input
 id="pinInput"
@@ -331,7 +381,7 @@ placeholder="Commissioner PIN"
 <button
 id="loginButton"
 class="blue"
-style="width:100%;"
+style="width:100%"
 >
 Enter Commissioner Mode
 </button>
@@ -343,17 +393,15 @@ class="small"
 
 </div>
 
-</div>
-
-</header>
-
 
 <div class="container">
 
 <div class="layout">
 
 
-<div>
+<!-- LEFT SIDE -->
+
+<div class="left-column">
 
 
 <!-- ACTIVE AUCTION -->
@@ -384,24 +432,25 @@ class="card"
 id="commissioner"
 >
 
-<h2>Commissioner Controls</h2>
-
+<h2 style="margin-top:0">
+Commissioner Controls
+</h2>
 
 <input
 id="search"
 placeholder="Search player..."
-autocomplete="off"
 >
 
+<div class="search-help">
+Players will appear when you type.
+</div>
 
 <div
 id="playerList"
 class="player-list"
 ></div>
 
-
 <br>
-
 
 <div class="controls">
 
@@ -423,9 +472,16 @@ SELL
 
 </div>
 
-
 <br>
 
+<div class="commissioner-buttons">
+
+<button
+id="unNominateButton"
+class="gray"
+>
+Un-Nominate
+</button>
 
 <button
 id="undoButton"
@@ -434,7 +490,6 @@ class="gray"
 Undo Last Sale
 </button>
 
-
 <button
 id="resetButton"
 class="red"
@@ -442,13 +497,14 @@ class="red"
 Reset Draft
 </button>
 
+</div>
 
-<br><br>
-
+<br>
 
 <button
 id="logoutButton"
 class="gray"
+style="width:100%"
 >
 Exit Commissioner Mode
 </button>
@@ -458,9 +514,13 @@ Exit Commissioner Mode
 
 <!-- DRAFT HISTORY -->
 
-<div class="card">
+<div class="card history-card">
 
-<h2>Draft History</h2>
+<h2 style="margin-top:0">
+Recent Drafted Players
+</h2>
+
+<div class="history-table-wrapper">
 
 <table>
 
@@ -485,13 +545,20 @@ Exit Commissioner Mode
 </div>
 
 
-<!-- TEAM STATUS -->
+</div>
 
-<div>
 
-<div class="card">
+<!-- RIGHT SIDE -->
 
-<h2>Team Status</h2>
+<div class="right-column">
+
+<div class="card team-card">
+
+<h2 style="margin-top:0">
+Team Status
+</h2>
+
+<div class="team-table-wrapper">
 
 <table>
 
@@ -509,6 +576,8 @@ Exit Commissioner Mode
 <tbody id="teams"></tbody>
 
 </table>
+
+</div>
 
 </div>
 
@@ -572,63 +641,275 @@ const teams = [
 
 
 /* =========================================================
-   PLAYER DATABASE
+   PLAYERS
    ========================================================= */
 
-/*
-   Players are now loaded directly from Supabase.
+const players = [
 
-   Your players table should contain:
+["Jahmyr Gibbs","DET","RB"],
+["Bijan Robinson","ATL","RB"],
+["Ja'Marr Chase","CIN","WR"],
+["Puka Nacua","LAR","WR"],
+["Christian McCaffrey","SF","RB"],
+["Jonathan Taylor","IND","RB"],
+["Amon-Ra St. Brown","DET","WR"],
+["Jaxon Smith-Njigba","SEA","WR"],
+["James Cook III","BUF","RB"],
+["CeeDee Lamb","DAL","WR"],
+["Saquon Barkley","PHI","RB"],
+["Kenneth Walker III","KC","RB"],
+["Ashton Jeanty","LV","RB"],
+["Chase Brown","CIN","RB"],
+["Justin Jefferson","MIN","WR"],
+["De'Von Achane","MIA","RB"],
+["Omarion Hampton","LAC","RB"],
+["Derrick Henry","BAL","RB"],
+["Drake London","ATL","WR"],
+["Brock Bowers","LV","TE"],
+["Nico Collins","HOU","WR"],
+["George Pickens","DAL","WR"],
+["A.J. Brown","NE","WR"],
+["Malik Nabers","NYG","WR"],
+["Chris Olave","NO","WR"],
+["DeVonta Smith","PHI","WR"],
+["Kyren Williams","LAR","RB"],
+["Josh Allen","BUF","QB"],
+["Trey McBride","ARI","TE"],
+["Tee Higgins","CIN","WR"],
+["Zay Flowers","BAL","WR"],
+["Jaylen Waddle","DEN","WR"],
+["Breece Hall","NYJ","RB"],
+["Javonte Williams","DAL","RB"],
+["Rashee Rice","KC","WR"],
+["Tetairoa McMillan","CAR","WR"],
+["Ladd McConkey","LAC","WR"],
+["Colston Loveland","CHI","TE"],
+["Garrett Wilson","NYJ","WR"],
+["Josh Jacobs","GB","RB"],
+["Travis Etienne Jr.","NO","RB"],
+["Emeka Egbuka","TB","WR"],
+["D'Andre Swift","CHI","RB"],
+["Terry McLaurin","WAS","WR"],
+["Luther Burden III","CHI","WR"],
+["Cam Skattebo","NYG","RB"],
+["Tyler Warren","IND","TE"],
+["DJ Moore","BUF","WR"],
+["Quinshon Judkins","CLE","RB"],
+["Lamar Jackson","BAL","QB"],
+["Rome Odunze","CHI","WR"],
+["Jameson Williams","DET","WR"],
+["Christian Watson","GB","WR"],
+["David Montgomery","HOU","RB"],
+["Davante Adams","LAR","WR"],
+["Bucky Irving","TB","RB"],
+["Mike Evans","SF","WR"],
+["Drake Maye","NE","QB"],
+["Jayden Daniels","WAS","QB"],
+["Joe Burrow","CIN","QB"],
+["Jalen Hurts","PHI","QB"],
+["TreVeyon Henderson","NE","RB"],
+["Tucker Kraft","GB","TE"],
+["Rhamondre Stevenson","NE","RB"],
+["Marvin Harrison Jr.","ARI","WR"],
+["Sam LaPorta","DET","TE"],
+["Jaylen Warren","PIT","RB"],
+["Caleb Williams","CHI","QB"],
+["Brian Thomas Jr.","JAC","WR"],
+["Justin Herbert","LAC","QB"],
+["DK Metcalf","PIT","WR"],
+["Tony Pollard","TEN","RB"],
+["Rico Dowdle","PIT","RB"],
+["Trevor Lawrence","JAC","QB"],
+["Dak Prescott","DAL","QB"],
+["Kyle Pitts Sr.","ATL","TE"],
+["J.K. Dobbins","DEN","RB"],
+["Chris Godwin Jr.","TB","WR"],
+["Stefon Diggs","WAS","WR"],
+["Michael Wilson","ARI","WR"],
+["Josh Downs","IND","WR"],
+["Blake Corum","LAR","RB"],
+["Quentin Johnston","LAC","WR"],
+["George Kittle","SF","TE"],
+["Jordan Addison","MIN","WR"],
+["Brock Purdy","SF","QB"],
+["Jayden Reed","GB","WR"],
+["Chuba Hubbard","CAR","RB"],
+["Courtland Sutton","DEN","WR"],
+["Alec Pierce","IND","WR"],
+["Bo Nix","DEN","QB"],
+["Jordan Mason","MIN","RB"],
+["Michael Pittman Jr.","PIT","WR"],
+["Dalton Kincaid","BUF","TE"],
+["Kyle Monangai","CHI","RB"],
+["RJ Harvey","DEN","RB"],
+["Kyler Murray","MIN","QB"],
+["Rachaad White","WAS","RB"],
+["Matthew Stafford","LAR","QB"],
+["Kenny Gainwell","TB","RB"],
+["Dallas Goedert","PHI","TE"],
+["Patrick Mahomes II","KC","QB"],
+["Travis Kelce","KC","TE"],
+["Jared Goff","DET","QB"],
+["Jakobi Meyers","JAC","WR"],
+["Wan'Dale Robinson","TEN","WR"],
+["Romeo Doubs","NE","WR"],
+["Keaton Mitchell","LAC","RB"],
+["Aaron Jones Sr.","MIN","RB"],
+["Mark Andrews","BAL","TE"],
+["Xavier Worthy","KC","WR"],
+["Jordan Love","GB","QB"],
+["Juwan Johnson","NO","TE"],
+["Rashid Shaheed","SEA","WR"],
+["Baker Mayfield","TB","QB"],
+["Denzel Boston","CLE","WR"],
+["Tyler Shough","NO","QB"],
+["Tank Bigsby","PHI","RB"],
+["Tyjae Spears","TEN","RB"],
+["Tyler Allgeier","ARI","RB"],
+["Woody Marks","HOU","RB"],
+["Khalil Shakir","BUF","WR"],
+["Zach Charbonnet","SEA","RB"],
+["Keenan Allen","IND","WR"],
+["Jake Ferguson","DAL","TE"],
+["Adonai Mitchell","NYJ","WR"],
+["Deebo Samuel Sr.","SF","WR"],
+["Chig Okonkwo","WAS","TE"],
+["Jalen McMillan","TB","WR"],
+["Dalton Schultz","HOU","TE"],
+["Brian Robinson Jr.","ATL","RB"],
+["Jalen Nailor","LV","WR"],
+["Travis Hunter","JAC","WR"],
+["Sam Darnold","SEA","QB"],
+["Brenton Strange","JAC","TE"],
+["Hunter Henry","NE","TE"],
+["Daniel Jones","IND","QB"],
+["Brandon Aubrey","DAL","K"],
+["C.J. Stroud","HOU","QB"],
+["Tyrone Tracy Jr.","NYG","RB"],
+["Bryce Young","CAR","QB"],
+["Ray Davis","BUF","RB"],
+["Jaydon Blue","DAL","RB"],
+["Alvin Kamara","NO","RB"],
+["T.J. Hockenson","MIN","TE"],
+["Tre' Harris","LAC","WR"],
+["Kenyon Sadiq","NYJ","TE"],
+["Oronde Gadsden II","LAC","TE"],
+["Nicholas Singleton","TEN","RB"],
+["Jaylin Noel","HOU","WR"],
+["Omar Cooper Jr.","NYJ","WR"],
+["Jerry Jeudy","CLE","WR"],
+["Jauan Jennings","MIN","WR"],
+["Malik Washington","MIA","WR"],
+["Fernando Mendoza","LV","QB"],
+["Jacoby Brissett","ARI","QB"],
+["Aaron Rodgers","PIT","QB"],
+["Sean Tucker","TB","RB"],
+["Geno Smith","NYJ","QB"],
+["Rashod Bateman","BAL","WR"],
+["Kaytron Allen","WAS","RB"],
+["Kayshon Boutte","NE","WR"],
+["Cade Otton","TB","TE"],
+["James Conner","ARI","RB"],
+["Malachi Fields","NYG","WR"],
+["Ollie Gordon II","MIA","RB"],
+["Najee Harris","NYG","RB"],
+["George Holani","SEA","RB"],
+["Zachariah Branch","ATL","WR"],
+["Isaiah Davis","NYJ","RB"],
+["Calvin Ridley","TEN","WR"],
+["Tank Dell","HOU","WR"],
+["Gunnar Helm","TEN","TE"],
+["Pat Freiermuth","PIT","TE"],
+["Tyquan Thornton","KC","WR"],
+["Jack Bech","LV","WR"],
+["Colby Parkinson","LAR","TE"],
+["Cooper Kupp","SEA","WR"],
+["Kimani Vidal","LAC","RB"],
+["Justice Hill","BAL","RB"],
+["Jahan Dotson","ATL","WR"],
+["Chris Bell","MIA","WR"],
+["Harrison Butker","KC","K"],
+["Tua Tagovailoa","ATL","QB"],
+["Darnell Mooney","NYG","WR"],
+["Samaje Perine","CIN","RB"],
+["Darius Slayton","NYG","WR"],
+["Michael Penix Jr.","ATL","QB"],
+["Jaylen Wright","MIA","RB"],
+["Kirk Cousins","LV","QB"],
+["Emanuel Wilson","SEA","RB"],
+["DJ Giddens","IND","RB"],
+["David Njoku","LAC","TE"],
+["Elijah Sarratt","BAL","WR"],
+["Evan Engram","DEN","TE"],
+["Jordan James","SF","RB"],
+["Keon Coleman","BUF","WR"],
+["Darnell Washington","PIT","TE"],
+["Xavier Legette","CAR","WR"],
+["Darren Waller","CAR","TE"],
+["Deshaun Watson","CLE","QB"],
+["Elic Ayomanor","TEN","WR"],
+["Troy Franklin","DEN","WR"],
+["Mike Gesicki","CIN","TE"],
+["Malik Davis","DAL","RB"],
+["Tory Horton","SEA","WR"],
+["Charlie Kolar","LAC","TE"],
+["Tahj Brooks","CIN","RB"],
+["Erick All Jr.","CIN","TE"],
+["Bryce Lance","NO","WR"],
+["Jake Tonges","SF","TE"],
+["Mason Taylor","NYJ","TE"],
+["Treylon Burks","WAS","WR"],
+["Tyler Higbee","LAR","TE"],
+["LeQuint Allen Jr.","JAC","RB"],
+["Phil Mafah","DAL","RB"],
+["Kendre Miller","NO","RB"],
+["DeMario Douglas","NE","WR"],
+["Xavier Hutchinson","HOU","WR"],
+["Theo Johnson","NYG","TE"],
+["Emari Demercado","KC","RB"],
+["Michael Mayer","LV","TE"],
+["Skyler Bell","BUF","WR"],
+["Malik Benson","LV","WR"],
+["Joshua Palmer","BUF","WR"],
+["Ashton Dulin","IND","WR"],
+["Ty Johnson","BUF","RB"],
+["Chimere Dike","TEN","WR"],
+["Carson Beck","ARI","QB"],
+["Christian Kirk","SF","WR"],
+["Brenen Thompson","LAC","WR"],
+["Isaiah Bond","CLE","WR"],
+["Trey Benson","ARI","RB"],
+["Andrei Iosivas","CIN","WR"],
+["Brandon Aiyuk","SF","WR"],
+["Calvin Austin III","NYG","WR"],
+["Devin Neal","NO","RB"],
+["Elijah Arroyo","SEA","TE"],
+["Luke McCaffrey","WAS","WR"],
+["Devin Singletary","NYG","RB"],
+["Oscar Delp","NO","TE"],
+["Sione Vaki","DET","RB"],
+["Marvin Mims Jr.","DEN","WR"],
+["Roschon Johnson","CHI","RB"],
+["Kaleb Johnson","PIT","RB"],
+["Trevor Etienne","CAR","RB"],
+["Raheim Sanders","CLE","RB"],
+["Jawhar Jordan","HOU","RB"],
+["Colbie Young","CIN","WR"],
+["CJ Daniels","LAR","WR"],
+["Savion Williams","GB","WR"],
+["Zavion Thomas","CHI","WR"],
+["Roman Wilson","PIT","WR"],
+["Mack Hollins","NE","WR"],
+["Kyle Williams","NE","WR"],
+["Kendrick Bourne","ARI","WR"],
+["Hollywood Brown","PHI","WR"],
+["Brashard Smith","KC","RB"],
+["Jalen Tolbert","MIA","WR"],
+["Noah Whittington","HOU","RB"],
+["Jordan Whittington","LAR","WR"],
+["Jake Elliott","PHI","K"]
 
-   name
-   team
-   position
-
-   This means the Yahoo player list you already
-   uploaded is what appears in Commissioner Search.
-*/
-
-let players = [];
-
-
-/* =========================================================
-   LOAD PLAYERS FROM SUPABASE
-   ========================================================= */
-
-async function loadPlayers(){
-
-const {data,error} =
-
-await supabaseClient
-
-.from("players")
-
-.select("name,team,position")
-
-.order("name");
-
-
-if(error){
-
-console.error(
-"PLAYER LOAD ERROR:",
-error
-);
-
-return;
-
-}
-
-
-players =
-data || [];
-
-console.log(
-"Loaded players:",
-players.length
-);
-
-}
+];
 
 
 /* =========================================================
@@ -640,23 +921,16 @@ function emptyState(){
 const rosters = {};
 
 teams.forEach(team=>{
-
 rosters[team]=[];
-
 });
 
 return {
-
 rosters:rosters,
-
 history:[],
-
 active:null
-
 };
 
 }
-
 
 let state =
 emptyState();
@@ -671,14 +945,11 @@ function normalizeState(saved){
 const clean =
 emptyState();
 
-
 if(saved && saved.rosters){
 
 teams.forEach(team=>{
 
-if(Array.isArray(
-saved.rosters[team]
-)){
+if(Array.isArray(saved.rosters[team])){
 
 clean.rosters[team] =
 saved.rosters[team];
@@ -689,24 +960,19 @@ saved.rosters[team];
 
 }
 
-
-if(saved &&
-Array.isArray(saved.history)){
+if(saved && Array.isArray(saved.history)){
 
 clean.history =
 saved.history;
 
 }
 
-
-if(saved &&
-saved.active){
+if(saved && saved.active){
 
 clean.active =
 saved.active;
 
 }
-
 
 return clean;
 
@@ -722,41 +988,25 @@ async function loadDraft(){
 const {data,error} =
 
 await supabaseClient
-
 .from("draft_state")
-
 .select("state")
-
 .eq("draft_code","JCO26")
-
 .limit(1);
-
 
 if(error){
 
-console.error(
-"LOAD ERROR:",
-error
-);
+console.error("LOAD ERROR:",error);
 
-setConnection(
-"DATABASE ERROR",
-true
-);
+setConnection("DATABASE ERROR",true);
 
 return;
 
 }
 
-
-if(data &&
-data.length &&
-data[0].state){
+if(data && data.length && data[0].state){
 
 state =
-normalizeState(
-data[0].state
-);
+normalizeState(data[0].state);
 
 }else{
 
@@ -765,11 +1015,7 @@ emptyState();
 
 }
 
-
-setConnection(
-"LIVE",
-false
-);
+setConnection("LIVE",false);
 
 render();
 
@@ -785,31 +1031,18 @@ async function saveDraft(){
 const {error} =
 
 await supabaseClient
-
 .from("draft_state")
-
 .update({
-
 state:state,
-
-updated_at:
-new Date().toISOString()
-
+updated_at:new Date().toISOString()
 })
-
 .eq("id",1);
-
 
 if(error){
 
-console.error(
-"SAVE ERROR:",
-error
-);
+console.error("SAVE ERROR:",error);
 
-alert(
-"Could not save draft."
-);
+alert("Could not save draft.");
 
 }
 
@@ -825,59 +1058,33 @@ async function checkForUpdates(){
 const {data,error} =
 
 await supabaseClient
-
 .from("draft_state")
-
-.select(
-"state,updated_at"
-)
-
-.eq(
-"draft_code",
-"JCO26"
-)
-
+.select("state,updated_at")
+.eq("draft_code","JCO26")
 .limit(1);
-
 
 if(error){
 
-console.error(
-"UPDATE ERROR:",
-error
-);
+console.error("UPDATE ERROR:",error);
 
-setConnection(
-"DATABASE ERROR",
-true
-);
+setConnection("DATABASE ERROR",true);
 
 return;
 
 }
 
+setConnection("LIVE",false);
 
-setConnection(
-"LIVE",
-false
-);
-
-
-if(data &&
-data.length &&
-data[0].state){
+if(data && data.length && data[0].state){
 
 state =
-normalizeState(
-data[0].state
-);
+normalizeState(data[0].state);
 
 render();
 
 }
 
 }
-
 
 setInterval(
 checkForUpdates,
@@ -889,38 +1096,24 @@ checkForUpdates,
    CONNECTION
    ========================================================= */
 
-function setConnection(
-text,
-isError
-){
+function setConnection(text,isError){
 
 const element =
-document.getElementById(
-"connection"
-);
+document.getElementById("connection");
 
 element.textContent =
 text;
 
-element.classList.remove(
-"online"
-);
-
-element.classList.remove(
-"error"
-);
+element.classList.remove("online");
+element.classList.remove("error");
 
 if(isError){
 
-element.classList.add(
-"error"
-);
+element.classList.add("error");
 
 }else if(text==="LIVE"){
 
-element.classList.add(
-"online"
-);
+element.classList.add("online");
 
 }
 
@@ -931,26 +1124,22 @@ element.classList.add(
    COMMISSIONER MENU
    ========================================================= */
 
-function toggleLoginMenu(){
+function toggleCommissionerMenu(){
 
 const box =
-document.getElementById(
-"loginBox"
-);
+document.getElementById("loginBox");
 
-if(box.style.display === "block"){
+if(box.style.display==="block"){
 
-box.style.display =
-"none";
+box.style.display="none";
 
 }else{
 
-box.style.display =
-"block";
+box.style.display="block";
 
-document.getElementById(
-"pinInput"
-).focus();
+document
+.getElementById("pinInput")
+.focus();
 
 }
 
@@ -964,47 +1153,20 @@ document.getElementById(
 function login(){
 
 const entered =
-document.getElementById(
-"pinInput"
-).value;
+document.getElementById("pinInput").value;
 
-
-if(entered ===
-COMMISSIONER_PIN){
+if(entered === COMMISSIONER_PIN){
 
 isCommissioner =
 true;
 
+document.getElementById("loginBox").style.display="none";
 
-document.getElementById(
-"loginBox"
-).style.display =
-"none";
+document.getElementById("commissioner").style.display="block";
 
+document.getElementById("commissionerBadge").style.display="inline-block";
 
-document.getElementById(
-"commissioner"
-).style.display =
-"block";
-
-
-document.getElementById(
-"commissionerBadge"
-).style.display =
-"inline-block";
-
-
-document.getElementById(
-"commissionerLoginButton"
-).style.display =
-"none";
-
-
-document.getElementById(
-"loginMessage"
-).textContent =
-"";
-
+document.getElementById("loginMessage").textContent="";
 
 loadTeams();
 
@@ -1012,9 +1174,7 @@ searchPlayers();
 
 }else{
 
-document.getElementById(
-"loginMessage"
-).textContent =
+document.getElementById("loginMessage").textContent =
 "Incorrect PIN.";
 
 }
@@ -1031,38 +1191,15 @@ function logout(){
 isCommissioner =
 false;
 
+document.getElementById("commissioner").style.display="none";
 
-document.getElementById(
-"commissioner"
-).style.display =
-"none";
+document.getElementById("commissionerBadge").style.display="none";
 
+document.getElementById("pinInput").value="";
 
-document.getElementById(
-"commissionerLoginButton"
-).style.display =
-"inline-block";
+document.getElementById("search").value="";
 
-
-document.getElementById(
-"commissionerBadge"
-).style.display =
-"none";
-
-
-document.getElementById(
-"pinInput"
-).value="";
-
-
-document.getElementById(
-"search"
-).value="";
-
-
-document.getElementById(
-"playerList"
-).innerHTML="";
+document.getElementById("loginBox").style.display="none";
 
 }
 
@@ -1074,19 +1211,14 @@ document.getElementById(
 function loadTeams(){
 
 const dropdown =
-document.getElementById(
-"winningTeam"
-);
+document.getElementById("winningTeam");
 
 dropdown.innerHTML="";
-
 
 teams.forEach(team=>{
 
 const option =
-document.createElement(
-"option"
-);
+document.createElement("option");
 
 option.value =
 team;
@@ -1094,9 +1226,7 @@ team;
 option.textContent =
 team;
 
-dropdown.appendChild(
-option
-);
+dropdown.appendChild(option);
 
 });
 
@@ -1115,28 +1245,20 @@ return;
 
 }
 
-
 const query =
-
-document.getElementById(
-"search"
-).value
+document.getElementById("search").value
 .toLowerCase()
 .trim();
 
-
 const list =
-document.getElementById(
-"playerList"
-);
+document.getElementById("playerList");
 
 list.innerHTML="";
 
 
 /*
-   IMPORTANT:
-   Do not show ANY players until
-   something has been typed.
+Only show players after the
+commissioner starts typing.
 */
 
 if(!query){
@@ -1148,134 +1270,55 @@ return;
 
 const soldNames =
 new Set(
-state.history.map(
-x=>x.name
-)
+state.history.map(x=>x.name)
 );
 
 
 players
+.filter(player=>
 
-.filter(player=>{
+player[0]
+.toLowerCase()
+.includes(query)
 
-const name =
-String(
-player.name || ""
-).toLowerCase();
+)
+.filter(player=>
 
-const team =
-String(
-player.team || ""
-).toLowerCase();
+!soldNames.has(player[0])
 
-const position =
-String(
-player.position || ""
-).toLowerCase();
-
-
-return (
-
-name.includes(query) ||
-
-team.includes(query) ||
-
-position.includes(query)
-
-);
-
-})
-
-
-.filter(player=>{
-
-return !soldNames.has(
-player.name
-);
-
-})
-
-
-.slice(0,50)
-
-
+)
 .forEach(player=>{
 
 const row =
-document.createElement(
-"div"
-);
+document.createElement("div");
 
 row.className =
 "player-row";
 
 
-/* PLAYER INFORMATION */
-
 const info =
-document.createElement(
-"div"
-);
+document.createElement("div");
 
 info.className =
 "player-info";
 
+info.innerHTML = `
 
-const name =
-document.createElement(
-"span"
-);
+<b>${player[0]}</b>
 
-name.className =
-"player-name";
+<span class="player-team">
+${player[1]}
+</span>
 
-name.textContent =
-player.name;
+<span class="player-pos">
+${player[2]}
+</span>
 
+`;
 
-const team =
-document.createElement(
-"span"
-);
-
-team.className =
-"player-team";
-
-team.textContent =
-player.team || "—";
-
-
-const position =
-document.createElement(
-"span"
-);
-
-position.className =
-"player-position";
-
-position.textContent =
-player.position || "—";
-
-
-info.appendChild(
-name
-);
-
-info.appendChild(
-team
-);
-
-info.appendChild(
-position
-);
-
-
-/* NOMINATE BUTTON */
 
 const button =
-document.createElement(
-"button"
-);
+document.createElement("button");
 
 button.className =
 "gray";
@@ -1283,34 +1326,23 @@ button.className =
 button.textContent =
 "Nominate";
 
-
 button.onclick =
 function(){
 
 nominate(
-
-player.name,
-
-player.position,
-
-player.team
-
+player[0],
+player[1],
+player[2]
 );
 
 };
 
 
-row.appendChild(
-info
-);
+row.appendChild(info);
 
-row.appendChild(
-button
-);
+row.appendChild(button);
 
-list.appendChild(
-row
-);
+list.appendChild(row);
 
 });
 
@@ -1323,8 +1355,8 @@ row
 
 async function nominate(
 name,
-position,
-team
+team,
+position
 ){
 
 if(!isCommissioner){
@@ -1337,15 +1369,70 @@ return;
 state.active={
 
 name:name,
-
+teamCode:team,
 position:position,
-
-team:team,
-
 sold:false
 
 };
 
+
+/*
+Reset search immediately after nomination.
+*/
+
+document.getElementById("search").value="";
+
+document.getElementById("playerList").innerHTML="";
+
+render();
+
+await saveDraft();
+
+}
+
+
+/* =========================================================
+   UN-NOMINATE
+   ========================================================= */
+
+async function unNominate(){
+
+if(!isCommissioner){
+
+return;
+
+}
+
+
+if(!state.active){
+
+return;
+
+}
+
+
+/*
+Do not allow un-nominating
+a player who has already been sold.
+*/
+
+if(state.active.sold){
+
+alert(
+"That player has already been sold. Use Undo Last Sale instead."
+);
+
+return;
+
+}
+
+
+state.active =
+null;
+
+document.getElementById("search").value="";
+
+document.getElementById("playerList").innerHTML="";
 
 render();
 
@@ -1371,6 +1458,17 @@ if(!state.active){
 
 alert(
 "Nominate a player first."
+);
+
+return;
+
+}
+
+
+if(state.active.sold){
+
+alert(
+"This player has already been sold."
 );
 
 return;
@@ -1451,22 +1549,18 @@ state.active.name,
 position:
 state.active.position,
 
-nflTeam:
-state.active.team || "",
+team:
+team,
 
-team:team,
-
-price:bid
+price:
+bid
 
 };
 
 
-state.rosters[team]
-.push(purchase);
+state.rosters[team].push(purchase);
 
-
-state.history
-.push(purchase);
+state.history.push(purchase);
 
 
 state.active={
@@ -1483,6 +1577,15 @@ document.getElementById(
 ).value="";
 
 
+document.getElementById(
+"search"
+).value="";
+
+document.getElementById(
+"playerList"
+).innerHTML="";
+
+
 render();
 
 await saveDraft();
@@ -1491,7 +1594,7 @@ await saveDraft();
 
 
 /* =========================================================
-   UNDO
+   UNDO LAST SALE
    ========================================================= */
 
 async function undoLast(){
@@ -1582,7 +1685,6 @@ return;
 state =
 emptyState();
 
-
 render();
 
 await saveDraft();
@@ -1597,9 +1699,7 @@ await saveDraft();
 function renderTeams(){
 
 const table =
-document.getElementById(
-"teams"
-);
+document.getElementById("teams");
 
 table.innerHTML="";
 
@@ -1607,8 +1707,7 @@ table.innerHTML="";
 teams.forEach(team=>{
 
 const roster =
-state.rosters[team] ||
-[];
+state.rosters[team] || [];
 
 
 const spent =
@@ -1637,9 +1736,7 @@ remaining-(spots-1)
 
 
 const row =
-document.createElement(
-"tr"
-);
+document.createElement("tr");
 
 
 row.innerHTML = `
@@ -1672,41 +1769,36 @@ table.appendChild(row);
 
 /* =========================================================
    HISTORY
-   MOST RECENT FIRST
    ========================================================= */
 
 function renderHistory(){
 
 const table =
-document.getElementById(
-"history"
-);
+document.getElementById("history");
 
 table.innerHTML="";
 
 
-const recentHistory =
-[...state.history].reverse();
+/*
+Most recent sales appear first.
+*/
+
+const recent =
+[...state.history]
+.reverse();
 
 
-recentHistory.forEach(
+recent.forEach(
 (player,index)=>{
 
-
-const originalNumber =
-state.history.length-index;
-
-
 const row =
-document.createElement(
-"tr"
-);
+document.createElement("tr");
 
 
 row.innerHTML = `
 
 <td>
-${originalNumber}
+${state.history.length-index}
 </td>
 
 <td>
@@ -1742,19 +1834,13 @@ table.appendChild(row);
 function renderActive(){
 
 const name =
-document.getElementById(
-"playerName"
-);
+document.getElementById("playerName");
 
 const position =
-document.getElementById(
-"playerPosition"
-);
+document.getElementById("playerPosition");
 
 const sold =
-document.getElementById(
-"soldMessage"
-);
+document.getElementById("soldMessage");
 
 
 if(!state.active){
@@ -1775,7 +1861,6 @@ return;
 
 name.textContent =
 state.active.name;
-
 
 position.textContent =
 state.active.position;
@@ -1815,7 +1900,6 @@ renderTeams();
 
 renderHistory();
 
-
 if(isCommissioner){
 
 searchPlayers();
@@ -1830,12 +1914,10 @@ searchPlayers();
    ========================================================= */
 
 document
-.getElementById(
-"commissionerLoginButton"
-)
+.getElementById("commissionerMenuButton")
 .addEventListener(
 "click",
-toggleLoginMenu
+toggleCommissionerMenu
 );
 
 
@@ -1887,6 +1969,14 @@ sellPlayer
 
 
 document
+.getElementById("unNominateButton")
+.addEventListener(
+"click",
+unNominate
+);
+
+
+document
 .getElementById("undoButton")
 .addEventListener(
 "click",
@@ -1903,55 +1993,14 @@ resetDraft
 
 
 /* =========================================================
-   CLOSE LOGIN MENU OUTSIDE CLICK
-   ========================================================= */
-
-document.addEventListener(
-"click",
-function(event){
-
-const menu =
-document.getElementById(
-"commissionerMenu"
-);
-
-const box =
-document.getElementById(
-"loginBox"
-);
-
-
-if(
-!menu.contains(event.target) &&
-box.style.display==="block"
-){
-
-box.style.display =
-"none";
-
-}
-
-});
-
-
-/* =========================================================
    START
    ========================================================= */
-
-async function start(){
-
-await loadPlayers();
 
 loadTeams();
 
 render();
 
-await loadDraft();
-
-}
-
-
-start();
+loadDraft();
 
 </script>
 
