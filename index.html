@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
 box-sizing:border-box
 }
@@ -142,7 +140,31 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 padding:10px;
-border-bottom:1px solid #293553
+border-bottom:1px solid #293553;
+gap:15px
+}
+
+.player-info{
+display:flex;
+align-items:center;
+gap:8px;
+min-width:0
+}
+
+.player-name{
+font-weight:bold
+}
+
+.player-team{
+color:#9da9c0;
+font-size:13px;
+font-weight:bold
+}
+
+.player-position{
+color:#4f8cff;
+font-size:13px;
+font-weight:bold
 }
 
 table{
@@ -186,24 +208,50 @@ color:#32c875
 color:#ef5350
 }
 
-#commissioner{
-display:none
+
+/* COMMISSIONER MENU */
+
+#commissionerMenu{
+position:relative;
+display:flex;
+align-items:center;
+gap:8px
+}
+
+#commissionerLoginButton{
+background:#26324d;
+color:white;
+font-size:13px;
+padding:9px 13px
+}
+
+#commissionerLoginButton:hover{
+background:#344362
 }
 
 #loginBox{
-max-width:400px;
-margin:20px auto;
-text-align:center
+display:none;
+position:absolute;
+top:48px;
+right:0;
+width:280px;
+z-index:1000;
+background:#11182b;
+border:1px solid #293553;
+border-radius:12px;
+padding:18px;
+box-shadow:0 10px 30px rgba(0,0,0,.4)
 }
 
 #commissionerBadge{
-display:none
+display:none;
+color:#32c875;
+font-weight:bold;
+font-size:13px
 }
 
-.no-results{
-padding:15px;
-color:#9da9c0;
-text-align:center
+#commissioner{
+display:none
 }
 
 @media(max-width:900px){
@@ -220,10 +268,14 @@ grid-template-columns:1fr
 font-size:32px
 }
 
+header{
+padding:15px
 }
 
+}
 </style>
 </head>
+
 
 <body>
 
@@ -240,29 +292,29 @@ font-size:32px
 
 </div>
 
-<div>
 
-<span id="commissionerBadge" class="status">
+<div id="commissionerMenu">
+
+<span id="commissionerBadge">
 COMMISSIONER
 </span>
+
+<button
+id="commissionerLoginButton"
+>
+Commissioner Login
+</button>
 
 <span id="connection" class="status">
 Connecting...
 </span>
 
-</div>
 
-</header>
+<div id="loginBox">
 
-
-<div class="container">
-
-
-<!-- COMMISSIONER LOGIN -->
-
-<div id="loginBox" class="card">
-
-<h2>Commissioner Login</h2>
+<h3 style="margin-top:0;">
+Commissioner Login
+</h3>
 
 <p class="small">
 Enter the Commissioner PIN to control the draft.
@@ -279,6 +331,7 @@ placeholder="Commissioner PIN"
 <button
 id="loginButton"
 class="blue"
+style="width:100%;"
 >
 Enter Commissioner Mode
 </button>
@@ -290,6 +343,12 @@ class="small"
 
 </div>
 
+</div>
+
+</header>
+
+
+<div class="container">
 
 <div class="layout">
 
@@ -327,17 +386,22 @@ id="commissioner"
 
 <h2>Commissioner Controls</h2>
 
+
 <input
 id="search"
 placeholder="Search player..."
+autocomplete="off"
 >
+
 
 <div
 id="playerList"
 class="player-list"
 ></div>
 
+
 <br>
+
 
 <div class="controls">
 
@@ -359,7 +423,9 @@ SELL
 
 </div>
 
+
 <br>
+
 
 <button
 id="undoButton"
@@ -368,6 +434,7 @@ class="gray"
 Undo Last Sale
 </button>
 
+
 <button
 id="resetButton"
 class="red"
@@ -375,7 +442,9 @@ class="red"
 Reset Draft
 </button>
 
+
 <br><br>
+
 
 <button
 id="logoutButton"
@@ -503,22 +572,27 @@ const teams = [
 
 
 /* =========================================================
-   PLAYERS
+   PLAYER DATABASE
    ========================================================= */
 
 /*
-   Players are loaded directly from the Supabase
-   "players" table.
+   Players are now loaded directly from Supabase.
 
-   Your full Yahoo player list that you already
-   imported into Supabase will therefore appear here.
+   Your players table should contain:
+
+   name
+   team
+   position
+
+   This means the Yahoo player list you already
+   uploaded is what appears in Commissioner Search.
 */
 
 let players = [];
 
 
 /* =========================================================
-   LOAD PLAYERS FROM DATABASE
+   LOAD PLAYERS FROM SUPABASE
    ========================================================= */
 
 async function loadPlayers(){
@@ -526,9 +600,13 @@ async function loadPlayers(){
 const {data,error} =
 
 await supabaseClient
+
 .from("players")
+
 .select("name,team,position")
+
 .order("name");
+
 
 if(error){
 
@@ -541,8 +619,14 @@ return;
 
 }
 
+
 players =
 data || [];
+
+console.log(
+"Loaded players:",
+players.length
+);
 
 }
 
@@ -556,13 +640,17 @@ function emptyState(){
 const rosters = {};
 
 teams.forEach(team=>{
+
 rosters[team]=[];
+
 });
 
 return {
 
 rosters:rosters,
+
 history:[],
+
 active:null
 
 };
@@ -840,6 +928,36 @@ element.classList.add(
 
 
 /* =========================================================
+   COMMISSIONER MENU
+   ========================================================= */
+
+function toggleLoginMenu(){
+
+const box =
+document.getElementById(
+"loginBox"
+);
+
+if(box.style.display === "block"){
+
+box.style.display =
+"none";
+
+}else{
+
+box.style.display =
+"block";
+
+document.getElementById(
+"pinInput"
+).focus();
+
+}
+
+}
+
+
+/* =========================================================
    COMMISSIONER LOGIN
    ========================================================= */
 
@@ -857,25 +975,36 @@ COMMISSIONER_PIN){
 isCommissioner =
 true;
 
+
 document.getElementById(
 "loginBox"
 ).style.display =
 "none";
+
 
 document.getElementById(
 "commissioner"
 ).style.display =
 "block";
 
+
 document.getElementById(
 "commissionerBadge"
 ).style.display =
 "inline-block";
 
+
+document.getElementById(
+"commissionerLoginButton"
+).style.display =
+"none";
+
+
 document.getElementById(
 "loginMessage"
 ).textContent =
 "";
+
 
 loadTeams();
 
@@ -902,24 +1031,38 @@ function logout(){
 isCommissioner =
 false;
 
+
 document.getElementById(
 "commissioner"
 ).style.display =
 "none";
 
+
 document.getElementById(
-"loginBox"
+"commissionerLoginButton"
 ).style.display =
-"block";
+"inline-block";
+
 
 document.getElementById(
 "commissionerBadge"
 ).style.display =
 "none";
 
+
 document.getElementById(
 "pinInput"
 ).value="";
+
+
+document.getElementById(
+"search"
+).value="";
+
+
+document.getElementById(
+"playerList"
+).innerHTML="";
 
 }
 
@@ -961,7 +1104,7 @@ option
 
 
 /* =========================================================
-   SEARCH
+   SEARCH PLAYERS
    ========================================================= */
 
 function searchPlayers(){
@@ -991,13 +1134,9 @@ list.innerHTML="";
 
 
 /*
-   THIS IS THE IMPORTANT CHANGE.
-
-   If the search box is empty,
-   show NOTHING.
-
-   Players only appear once
-   the commissioner starts typing.
+   IMPORTANT:
+   Do not show ANY players until
+   something has been typed.
 */
 
 if(!query){
@@ -1015,38 +1154,52 @@ x=>x.name
 );
 
 
-const matches =
-
 players
 
-.filter(player=>
+.filter(player=>{
 
-player.name
-.toLowerCase()
-.includes(query)
+const name =
+String(
+player.name || ""
+).toLowerCase();
 
-)
+const team =
+String(
+player.team || ""
+).toLowerCase();
 
-.filter(player=>
+const position =
+String(
+player.position || ""
+).toLowerCase();
 
-!soldNames.has(
-player.name
-)
+
+return (
+
+name.includes(query) ||
+
+team.includes(query) ||
+
+position.includes(query)
 
 );
 
-
-if(!matches.length){
-
-list.innerHTML =
-'<div class="no-results">No players found.</div>';
-
-return;
-
-}
+})
 
 
-matches.forEach(player=>{
+.filter(player=>{
+
+return !soldNames.has(
+player.name
+);
+
+})
+
+
+.slice(0,50)
+
+
+.forEach(player=>{
 
 const row =
 document.createElement(
@@ -1057,18 +1210,67 @@ row.className =
 "player-row";
 
 
+/* PLAYER INFORMATION */
+
 const info =
+document.createElement(
+"div"
+);
+
+info.className =
+"player-info";
+
+
+const name =
 document.createElement(
 "span"
 );
 
-info.innerHTML =
+name.className =
+"player-name";
 
-`<b>${player.name}</b>
-<span class="small">
-${player.team} • ${player.position}
-</span>`;
+name.textContent =
+player.name;
 
+
+const team =
+document.createElement(
+"span"
+);
+
+team.className =
+"player-team";
+
+team.textContent =
+player.team || "—";
+
+
+const position =
+document.createElement(
+"span"
+);
+
+position.className =
+"player-position";
+
+position.textContent =
+player.position || "—";
+
+
+info.appendChild(
+name
+);
+
+info.appendChild(
+team
+);
+
+info.appendChild(
+position
+);
+
+
+/* NOMINATE BUTTON */
 
 const button =
 document.createElement(
@@ -1086,18 +1288,29 @@ button.onclick =
 function(){
 
 nominate(
+
 player.name,
-player.position
+
+player.position,
+
+player.team
+
 );
 
 };
 
 
-row.appendChild(info);
+row.appendChild(
+info
+);
 
-row.appendChild(button);
+row.appendChild(
+button
+);
 
-list.appendChild(row);
+list.appendChild(
+row
+);
 
 });
 
@@ -1110,7 +1323,8 @@ list.appendChild(row);
 
 async function nominate(
 name,
-position
+position,
+team
 ){
 
 if(!isCommissioner){
@@ -1125,6 +1339,8 @@ state.active={
 name:name,
 
 position:position,
+
+team:team,
 
 sold:false
 
@@ -1235,6 +1451,9 @@ state.active.name,
 position:
 state.active.position,
 
+nflTeam:
+state.active.team || "",
+
 team:team,
 
 price:bid
@@ -1244,6 +1463,7 @@ price:bid
 
 state.rosters[team]
 .push(purchase);
+
 
 state.history
 .push(purchase);
@@ -1362,6 +1582,7 @@ return;
 state =
 emptyState();
 
+
 render();
 
 await saveDraft();
@@ -1451,6 +1672,7 @@ table.appendChild(row);
 
 /* =========================================================
    HISTORY
+   MOST RECENT FIRST
    ========================================================= */
 
 function renderHistory(){
@@ -1463,8 +1685,17 @@ document.getElementById(
 table.innerHTML="";
 
 
-state.history.forEach(
+const recentHistory =
+[...state.history].reverse();
+
+
+recentHistory.forEach(
 (player,index)=>{
+
+
+const originalNumber =
+state.history.length-index;
+
 
 const row =
 document.createElement(
@@ -1475,7 +1706,7 @@ document.createElement(
 row.innerHTML = `
 
 <td>
-${index+1}
+${originalNumber}
 </td>
 
 <td>
@@ -1545,6 +1776,7 @@ return;
 name.textContent =
 state.active.name;
 
+
 position.textContent =
 state.active.position;
 
@@ -1583,6 +1815,7 @@ renderTeams();
 
 renderHistory();
 
+
 if(isCommissioner){
 
 searchPlayers();
@@ -1595,6 +1828,16 @@ searchPlayers();
 /* =========================================================
    BUTTONS
    ========================================================= */
+
+document
+.getElementById(
+"commissionerLoginButton"
+)
+.addEventListener(
+"click",
+toggleLoginMenu
+);
+
 
 document
 .getElementById("loginButton")
@@ -1660,27 +1903,57 @@ resetDraft
 
 
 /* =========================================================
-   START
+   CLOSE LOGIN MENU OUTSIDE CLICK
    ========================================================= */
 
-loadTeams();
+document.addEventListener(
+"click",
+function(event){
 
-render();
+const menu =
+document.getElementById(
+"commissionerMenu"
+);
 
-loadPlayers().then(() => {
+const box =
+document.getElementById(
+"loginBox"
+);
 
-if(isCommissioner){
 
-searchPlayers();
+if(
+!menu.contains(event.target) &&
+box.style.display==="block"
+){
+
+box.style.display =
+"none";
 
 }
 
 });
 
-loadDraft();
+
+/* =========================================================
+   START
+   ========================================================= */
+
+async function start(){
+
+await loadPlayers();
+
+loadTeams();
+
+render();
+
+await loadDraft();
+
+}
+
+
+start();
 
 </script>
 
 </body>
 </html>
-```
