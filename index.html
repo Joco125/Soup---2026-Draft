@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,14 +190,59 @@ color:#32c875
 color:#ef5350
 }
 
-#commissioner{
-display:none
+
+/* =========================================================
+   COMMISSIONER MENU
+   ========================================================= */
+
+.header-right{
+display:flex;
+align-items:center;
+gap:10px;
+position:relative
 }
 
-#loginBox{
-max-width:400px;
-margin:20px auto;
-text-align:center
+.commissioner-button{
+background:#26324d;
+color:#fff;
+border:1px solid #394967;
+padding:9px 13px;
+font-size:13px
+}
+
+.commissioner-button:hover{
+background:#33415f
+}
+
+.commissioner-menu{
+display:none;
+position:absolute;
+right:0;
+top:48px;
+width:280px;
+background:#11182b;
+border:1px solid #293553;
+border-radius:12px;
+padding:16px;
+z-index:1000;
+box-shadow:0 10px 30px rgba(0,0,0,.35)
+}
+
+.commissioner-menu h3{
+margin:0 0 8px 0
+}
+
+.commissioner-menu input{
+margin-top:10px
+}
+
+.commissioner-menu button{
+width:100%;
+margin-top:10px
+}
+
+#commissioner{
+display:none
 }
 
 #commissionerBadge{
@@ -223,6 +269,23 @@ grid-template-columns:1fr
 font-size:32px
 }
 
+header{
+padding:15px;
+}
+
+h1{
+font-size:20px;
+}
+
+.header-right{
+gap:5px;
+}
+
+.status{
+padding:6px 9px;
+font-size:11px;
+}
+
 }
 </style>
 </head>
@@ -243,41 +306,54 @@ font-size:32px
 
 </div>
 
-<div>
 
-<span id="commissionerBadge" class="status">
+<div class="header-right">
+
+
+<!-- COMMISSIONER BUTTON -->
+
+<button
+id="commissionerButton"
+class="commissioner-button"
+>
+Commissioner
+</button>
+
+
+<span
+id="commissionerBadge"
+class="status"
+>
 COMMISSIONER
 </span>
 
-<span id="connection" class="status">
+
+<span
+id="connection"
+class="status"
+>
 Connecting...
 </span>
 
-</div>
 
-</header>
+<!-- COMMISSIONER LOGIN MENU -->
 
+<div
+id="commissionerMenu"
+class="commissioner-menu"
+>
 
-<div class="container">
+<h3>Commissioner Login</h3>
 
-
-<!-- COMMISSIONER LOGIN -->
-
-<div id="loginBox" class="card">
-
-<h2>Commissioner Login</h2>
-
-<p class="small">
+<div class="small">
 Enter the Commissioner PIN to control the draft.
-</p>
+</div>
 
 <input
 id="pinInput"
 type="password"
 placeholder="Commissioner PIN"
 >
-
-<br><br>
 
 <button
 id="loginButton"
@@ -292,6 +368,14 @@ class="small"
 ></p>
 
 </div>
+
+
+</div>
+
+</header>
+
+
+<div class="container">
 
 
 <div class="layout">
@@ -515,16 +599,6 @@ const teams = [
    PLAYERS
    ========================================================= */
 
-/*
-   IMPORTANT:
-
-   Players are now loaded directly from the
-   Supabase "players" table.
-
-   You do NOT need to put the Yahoo players
-   inside this HTML anymore.
-*/
-
 let players = [];
 
 
@@ -607,7 +681,7 @@ return clean;
 
 
 /* =========================================================
-   LOAD PLAYERS FROM SUPABASE
+   LOAD PLAYERS
    ========================================================= */
 
 async function loadPlayers(){
@@ -890,6 +964,36 @@ element.classList.add(
 
 
 /* =========================================================
+   COMMISSIONER MENU
+   ========================================================= */
+
+function toggleCommissionerMenu(){
+
+const menu =
+document.getElementById(
+"commissionerMenu"
+);
+
+if(menu.style.display === "block"){
+
+menu.style.display =
+"none";
+
+}else{
+
+menu.style.display =
+"block";
+
+document.getElementById(
+"pinInput"
+).focus();
+
+}
+
+}
+
+
+/* =========================================================
    COMMISSIONER LOGIN
    ========================================================= */
 
@@ -908,7 +1012,7 @@ isCommissioner =
 true;
 
 document.getElementById(
-"loginBox"
+"commissionerMenu"
 ).style.display =
 "none";
 
@@ -921,6 +1025,11 @@ document.getElementById(
 "commissionerBadge"
 ).style.display =
 "inline-block";
+
+document.getElementById(
+"commissionerButton"
+).style.display =
+"none";
 
 document.getElementById(
 "loginMessage"
@@ -958,14 +1067,14 @@ document.getElementById(
 "none";
 
 document.getElementById(
-"loginBox"
-).style.display =
-"block";
-
-document.getElementById(
 "commissionerBadge"
 ).style.display =
 "none";
+
+document.getElementById(
+"commissionerButton"
+).style.display =
+"inline-block";
 
 document.getElementById(
 "pinInput"
@@ -1493,9 +1602,7 @@ $${maxBid}
 `;
 
 
-table.appendChild(
-row
-);
+table.appendChild(row);
 
 });
 
@@ -1650,6 +1757,14 @@ searchPlayers();
    ========================================================= */
 
 document
+.getElementById("commissionerButton")
+.addEventListener(
+"click",
+toggleCommissionerMenu
+);
+
+
+document
 .getElementById("loginButton")
 .addEventListener(
 "click",
@@ -1713,6 +1828,39 @@ resetDraft
 
 
 /* =========================================================
+   CLOSE MENU WHEN CLICKING OUTSIDE
+   ========================================================= */
+
+document.addEventListener(
+"click",
+function(event){
+
+const menu =
+document.getElementById(
+"commissionerMenu"
+);
+
+const button =
+document.getElementById(
+"commissionerButton"
+);
+
+
+if(
+menu.style.display === "block" &&
+!menu.contains(event.target) &&
+!button.contains(event.target)
+){
+
+menu.style.display =
+"none";
+
+}
+
+});
+
+
+/* =========================================================
    START
    ========================================================= */
 
@@ -1728,3 +1876,4 @@ loadDraft();
 
 </body>
 </html>
+```
