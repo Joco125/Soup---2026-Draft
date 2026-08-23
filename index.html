@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Soup 2026 Fantasy Auction Draft</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -11,203 +12,234 @@
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  background:#0b1020;
-  color:#fff;
-  font-family:Arial,sans-serif
+margin:0;
+background:#0b1020;
+color:#fff;
+font-family:Arial,sans-serif
 }
 
 header{
-  padding:20px 30px;
-  background:#11182b;
-  border-bottom:1px solid #293553;
-  display:flex;
-  justify-content:space-between;
-  align-items:center
+padding:20px 30px;
+background:#11182b;
+border-bottom:1px solid #293553;
+display:flex;
+justify-content:space-between;
+align-items:center
 }
 
 h1{
-  margin:0;
-  font-size:25px
+margin:0;
+font-size:25px
 }
 
 .container{
-  max-width:1500px;
-  margin:auto;
-  padding:20px
+max-width:1500px;
+margin:auto;
+padding:20px
 }
 
 .layout{
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:20px
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px
 }
 
 .card{
-  background:#11182b;
-  border:1px solid #293553;
-  border-radius:14px;
-  padding:20px;
-  margin-bottom:20px
+background:#11182b;
+border:1px solid #293553;
+border-radius:14px;
+padding:20px;
+margin-bottom:20px
 }
 
 .auction{
-  text-align:center;
-  padding:45px 20px
+text-align:center;
+padding:45px 20px
 }
 
 .label{
-  color:#9da9c0;
-  font-size:13px;
-  font-weight:bold;
-  letter-spacing:1px
+color:#9da9c0;
+font-size:13px;
+font-weight:bold;
+letter-spacing:1px
 }
 
 .player{
-  font-size:42px;
-  font-weight:bold;
-  margin-top:15px
+font-size:42px;
+font-weight:bold;
+margin-top:15px
 }
 
 .position{
-  color:#4f8cff;
-  font-size:20px;
-  font-weight:bold;
-  margin-top:5px
+color:#4f8cff;
+font-size:20px;
+font-weight:bold;
+margin-top:5px
 }
 
 .sold{
-  color:#32c875;
-  font-size:20px;
-  font-weight:bold;
-  margin-top:20px
+color:#32c875;
+font-size:20px;
+font-weight:bold;
+margin-top:20px
 }
 
 input,select{
-  width:100%;
-  background:#0b1020;
-  color:#fff;
-  border:1px solid #293553;
-  border-radius:8px;
-  padding:11px
+width:100%;
+background:#0b1020;
+color:#fff;
+border:1px solid #293553;
+border-radius:8px;
+padding:11px
 }
 
 button{
-  border:0;
-  border-radius:8px;
-  padding:10px 15px;
-  font-weight:bold;
-  cursor:pointer
+border:0;
+border-radius:8px;
+padding:10px 15px;
+font-weight:bold;
+cursor:pointer
 }
 
 .green{
-  background:#32c875;
-  color:white
+background:#32c875;
+color:white
 }
 
 .gray{
-  background:#26324d;
-  color:white
+background:#26324d;
+color:white
 }
 
 .red{
-  background:#ef5350;
-  color:white
+background:#ef5350;
+color:white
+}
+
+.blue{
+background:#4f8cff;
+color:white
 }
 
 .controls{
-  display:grid;
-  grid-template-columns:1fr 150px 120px;
-  gap:10px
+display:grid;
+grid-template-columns:1fr 150px 120px;
+gap:10px
 }
 
 .player-list{
-  max-height:300px;
-  overflow:auto;
-  margin-top:10px
+max-height:300px;
+overflow:auto;
+margin-top:10px
 }
 
 .player-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px;
-  border-bottom:1px solid #293553
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+border-bottom:1px solid #293553
 }
 
 table{
-  width:100%;
-  border-collapse:collapse
+width:100%;
+border-collapse:collapse
 }
 
 th,td{
-  padding:10px;
-  text-align:left;
-  border-bottom:1px solid #293553
+padding:10px;
+text-align:left;
+border-bottom:1px solid #293553
 }
 
 th{
-  color:#9da9c0;
-  font-size:12px
+color:#9da9c0;
+font-size:12px
 }
 
 .money{
-  font-weight:bold
+font-weight:bold
 }
 
 .small{
-  color:#9da9c0;
-  font-size:12px
+color:#9da9c0;
+font-size:12px
 }
 
 .status{
-  padding:8px 12px;
-  border-radius:20px;
-  background:#26324d;
-  color:#9da9c0;
-  font-size:13px
+padding:8px 12px;
+border-radius:20px;
+background:#26324d;
+color:#9da9c0;
+font-size:13px
 }
 
 .online{
-  color:#32c875
+color:#32c875
 }
 
 .error{
-  color:#ef5350
+color:#ef5350
+}
+
+#commissioner{
+display:none
+}
+
+#loginBox{
+max-width:400px;
+margin:20px auto;
+text-align:center
+}
+
+#commissionerBadge{
+display:none
 }
 
 @media(max-width:900px){
-  .layout{
-    grid-template-columns:1fr
-  }
 
-  .controls{
-    grid-template-columns:1fr
-  }
+.layout{
+grid-template-columns:1fr
+}
 
-  .player{
-    font-size:32px
-  }
+.controls{
+grid-template-columns:1fr
+}
+
+.player{
+font-size:32px
+}
+
 }
 </style>
 </head>
 
+
 <body>
+
 
 <header>
 
 <div>
+
 <h1>🏈 Soup 2026 Fantasy Auction Draft</h1>
 
 <div class="small">
 10 Teams • $200 Budget • 15 Players
 </div>
+
 </div>
 
 <div>
+
+<span id="commissionerBadge" class="status">
+COMMISSIONER
+</span>
+
 <span id="connection" class="status">
 Connecting...
 </span>
+
 </div>
 
 </header>
@@ -215,9 +247,45 @@ Connecting...
 
 <div class="container">
 
+
+<!-- COMMISSIONER LOGIN -->
+
+<div id="loginBox" class="card">
+
+<h2>Commissioner Login</h2>
+
+<p class="small">
+Enter the Commissioner PIN to control the draft.
+</p>
+
+<input
+id="pinInput"
+type="password"
+placeholder="Commissioner PIN"
+>
+
+<br><br>
+
+<button
+id="loginButton"
+class="blue"
+>
+Enter Commissioner Mode
+</button>
+
+<p
+id="loginMessage"
+class="small"
+></p>
+
+</div>
+
+
 <div class="layout">
 
+
 <div>
+
 
 <!-- ACTIVE AUCTION -->
 
@@ -240,9 +308,12 @@ No Player Nominated
 </div>
 
 
-<!-- COMMISSIONER -->
+<!-- COMMISSIONER CONTROLS -->
 
-<div class="card">
+<div
+class="card"
+id="commissioner"
+>
 
 <h2>Commissioner Controls</h2>
 
@@ -251,7 +322,10 @@ id="search"
 placeholder="Search player..."
 >
 
-<div id="playerList" class="player-list"></div>
+<div
+id="playerList"
+class="player-list"
+></div>
 
 <br>
 
@@ -291,10 +365,19 @@ class="red"
 Reset Draft
 </button>
 
+<br><br>
+
+<button
+id="logoutButton"
+class="gray"
+>
+Exit Commissioner Mode
+</button>
+
 </div>
 
 
-<!-- HISTORY -->
+<!-- DRAFT HISTORY -->
 
 <div class="card">
 
@@ -352,12 +435,14 @@ Reset Draft
 
 </div>
 
+
 </div>
 
 </div>
 
 
 <script>
+
 
 /* =========================================================
    SUPABASE
@@ -371,9 +456,21 @@ const SUPABASE_KEY =
 
 const supabaseClient =
 window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
+
+
+/* =========================================================
+   COMMISSIONER PIN
+   ========================================================= */
+
+const COMMISSIONER_PIN =
+"0125";
+
+
+let isCommissioner =
+false;
 
 
 /* =========================================================
@@ -381,16 +478,18 @@ window.supabase.createClient(
    ========================================================= */
 
 const teams = [
-  "Joco",
-  "Bij",
-  "Steguin",
-  "Mike Gabbay",
-  "Allie + Ikey",
-  "Jack + Ike B",
-  "Ben",
-  "Dave",
-  "Jeff",
-  "Lati"
+
+"Joco",
+"Bij",
+"Steguin",
+"Mike Gabbay",
+"Allie + Ikey",
+"Jack + Ike B",
+"Ben",
+"Dave",
+"Jeff",
+"Lati"
+
 ];
 
 
@@ -450,18 +549,22 @@ function emptyState(){
 const rosters = {};
 
 teams.forEach(team=>{
-  rosters[team] = [];
+rosters[team]=[];
 });
 
 return {
-  rosters:rosters,
-  history:[],
-  active:null
+
+rosters:rosters,
+history:[],
+active:null
+
 };
 
 }
 
-let state = emptyState();
+
+let state =
+emptyState();
 
 
 /* =========================================================
@@ -470,13 +573,17 @@ let state = emptyState();
 
 function normalizeState(saved){
 
-const clean = emptyState();
+const clean =
+emptyState();
+
 
 if(saved && saved.rosters){
 
 teams.forEach(team=>{
 
-if(Array.isArray(saved.rosters[team])){
+if(Array.isArray(
+saved.rosters[team]
+)){
 
 clean.rosters[team] =
 saved.rosters[team];
@@ -487,19 +594,24 @@ saved.rosters[team];
 
 }
 
-if(saved && Array.isArray(saved.history)){
+
+if(saved &&
+Array.isArray(saved.history)){
 
 clean.history =
 saved.history;
 
 }
 
-if(saved && saved.active){
+
+if(saved &&
+saved.active){
 
 clean.active =
 saved.active;
 
 }
+
 
 return clean;
 
@@ -507,7 +619,7 @@ return clean;
 
 
 /* =========================================================
-   DATABASE LOAD
+   LOAD DRAFT
    ========================================================= */
 
 async function loadDraft(){
@@ -515,25 +627,41 @@ async function loadDraft(){
 const {data,error} =
 
 await supabaseClient
+
 .from("draft_state")
+
 .select("state")
+
 .eq("draft_code","JCO26")
+
 .limit(1);
+
 
 if(error){
 
-console.error("LOAD ERROR:",error);
+console.error(
+"LOAD ERROR:",
+error
+);
 
-setConnection("DATABASE ERROR",true);
+setConnection(
+"DATABASE ERROR",
+true
+);
 
 return;
 
 }
 
-if(data && data.length && data[0].state){
+
+if(data &&
+data.length &&
+data[0].state){
 
 state =
-normalizeState(data[0].state);
+normalizeState(
+data[0].state
+);
 
 }else{
 
@@ -542,7 +670,11 @@ emptyState();
 
 }
 
-setConnection("LIVE",false);
+
+setConnection(
+"LIVE",
+false
+);
 
 render();
 
@@ -550,7 +682,7 @@ render();
 
 
 /* =========================================================
-   DATABASE SAVE
+   SAVE
    ========================================================= */
 
 async function saveDraft(){
@@ -558,19 +690,30 @@ async function saveDraft(){
 const {error} =
 
 await supabaseClient
+
 .from("draft_state")
+
 .update({
-  state:state,
-  updated_at:new Date().toISOString()
+
+state:state,
+
+updated_at:
+new Date().toISOString()
+
 })
+
 .eq("id",1);
+
 
 if(error){
 
-console.error("SAVE ERROR:",error);
+console.error(
+"SAVE ERROR:",
+error
+);
 
 alert(
-"Could not save draft. Check the browser console."
+"Could not save draft."
 );
 
 }
@@ -579,7 +722,7 @@ alert(
 
 
 /* =========================================================
-   DATABASE POLLING
+   LIVE UPDATES
    ========================================================= */
 
 async function checkForUpdates(){
@@ -587,36 +730,59 @@ async function checkForUpdates(){
 const {data,error} =
 
 await supabaseClient
+
 .from("draft_state")
-.select("state,updated_at")
-.eq("draft_code","JCO26")
+
+.select(
+"state,updated_at"
+)
+
+.eq(
+"draft_code",
+"JCO26"
+)
+
 .limit(1);
+
 
 if(error){
 
-console.error("UPDATE ERROR:",error);
+console.error(
+"UPDATE ERROR:",
+error
+);
 
-setConnection("DATABASE ERROR",true);
+setConnection(
+"DATABASE ERROR",
+true
+);
 
 return;
 
 }
 
-setConnection("LIVE",false);
 
-if(data && data.length && data[0].state){
+setConnection(
+"LIVE",
+false
+);
 
-const incoming =
-normalizeState(data[0].state);
+
+if(data &&
+data.length &&
+data[0].state){
 
 state =
-incoming;
+normalizeState(
+data[0].state
+);
 
 render();
 
 }
 
 }
+
 
 setInterval(
 checkForUpdates,
@@ -625,27 +791,41 @@ checkForUpdates,
 
 
 /* =========================================================
-   CONNECTION DISPLAY
+   CONNECTION
    ========================================================= */
 
-function setConnection(text,isError){
+function setConnection(
+text,
+isError
+){
 
 const element =
-document.getElementById("connection");
+document.getElementById(
+"connection"
+);
 
 element.textContent =
 text;
 
-element.classList.remove("online");
-element.classList.remove("error");
+element.classList.remove(
+"online"
+);
+
+element.classList.remove(
+"error"
+);
 
 if(isError){
 
-element.classList.add("error");
+element.classList.add(
+"error"
+);
 
 }else if(text==="LIVE"){
 
-element.classList.add("online");
+element.classList.add(
+"online"
+);
 
 }
 
@@ -653,20 +833,110 @@ element.classList.add("online");
 
 
 /* =========================================================
-   TEAM DROPDOWN
+   COMMISSIONER LOGIN
+   ========================================================= */
+
+function login(){
+
+const entered =
+document.getElementById(
+"pinInput"
+).value;
+
+
+if(entered ===
+COMMISSIONER_PIN){
+
+isCommissioner =
+true;
+
+document.getElementById(
+"loginBox"
+).style.display =
+"none";
+
+document.getElementById(
+"commissioner"
+).style.display =
+"block";
+
+document.getElementById(
+"commissionerBadge"
+).style.display =
+"inline-block";
+
+document.getElementById(
+"loginMessage"
+).textContent =
+"";
+
+loadTeams();
+
+searchPlayers();
+
+}else{
+
+document.getElementById(
+"loginMessage"
+).textContent =
+"Incorrect PIN.";
+
+}
+
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+function logout(){
+
+isCommissioner =
+false;
+
+document.getElementById(
+"commissioner"
+).style.display =
+"none";
+
+document.getElementById(
+"loginBox"
+).style.display =
+"block";
+
+document.getElementById(
+"commissionerBadge"
+).style.display =
+"none";
+
+document.getElementById(
+"pinInput"
+).value="";
+
+}
+
+
+/* =========================================================
+   TEAMS
    ========================================================= */
 
 function loadTeams(){
 
 const dropdown =
-document.getElementById("winningTeam");
+document.getElementById(
+"winningTeam"
+);
 
 dropdown.innerHTML="";
+
 
 teams.forEach(team=>{
 
 const option =
-document.createElement("option");
+document.createElement(
+"option"
+);
 
 option.value =
 team;
@@ -674,7 +944,9 @@ team;
 option.textContent =
 team;
 
-dropdown.appendChild(option);
+dropdown.appendChild(
+option
+);
 
 });
 
@@ -687,57 +959,84 @@ dropdown.appendChild(option);
 
 function searchPlayers(){
 
-const input =
-document.getElementById("search");
+if(!isCommissioner){
+
+return;
+
+}
+
 
 const query =
-input.value.toLowerCase().trim();
+
+document.getElementById(
+"search"
+).value
+.toLowerCase()
+.trim();
+
 
 const list =
-document.getElementById("playerList");
+document.getElementById(
+"playerList"
+);
 
 list.innerHTML="";
 
+
 const soldNames =
 new Set(
-state.history.map(x=>x.name)
+state.history.map(
+x=>x.name
+)
 );
+
 
 players
 
-.filter(player=>{
+.filter(player=>
 
-return player[0]
+player[0]
 .toLowerCase()
-.includes(query);
+.includes(query)
 
-})
+)
 
-.filter(player=>{
+.filter(player=>
 
-return !soldNames.has(player[0]);
+!soldNames.has(
+player[0]
+)
 
-})
+)
 
 .forEach(player=>{
 
 const row =
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 row.className =
 "player-row";
 
 
 const info =
-document.createElement("span");
+document.createElement(
+"span"
+);
 
 info.innerHTML =
+
 `<b>${player[0]}</b>
-<span class="small">${player[1]}</span>`;
+<span class="small">
+${player[1]}
+</span>`;
 
 
 const button =
-document.createElement("button");
+document.createElement(
+"button"
+);
 
 button.className =
 "gray";
@@ -746,7 +1045,8 @@ button.textContent =
 "Nominate";
 
 
-button.onclick = function(){
+button.onclick =
+function(){
 
 nominate(
 player[0],
@@ -757,6 +1057,7 @@ player[1]
 
 
 row.appendChild(info);
+
 row.appendChild(button);
 
 list.appendChild(row);
@@ -770,15 +1071,28 @@ list.appendChild(row);
    NOMINATE
    ========================================================= */
 
-async function nominate(name,position){
+async function nominate(
+name,
+position
+){
 
-state.active = {
+if(!isCommissioner){
+
+return;
+
+}
+
+
+state.active={
 
 name:name,
+
 position:position,
+
 sold:false
 
 };
+
 
 render();
 
@@ -793,6 +1107,13 @@ await saveDraft();
 
 async function sellPlayer(){
 
+if(!isCommissioner){
+
+return;
+
+}
+
+
 if(!state.active){
 
 alert(
@@ -803,17 +1124,22 @@ return;
 
 }
 
+
 const team =
+
 document.getElementById(
 "winningTeam"
 ).value;
 
+
 const bid =
+
 Number(
 document.getElementById(
 "winningBid"
 ).value
 );
+
 
 if(!bid || bid<1){
 
@@ -825,24 +1151,31 @@ return;
 
 }
 
+
 const roster =
 state.rosters[team];
 
+
 const spent =
+
 roster.reduce(
 (sum,player)=>
 sum+Number(player.price),
 0
 );
 
+
 const remaining =
 200-spent;
+
 
 const spotsLeft =
 15-roster.length;
 
+
 const maxBid =
 remaining-(spotsLeft-1);
+
 
 if(bid>maxBid){
 
@@ -856,33 +1189,42 @@ return;
 
 }
 
-const purchase = {
 
-name:state.active.name,
-position:state.active.position,
+const purchase={
+
+name:
+state.active.name,
+
+position:
+state.active.position,
+
 team:team,
+
 price:bid
 
 };
 
-state.rosters[team].push(
-purchase
-);
 
-state.history.push(
-purchase
-);
+state.rosters[team]
+.push(purchase);
 
-state.active = {
+state.history
+.push(purchase);
+
+
+state.active={
 
 ...purchase,
+
 sold:true
 
 };
 
+
 document.getElementById(
 "winningBid"
 ).value="";
+
 
 render();
 
@@ -897,36 +1239,55 @@ await saveDraft();
 
 async function undoLast(){
 
+if(!isCommissioner){
+
+return;
+
+}
+
+
 if(!state.history.length){
 
 return;
 
 }
 
+
 const last =
 state.history.pop();
+
 
 const roster =
 state.rosters[last.team];
 
-const index =
-roster.findIndex(player=>{
 
-return (
-player.name===last.name &&
+const index =
+
+roster.findIndex(
+player=>
+
+player.name===
+last.name &&
+
 Number(player.price)===
 Number(last.price)
+
 );
 
-});
 
 if(index>=0){
 
-roster.splice(index,1);
+roster.splice(
+index,
+1
+);
 
 }
 
-state.active=null;
+
+state.active =
+null;
+
 
 render();
 
@@ -941,16 +1302,25 @@ await saveDraft();
 
 async function resetDraft(){
 
+if(!isCommissioner){
+
+return;
+
+}
+
+
 const answer =
 confirm(
 "RESET THE ENTIRE DRAFT?"
 );
+
 
 if(!answer){
 
 return;
 
 }
+
 
 state =
 emptyState();
@@ -963,42 +1333,55 @@ await saveDraft();
 
 
 /* =========================================================
-   TEAM TABLE
+   TEAM STATUS
    ========================================================= */
 
 function renderTeams(){
 
 const table =
-document.getElementById("teams");
+document.getElementById(
+"teams"
+);
 
 table.innerHTML="";
+
 
 teams.forEach(team=>{
 
 const roster =
-state.rosters[team] || [];
+state.rosters[team] ||
+[];
 
 const spent =
+
 roster.reduce(
 (sum,player)=>
 sum+Number(player.price),
 0
 );
 
+
 const remaining =
 200-spent;
+
 
 const spots =
 15-roster.length;
 
+
 const maxBid =
+
 Math.max(
 0,
 remaining-(spots-1)
 );
 
+
 const row =
-document.createElement("tr");
+document.createElement(
+"tr"
+);
+
 
 row.innerHTML = `
 
@@ -1020,6 +1403,7 @@ $${maxBid}
 
 `;
 
+
 table.appendChild(row);
 
 });
@@ -1028,21 +1412,27 @@ table.appendChild(row);
 
 
 /* =========================================================
-   HISTORY TABLE
+   HISTORY
    ========================================================= */
 
 function renderHistory(){
 
 const table =
-document.getElementById("history");
+document.getElementById(
+"history"
+);
 
 table.innerHTML="";
+
 
 state.history.forEach(
 (player,index)=>{
 
 const row =
-document.createElement("tr");
+document.createElement(
+"tr"
+);
+
 
 row.innerHTML = `
 
@@ -1067,6 +1457,7 @@ $${player.price}
 </td>
 
 `;
+
 
 table.appendChild(row);
 
@@ -1096,6 +1487,7 @@ document.getElementById(
 "soldMessage"
 );
 
+
 if(!state.active){
 
 name.textContent =
@@ -1111,11 +1503,13 @@ return;
 
 }
 
+
 name.textContent =
 state.active.name;
 
 position.textContent =
 state.active.position;
+
 
 if(state.active.sold){
 
@@ -1132,8 +1526,7 @@ SOLD — ${state.active.team}
 
 }else{
 
-sold.innerHTML =
-"";
+sold.innerHTML="";
 
 }
 
@@ -1152,7 +1545,11 @@ renderTeams();
 
 renderHistory();
 
+if(isCommissioner){
+
 searchPlayers();
+
+}
 
 }
 
@@ -1162,11 +1559,43 @@ searchPlayers();
    ========================================================= */
 
 document
+.getElementById("loginButton")
+.addEventListener(
+"click",
+login
+);
+
+
+document
+.getElementById("pinInput")
+.addEventListener(
+"keydown",
+function(event){
+
+if(event.key==="Enter"){
+
+login();
+
+}
+
+});
+
+
+document
+.getElementById("logoutButton")
+.addEventListener(
+"click",
+logout
+);
+
+
+document
 .getElementById("search")
 .addEventListener(
 "input",
 searchPlayers
 );
+
 
 document
 .getElementById("sellButton")
@@ -1175,12 +1604,14 @@ document
 sellPlayer
 );
 
+
 document
 .getElementById("undoButton")
 .addEventListener(
 "click",
 undoLast
 );
+
 
 document
 .getElementById("resetButton")
