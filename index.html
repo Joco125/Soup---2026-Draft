@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -263,10 +264,26 @@ flex:1;
 overflow:auto
 }
 
+/* BIGGER TEAM STATUS */
 .team-card table th,
 .team-card table td{
-padding:13px 12px;
-font-size:14px
+padding:18px 16px;
+font-size:22px
+}
+
+.team-card table th{
+font-size:15px;
+letter-spacing:1px
+}
+
+.team-card table td.money{
+font-size:32px;
+font-weight:bold
+}
+
+.team-card table td:first-child{
+font-size:25px;
+font-weight:bold
 }
 
 #search{
@@ -499,16 +516,6 @@ Reset Draft
 
 </div>
 
-<br>
-
-<button
-id="logoutButton"
-class="gray"
-style="width:100%"
->
-Exit Commissioner Mode
-</button>
-
 </div>
 
 
@@ -567,8 +574,6 @@ Team Status
 <tr>
 <th>Team</th>
 <th>Max Bid</th>
-<th>$ Left</th>
-<th>Players</th>
 </tr>
 
 </thead>
@@ -1251,45 +1256,6 @@ document.getElementById(
 
 
 /* =========================================================
-   LOGOUT
-   ========================================================= */
-
-function logout(){
-
-isCommissioner =
-false;
-
-document.getElementById(
-"commissioner"
-).style.display =
-"none";
-
-document.getElementById(
-"commissionerBadge"
-).style.display =
-"none";
-
-document.getElementById(
-"pinInput"
-).value="";
-
-document.getElementById(
-"search"
-).value="";
-
-document.getElementById(
-"playerList"
-).innerHTML="";
-
-document.getElementById(
-"loginBox"
-).style.display =
-"none";
-
-}
-
-
-/* =========================================================
    TEAMS
    ========================================================= */
 
@@ -1827,14 +1793,6 @@ row.innerHTML = `
 $${maxBid}
 </td>
 
-<td class="money">
-$${remaining}
-</td>
-
-<td>
-${roster.length}/15
-</td>
-
 `;
 
 table.appendChild(row);
@@ -1855,12 +1813,24 @@ document.getElementById(
 "history"
 );
 
+if(!table){
+
+return;
+
+}
+
 table.innerHTML="";
 
 
+if(!Array.isArray(state.history)){
+
+return;
+
+}
+
+
 /*
-Create a reversed copy so the
-most recent player is first.
+Most recent player first.
 */
 
 const recentPlayers =
@@ -1977,6 +1947,12 @@ sold.innerHTML="";
 
 function render(){
 
+/*
+Always render all public sections,
+including Recent Drafted Players,
+regardless of commissioner mode.
+*/
+
 renderActive();
 
 renderTeams();
@@ -2031,16 +2007,6 @@ login();
 }
 
 });
-
-
-document
-.getElementById(
-"logoutButton"
-)
-.addEventListener(
-"click",
-logout
-);
 
 
 document
@@ -2107,3 +2073,4 @@ loadDraft();
 
 </body>
 </html>
+```
