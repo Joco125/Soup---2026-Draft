@@ -1,1 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fantasy Auction Draft</title>
 
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0b1020;
+  color: white;
+}
+
+header {
+  padding: 20px 30px;
+  background: #11182b;
+  border-bottom: 1px solid #293553;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 25px;
+}
+
+.subtitle {
+  color: #9da9c0;
+  margin-top: 5px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary {
+  background: #4f8cff;
+  color: white;
+}
+
+.green {
+  background: #32c875;
+  color: white;
+}
+
+.red {
+  background: #ef5350;
+  color: white;
+}
+
+.gray {
+  background: #26324d;
+  color: white;
+}
+
+.container {
+  max-width: 1500px;
+  margin: auto;
+  padding: 20px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: #11182b;
+  border: 1px solid #293553;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.auction {
+  text-align: center;
+  padding: 45px 20px;
+}
+
+.active-label {
+  color: #8fa1c2;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.player-name {
+  font-size: 42px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.position {
+  color: #4f8cff;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.sold {
+  color: #32c875;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 150px 120px;
+  gap: 10px;
+}
+
+input,
+select {
+  width: 100%;
+  background: #0b1020;
+  color: white;
+  border: 1px solid #293553;
+  border-radius: 8px;
+  padding: 11px;
+}
+
+.search {
+  margin-bottom: 15px;
+}
+
+.player-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.player-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #293553;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #293553;
+}
+
+th {
+  color: #9da9c0;
+  font-size: 12px;
+}
+
+.money {
+  font-weight: bold;
+}
+
+.small {
+  color: #9da9c0;
+  font-size: 12px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.hidden {
+  display: none;
+}
+
+@media(max-width:900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .player-name {
+    font-size: 32px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <h1>🏈 Fantasy Auction Draft</h1>
+    <div class="subtitle">
+      10 Teams • $200 Budget • Offline Auction
+    </div>
+  </div>
+
+  <button class="gray" onclick="resetDraft()">
+    Reset Draft
+  </button>
+</header>
+
+<div class="container">
+
+<div class="layout">
+
+<!-- LEFT SIDE -->
+<div>
+
+  <!-- ACTIVE AUCTION -->
+  <div class="card auction">
+
+    <div class="active-label">
+      ACTIVE AUCTION
+    </div>
+
+    <div id="playerName" class="player-name">
+      No Player Nominated
+    </div>
+
+    <div id="playerPosition" class="position">
+      —
+    </div>
+
+    <div id="soldMessage"></div>
+
+  </div>
+
+
+  <!-- COMMISSIONER -->
+  <div class="card">
+
+    <h2>Commissioner Controls</h2>
+
+    <input
+      id="search"
+      class="search"
+      placeholder="Search player..."
+      oninput="searchPlayers()"
+    >
+
+    <div id="playerList" class="player-list"></div>
+
+    <br>
+
+    <div class="controls">
+
+      <select id="winningTeam">
+      </select>
+
+      <input
+        id="winningBid"
+        type="number"
+        placeholder="Winning bid"
+        min="1"
+      >
+
+      <button
+        class="green"
+        onclick="sellPlayer()"
+      >
+        SELL
+      </button>
+
+    </div>
+
+    <br>
+
+    <button
+      class="gray"
+      onclick="undoLast()"
+    >
+      Undo Last Sale
+    </button>
+
+  </div>
+
+
+  <!-- DRAFT HISTORY -->
+  <div class="card">
+
+    <h2>Draft History</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Player</th>
+          <th>Position</th>
+          <th>Team</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+
+      <tbody id="history">
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- RIGHT SIDE -->
+<div>
+
+  <div class="card">
+
+    <h2>Team Status</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>$ Left</th>
+          <th>Players</th>
+        </tr>
+      </thead>
+
+      <tbody id="teams">
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const teams = [
+  "Joco",
+  "Bij",
+  "Steguin",
+  "Mike Gabbay",
+  "Allie + Ikey",
+  "Jack + Ike B",
+  "Ben",
+  "Dave",
+  "Jeff",
+  "Lati"
+];
+
+
+const players = [
+
+["Josh Allen","QB"],
+["Lamar Jackson","QB"],
+["Jalen Hurts","QB"],
+["Joe Burrow","QB"],
+["Patrick Mahomes","QB"],
+
+["Bijan Robinson","RB"],
+["Saquon Barkley","RB"],
+["Jahmyr Gibbs","RB"],
+["Christian McCaffrey","RB"],
+["Jonathan Taylor","RB"],
+
+["CeeDee Lamb","WR"],
+["Ja'Marr Chase","WR"],
+["Justin Jefferson","WR"],
+["Amon-Ra St. Brown","WR"],
+["Puka Nacua","WR"],
+["Tyreek Hill","WR"],
+["A.J. Brown","WR"],
+["Malik Nabers","WR"],
+["Garrett Wilson","WR"],
+["Nico Collins","WR"],
+
+["Brock Bowers","TE"],
+["Trey McBride","TE"],
+["Sam LaPorta","TE"],
+["Travis Kelce","TE"],
+["George Kittle","TE"],
+
+["Brandon Aubrey","K"],
+["Justin Tucker","K"],
+["Harrison Butker","K"],
+
+["Baltimore Ravens","DEF"],
+["San Francisco 49ers","DEF"],
+["Pittsburgh Steelers","DEF"],
+["Kansas City Chiefs","DEF"]
+
+];
+
+
+let rosters = {};
+
+teams.forEach(team => {
+  rosters[team] = [];
+});
+
+
+let draftHistory = [];
+let activePlayer = null;
+
+
+/* TEAM DROPDOWN */
+
+function loadTeams() {
+
+  const dropdown =
+    document.getElementById("winningTeam");
+
+  dropdown.innerHTML = "";
+
+  teams.forEach(team => {
+
+    const option =
+      document.createElement("option");
+
+    option.value = team;
+    option.textContent = team;
+
+    dropdown.appendChild(option);
+
+  });
+
+}
+
+
+/* PLAYER SEARCH */
+
+function searchPlayers() {
+
+  const search =
+    document.getElementById("search")
+    .value
+    .toLowerCase();
+
+  const soldPlayers =
+    draftHistory.map(player => player.name);
+
+  const list =
+    document.getElementById("playerList");
+
+  list.innerHTML = "";
+
+  players
+    .filter(player =>
+      player[0].toLowerCase().includes(search)
+    )
+    .filter(player =>
+      !soldPlayers.includes(player[0])
+    )
+    .forEach(player => {
+
+      const row =
+        document.createElement("div");
+
+      row.className = "player-row";
+
+      row.innerHTML = `
+        <span>
+          <b>${player[0]}</b>
+          <span class="small">
+            ${player[1]}
+          </span>
+        </span>
+
+        <button
+          class="gray"
+          onclick="nominate('${player[0]}','${player[1]}')"
+        >
+          Nominate
+        </button>
+      `;
+
+      list.appendChild(row);
+
+    });
+
+}
+
+
+/* NOMINATE */
+
+function nominate(name, position) {
+
+  activePlayer = {
+    name: name,
+    position: position
+  };
+
+  document.getElementById("playerName")
+    .textContent = name;
+
+  document.getElementById("playerPosition")
+    .textContent = position;
+
+  document.getElementById("soldMessage")
+    .innerHTML = "";
+
+}
+
+
+/* SELL PLAYER */
+
+function sellPlayer() {
+
+  if (!activePlayer) {
+
+    alert("Nominate a player first.");
+
+    return;
+
+  }
+
+
+  const team =
+    document.getElementById("winningTeam")
+    .value;
+
+  const bid =
+    Number(
+      document.getElementById("winningBid")
+      .value
+    );
+
+
+  if (!bid || bid < 1) {
+
+    alert("Enter a winning bid.");
+
+    return;
+
+  }
+
+
+  const spent =
+    rosters[team]
+      .reduce(
+        (total, player) =>
+          total + player.price,
+        0
+      );
+
+
+  const remaining =
+    200 - spent;
+
+
+  const spotsLeft =
+    15 - rosters[team].length;
+
+
+  const maxBid =
+    remaining - (spotsLeft - 1);
+
+
+  if (bid > maxBid) {
+
+    alert(
+      team +
+      " can only bid up to $" +
+      maxBid
+    );
+
+    return;
+
+  }
+
+
+  const purchase = {
+
+    name: activePlayer.name,
+
+    position:
+      activePlayer.position,
+
+    team: team,
+
+    price: bid
+
+  };
+
+
+  rosters[team].push(purchase);
+
+  draftHistory.push(purchase);
+
+
+  document.getElementById("soldMessage")
+    .innerHTML =
+      `<div class="sold">
+        SOLD — ${team} — $${bid}
+      </div>`;
+
+
+  activePlayer = null;
+
+  document.getElementById("winningBid")
+    .value = "";
+
+
+  render();
+
+}
+
+
+/* UNDO */
+
+function undoLast() {
+
+  if (draftHistory.length === 0) {
+
+    return;
+
+  }
+
+
+  const last =
+    draftHistory.pop();
+
+
+  rosters[last.team].pop();
+
+
+  document.getElementById("playerName")
+    .textContent =
+      "No Player Nominated";
+
+  document.getElementById("playerPosition")
+    .textContent = "—";
+
+  document.getElementById("soldMessage")
+    .innerHTML = "";
+
+
+  activePlayer = null;
+
+  render();
+
+}
+
+
+/* RENDER TEAM STATUS */
+
+function renderTeams() {
+
+  const table =
+    document.getElementById("teams");
+
+  table.innerHTML = "";
+
+
+  teams.forEach(team => {
+
+    const spent =
+      rosters[team]
+        .reduce(
+          (total, player) =>
+            total + player.price,
+          0
+        );
+
+
+    const remaining =
+      200 - spent;
+
+
+    const row =
+      document.createElement("tr");
+
+
+    row.innerHTML = `
+
+      <td>
+        <b>${team}</b>
+      </td>
+
+      <td class="money">
+        $${remaining}
+      </td>
+
+      <td>
+        ${rosters[team].length}/15
+      </td>
+
+    `;
+
+
+    table.appendChild(row);
+
+  });
+
+}
+
+
+/* RENDER HISTORY */
+
+function renderHistory() {
+
+  const table =
+    document.getElementById("history");
+
+  table.innerHTML = "";
+
+
+  draftHistory.forEach(
+    (player, index) => {
+
+      const row =
+        document.createElement("tr");
+
+
+      row.innerHTML = `
+
+        <td>${index + 1}</td>
+
+        <td>
+          <b>${player.name}</b>
+        </td>
+
+        <td>
+          ${player.position}
+        </td>
+
+        <td>
+          ${player.team}
+        </td>
+
+        <td class="money">
+          $${player.price}
+        </td>
+
+      `;
+
+
+      table.appendChild(row);
+
+    }
+  );
+
+}
+
+
+/* RENDER */
+
+function render() {
+
+  renderTeams();
+
+  renderHistory();
+
+  searchPlayers();
+
+}
+
+
+/* RESET */
+
+function resetDraft() {
+
+  const confirmation =
+    confirm(
+      "Are you sure you want to completely reset the draft?"
+    );
+
+
+  if (!confirmation) return;
+
+
+  teams.forEach(team => {
+
+    rosters[team] = [];
+
+  });
+
+
+  draftHistory = [];
+
+  activePlayer = null;
+
+
+  document.getElementById("playerName")
+    .textContent =
+      "No Player Nominated";
+
+
+  document.getElementById("playerPosition")
+    .textContent = "—";
+
+
+  document.getElementById("soldMessage")
+    .innerHTML = "";
+
+
+  render();
+
+}
+
+
+/* START */
+
+loadTeams();
+
+render();
+
+</script>
+
+</body>
+</html>
