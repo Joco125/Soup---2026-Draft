@@ -359,7 +359,7 @@ Connecting...
 </header>
 
 
-<!-- COMMISSIONER LOGIN POPUP -->
+<!-- COMMISSIONER LOGIN -->
 
 <div
 id="loginBox"
@@ -512,7 +512,7 @@ Exit Commissioner Mode
 </div>
 
 
-<!-- DRAFT HISTORY -->
+<!-- RECENT DRAFTED PLAYERS -->
 
 <div class="card history-card">
 
@@ -566,9 +566,9 @@ Team Status
 
 <tr>
 <th>Team</th>
+<th>Max Bid</th>
 <th>$ Left</th>
 <th>Players</th>
-<th>Max Bid</th>
 </tr>
 
 </thead>
@@ -997,7 +997,10 @@ if(error){
 
 console.error("LOAD ERROR:",error);
 
-setConnection("DATABASE ERROR",true);
+setConnection(
+"DATABASE ERROR",
+true
+);
 
 return;
 
@@ -1015,7 +1018,10 @@ emptyState();
 
 }
 
-setConnection("LIVE",false);
+setConnection(
+"LIVE",
+false
+);
 
 render();
 
@@ -1033,16 +1039,25 @@ const {error} =
 await supabaseClient
 .from("draft_state")
 .update({
+
 state:state,
-updated_at:new Date().toISOString()
+
+updated_at:
+new Date().toISOString()
+
 })
 .eq("id",1);
 
 if(error){
 
-console.error("SAVE ERROR:",error);
+console.error(
+"SAVE ERROR:",
+error
+);
 
-alert("Could not save draft.");
+alert(
+"Could not save draft."
+);
 
 }
 
@@ -1059,26 +1074,44 @@ const {data,error} =
 
 await supabaseClient
 .from("draft_state")
-.select("state,updated_at")
-.eq("draft_code","JCO26")
+.select(
+"state,updated_at"
+)
+.eq(
+"draft_code",
+"JCO26"
+)
 .limit(1);
 
 if(error){
 
-console.error("UPDATE ERROR:",error);
+console.error(
+"UPDATE ERROR:",
+error
+);
 
-setConnection("DATABASE ERROR",true);
+setConnection(
+"DATABASE ERROR",
+true
+);
 
 return;
 
 }
 
-setConnection("LIVE",false);
+setConnection(
+"LIVE",
+false
+);
 
-if(data && data.length && data[0].state){
+if(data &&
+data.length &&
+data[0].state){
 
 state =
-normalizeState(data[0].state);
+normalizeState(
+data[0].state
+);
 
 render();
 
@@ -1096,24 +1129,38 @@ checkForUpdates,
    CONNECTION
    ========================================================= */
 
-function setConnection(text,isError){
+function setConnection(
+text,
+isError
+){
 
 const element =
-document.getElementById("connection");
+document.getElementById(
+"connection"
+);
 
 element.textContent =
 text;
 
-element.classList.remove("online");
-element.classList.remove("error");
+element.classList.remove(
+"online"
+);
+
+element.classList.remove(
+"error"
+);
 
 if(isError){
 
-element.classList.add("error");
+element.classList.add(
+"error"
+);
 
 }else if(text==="LIVE"){
 
-element.classList.add("online");
+element.classList.add(
+"online"
+);
 
 }
 
@@ -1127,7 +1174,9 @@ element.classList.add("online");
 function toggleCommissionerMenu(){
 
 const box =
-document.getElementById("loginBox");
+document.getElementById(
+"loginBox"
+);
 
 if(box.style.display==="block"){
 
@@ -1153,28 +1202,47 @@ document
 function login(){
 
 const entered =
-document.getElementById("pinInput").value;
+document.getElementById(
+"pinInput"
+).value;
 
-if(entered === COMMISSIONER_PIN){
+if(entered ===
+COMMISSIONER_PIN){
 
 isCommissioner =
 true;
 
-document.getElementById("loginBox").style.display="none";
+document.getElementById(
+"loginBox"
+).style.display =
+"none";
 
-document.getElementById("commissioner").style.display="block";
+document.getElementById(
+"commissioner"
+).style.display =
+"block";
 
-document.getElementById("commissionerBadge").style.display="inline-block";
+document.getElementById(
+"commissionerBadge"
+).style.display =
+"inline-block";
 
-document.getElementById("loginMessage").textContent="";
+document.getElementById(
+"loginMessage"
+).textContent =
+"";
 
 loadTeams();
 
 searchPlayers();
 
+render();
+
 }else{
 
-document.getElementById("loginMessage").textContent =
+document.getElementById(
+"loginMessage"
+).textContent =
 "Incorrect PIN.";
 
 }
@@ -1191,15 +1259,32 @@ function logout(){
 isCommissioner =
 false;
 
-document.getElementById("commissioner").style.display="none";
+document.getElementById(
+"commissioner"
+).style.display =
+"none";
 
-document.getElementById("commissionerBadge").style.display="none";
+document.getElementById(
+"commissionerBadge"
+).style.display =
+"none";
 
-document.getElementById("pinInput").value="";
+document.getElementById(
+"pinInput"
+).value="";
 
-document.getElementById("search").value="";
+document.getElementById(
+"search"
+).value="";
 
-document.getElementById("loginBox").style.display="none";
+document.getElementById(
+"playerList"
+).innerHTML="";
+
+document.getElementById(
+"loginBox"
+).style.display =
+"none";
 
 }
 
@@ -1211,14 +1296,18 @@ document.getElementById("loginBox").style.display="none";
 function loadTeams(){
 
 const dropdown =
-document.getElementById("winningTeam");
+document.getElementById(
+"winningTeam"
+);
 
 dropdown.innerHTML="";
 
 teams.forEach(team=>{
 
 const option =
-document.createElement("option");
+document.createElement(
+"option"
+);
 
 option.value =
 team;
@@ -1226,7 +1315,9 @@ team;
 option.textContent =
 team;
 
-dropdown.appendChild(option);
+dropdown.appendChild(
+option
+);
 
 });
 
@@ -1246,20 +1337,18 @@ return;
 }
 
 const query =
-document.getElementById("search").value
+document.getElementById(
+"search"
+).value
 .toLowerCase()
 .trim();
 
 const list =
-document.getElementById("playerList");
+document.getElementById(
+"playerList"
+);
 
 list.innerHTML="";
-
-
-/*
-Only show players after the
-commissioner starts typing.
-*/
 
 if(!query){
 
@@ -1267,14 +1356,15 @@ return;
 
 }
 
-
 const soldNames =
 new Set(
-state.history.map(x=>x.name)
+state.history.map(
+x=>x.name
+)
 );
 
-
 players
+
 .filter(player=>
 
 player[0]
@@ -1282,22 +1372,30 @@ player[0]
 .includes(query)
 
 )
+
 .filter(player=>
 
-!soldNames.has(player[0])
+!soldNames.has(
+player[0]
+)
 
 )
+
 .forEach(player=>{
 
 const row =
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 row.className =
 "player-row";
 
 
 const info =
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 info.className =
 "player-info";
@@ -1318,7 +1416,9 @@ ${player[2]}
 
 
 const button =
-document.createElement("button");
+document.createElement(
+"button"
+);
 
 button.className =
 "gray";
@@ -1355,7 +1455,7 @@ list.appendChild(row);
 
 async function nominate(
 name,
-team,
+teamCode,
 position
 ){
 
@@ -1365,24 +1465,25 @@ return;
 
 }
 
-
 state.active={
 
 name:name,
-teamCode:team,
+
+teamCode:teamCode,
+
 position:position,
+
 sold:false
 
 };
 
+document.getElementById(
+"search"
+).value="";
 
-/*
-Reset search immediately after nomination.
-*/
-
-document.getElementById("search").value="";
-
-document.getElementById("playerList").innerHTML="";
+document.getElementById(
+"playerList"
+).innerHTML="";
 
 render();
 
@@ -1403,36 +1504,32 @@ return;
 
 }
 
-
 if(!state.active){
 
 return;
 
 }
 
-
-/*
-Do not allow un-nominating
-a player who has already been sold.
-*/
-
 if(state.active.sold){
 
 alert(
-"That player has already been sold. Use Undo Last Sale instead."
+"This player has already been sold. Use Undo Last Sale instead."
 );
 
 return;
 
 }
 
-
 state.active =
 null;
 
-document.getElementById("search").value="";
+document.getElementById(
+"search"
+).value="";
 
-document.getElementById("playerList").innerHTML="";
+document.getElementById(
+"playerList"
+).innerHTML="";
 
 render();
 
@@ -1453,7 +1550,6 @@ return;
 
 }
 
-
 if(!state.active){
 
 alert(
@@ -1463,7 +1559,6 @@ alert(
 return;
 
 }
-
 
 if(state.active.sold){
 
@@ -1475,13 +1570,11 @@ return;
 
 }
 
-
 const team =
 
 document.getElementById(
 "winningTeam"
 ).value;
-
 
 const bid =
 
@@ -1490,7 +1583,6 @@ document.getElementById(
 "winningBid"
 ).value
 );
-
 
 if(!bid || bid<1){
 
@@ -1502,10 +1594,8 @@ return;
 
 }
 
-
 const roster =
 state.rosters[team];
-
 
 const spent =
 
@@ -1515,18 +1605,14 @@ sum+Number(player.price),
 0
 );
 
-
 const remaining =
 200-spent;
-
 
 const spotsLeft =
 15-roster.length;
 
-
 const maxBid =
 remaining-(spotsLeft-1);
-
 
 if(bid>maxBid){
 
@@ -1539,7 +1625,6 @@ maxBid
 return;
 
 }
-
 
 const purchase={
 
@@ -1557,11 +1642,11 @@ bid
 
 };
 
+state.rosters[team]
+.push(purchase);
 
-state.rosters[team].push(purchase);
-
-state.history.push(purchase);
-
+state.history
+.push(purchase);
 
 state.active={
 
@@ -1571,11 +1656,9 @@ sold:true
 
 };
 
-
 document.getElementById(
 "winningBid"
 ).value="";
-
 
 document.getElementById(
 "search"
@@ -1584,7 +1667,6 @@ document.getElementById(
 document.getElementById(
 "playerList"
 ).innerHTML="";
-
 
 render();
 
@@ -1605,21 +1687,17 @@ return;
 
 }
 
-
 if(!state.history.length){
 
 return;
 
 }
 
-
 const last =
 state.history.pop();
 
-
 const roster =
 state.rosters[last.team];
-
 
 const index =
 
@@ -1634,7 +1712,6 @@ Number(last.price)
 
 );
 
-
 if(index>=0){
 
 roster.splice(
@@ -1644,10 +1721,8 @@ index,
 
 }
 
-
 state.active =
 null;
-
 
 render();
 
@@ -1668,12 +1743,10 @@ return;
 
 }
 
-
 const answer =
 confirm(
 "RESET THE ENTIRE DRAFT?"
 );
-
 
 if(!answer){
 
@@ -1681,9 +1754,16 @@ return;
 
 }
 
-
 state =
 emptyState();
+
+document.getElementById(
+"search"
+).value="";
+
+document.getElementById(
+"playerList"
+).innerHTML="";
 
 render();
 
@@ -1699,16 +1779,17 @@ await saveDraft();
 function renderTeams(){
 
 const table =
-document.getElementById("teams");
+document.getElementById(
+"teams"
+);
 
 table.innerHTML="";
-
 
 teams.forEach(team=>{
 
 const roster =
-state.rosters[team] || [];
-
+state.rosters[team] ||
+[];
 
 const spent =
 
@@ -1718,14 +1799,11 @@ sum+Number(player.price),
 0
 );
 
-
 const remaining =
 200-spent;
 
-
 const spots =
 15-roster.length;
-
 
 const maxBid =
 
@@ -1734,15 +1812,19 @@ Math.max(
 remaining-(spots-1)
 );
 
-
 const row =
-document.createElement("tr");
-
+document.createElement(
+"tr"
+);
 
 row.innerHTML = `
 
 <td>
 <b>${team}</b>
+</td>
+
+<td class="money">
+$${maxBid}
 </td>
 
 <td class="money">
@@ -1753,12 +1835,7 @@ $${remaining}
 ${roster.length}/15
 </td>
 
-<td class="money">
-$${maxBid}
-</td>
-
 `;
-
 
 table.appendChild(row);
 
@@ -1768,32 +1845,35 @@ table.appendChild(row);
 
 
 /* =========================================================
-   HISTORY
+   RECENT DRAFTED PLAYERS
    ========================================================= */
 
 function renderHistory(){
 
 const table =
-document.getElementById("history");
+document.getElementById(
+"history"
+);
 
 table.innerHTML="";
 
 
 /*
-Most recent sales appear first.
+Create a reversed copy so the
+most recent player is first.
 */
 
-const recent =
-[...state.history]
-.reverse();
+const recentPlayers =
+[...state.history].reverse();
 
 
-recent.forEach(
+recentPlayers.forEach(
 (player,index)=>{
 
 const row =
-document.createElement("tr");
-
+document.createElement(
+"tr"
+);
 
 row.innerHTML = `
 
@@ -1819,7 +1899,6 @@ $${player.price}
 
 `;
 
-
 table.appendChild(row);
 
 });
@@ -1834,14 +1913,19 @@ table.appendChild(row);
 function renderActive(){
 
 const name =
-document.getElementById("playerName");
+document.getElementById(
+"playerName"
+);
 
 const position =
-document.getElementById("playerPosition");
+document.getElementById(
+"playerPosition"
+);
 
 const sold =
-document.getElementById("soldMessage");
-
+document.getElementById(
+"soldMessage"
+);
 
 if(!state.active){
 
@@ -1857,7 +1941,6 @@ sold.innerHTML =
 return;
 
 }
-
 
 name.textContent =
 state.active.name;
@@ -1914,7 +1997,9 @@ searchPlayers();
    ========================================================= */
 
 document
-.getElementById("commissionerMenuButton")
+.getElementById(
+"commissionerMenuButton"
+)
 .addEventListener(
 "click",
 toggleCommissionerMenu
@@ -1922,7 +2007,9 @@ toggleCommissionerMenu
 
 
 document
-.getElementById("loginButton")
+.getElementById(
+"loginButton"
+)
 .addEventListener(
 "click",
 login
@@ -1930,7 +2017,9 @@ login
 
 
 document
-.getElementById("pinInput")
+.getElementById(
+"pinInput"
+)
 .addEventListener(
 "keydown",
 function(event){
@@ -1945,7 +2034,9 @@ login();
 
 
 document
-.getElementById("logoutButton")
+.getElementById(
+"logoutButton"
+)
 .addEventListener(
 "click",
 logout
@@ -1953,7 +2044,9 @@ logout
 
 
 document
-.getElementById("search")
+.getElementById(
+"search"
+)
 .addEventListener(
 "input",
 searchPlayers
@@ -1961,7 +2054,9 @@ searchPlayers
 
 
 document
-.getElementById("sellButton")
+.getElementById(
+"sellButton"
+)
 .addEventListener(
 "click",
 sellPlayer
@@ -1969,7 +2064,9 @@ sellPlayer
 
 
 document
-.getElementById("unNominateButton")
+.getElementById(
+"unNominateButton"
+)
 .addEventListener(
 "click",
 unNominate
@@ -1977,7 +2074,9 @@ unNominate
 
 
 document
-.getElementById("undoButton")
+.getElementById(
+"undoButton"
+)
 .addEventListener(
 "click",
 undoLast
@@ -1985,7 +2084,9 @@ undoLast
 
 
 document
-.getElementById("resetButton")
+.getElementById(
+"resetButton"
+)
 .addEventListener(
 "click",
 resetDraft
