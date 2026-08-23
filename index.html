@@ -128,7 +128,7 @@ gap:10px
 }
 
 .player-list{
-max-height:300px;
+max-height:400px;
 overflow:auto;
 margin-top:10px
 }
@@ -138,7 +138,14 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 padding:10px;
-border-bottom:1px solid #293553
+border-bottom:1px solid #293553;
+gap:10px
+}
+
+.player-info{
+display:flex;
+flex-direction:column;
+gap:3px
 }
 
 table{
@@ -194,6 +201,12 @@ text-align:center
 
 #commissionerBadge{
 display:none
+}
+
+.loading{
+color:#9da9c0;
+padding:15px;
+text-align:center
 }
 
 @media(max-width:900px){
@@ -325,7 +338,13 @@ placeholder="Search player..."
 <div
 id="playerList"
 class="player-list"
-></div>
+>
+
+<div class="loading">
+Loading players...
+</div>
+
+</div>
 
 <br>
 
@@ -468,7 +487,6 @@ SUPABASE_KEY
 const COMMISSIONER_PIN =
 "0125";
 
-
 let isCommissioner =
 false;
 
@@ -497,47 +515,17 @@ const teams = [
    PLAYERS
    ========================================================= */
 
-const players = [
+/*
+   IMPORTANT:
 
-["Josh Allen","QB"],
-["Lamar Jackson","QB"],
-["Jalen Hurts","QB"],
-["Joe Burrow","QB"],
-["Patrick Mahomes","QB"],
+   Players are now loaded directly from the
+   Supabase "players" table.
 
-["Bijan Robinson","RB"],
-["Saquon Barkley","RB"],
-["Jahmyr Gibbs","RB"],
-["Christian McCaffrey","RB"],
-["Jonathan Taylor","RB"],
+   You do NOT need to put the Yahoo players
+   inside this HTML anymore.
+*/
 
-["CeeDee Lamb","WR"],
-["Ja'Marr Chase","WR"],
-["Justin Jefferson","WR"],
-["Amon-Ra St. Brown","WR"],
-["Puka Nacua","WR"],
-["Tyreek Hill","WR"],
-["A.J. Brown","WR"],
-["Malik Nabers","WR"],
-["Garrett Wilson","WR"],
-["Nico Collins","WR"],
-
-["Brock Bowers","TE"],
-["Trey McBride","TE"],
-["Sam LaPorta","TE"],
-["Travis Kelce","TE"],
-["George Kittle","TE"],
-
-["Brandon Aubrey","K"],
-["Justin Tucker","K"],
-["Harrison Butker","K"],
-
-["Baltimore Ravens","DEF"],
-["San Francisco 49ers","DEF"],
-["Pittsburgh Steelers","DEF"],
-["Kansas City Chiefs","DEF"]
-
-];
+let players = [];
 
 
 /* =========================================================
@@ -619,6 +607,69 @@ return clean;
 
 
 /* =========================================================
+   LOAD PLAYERS FROM SUPABASE
+   ========================================================= */
+
+async function loadPlayers(){
+
+const {data,error} =
+
+await supabaseClient
+
+.from("players")
+
+.select("name, team, position")
+
+.order("name", {
+ascending:true
+});
+
+
+if(error){
+
+console.error(
+"PLAYER LOAD ERROR:",
+error
+);
+
+setConnection(
+"DATABASE ERROR",
+true
+);
+
+document.getElementById(
+"playerList"
+).innerHTML =
+
+`<div class="loading">
+Could not load players.
+</div>`;
+
+return;
+
+}
+
+
+players =
+data || [];
+
+
+console.log(
+"Loaded players:",
+players.length
+);
+
+
+if(isCommissioner){
+
+searchPlayers();
+
+}
+
+}
+
+
+/* =========================================================
    LOAD DRAFT
    ========================================================= */
 
@@ -632,7 +683,10 @@ await supabaseClient
 
 .select("state")
 
-.eq("draft_code","JCO26")
+.eq(
+"draft_code",
+"JCO26"
+)
 
 .limit(1);
 
@@ -702,7 +756,10 @@ new Date().toISOString()
 
 })
 
-.eq("id",1);
+.eq(
+"id",
+1
+);
 
 
 if(error){
@@ -954,7 +1011,7 @@ option
 
 
 /* =========================================================
-   SEARCH
+   SEARCH PLAYERS
    ========================================================= */
 
 function searchPlayers(){
@@ -991,11 +1048,13 @@ x=>x.name
 );
 
 
+const filteredPlayers =
+
 players
 
 .filter(player=>
 
-player[0]
+player.name
 .toLowerCase()
 .includes(query)
 
@@ -1004,12 +1063,27 @@ player[0]
 .filter(player=>
 
 !soldNames.has(
-player[0]
+player.name
 )
 
-)
+);
 
-.forEach(player=>{
+
+if(!filteredPlayers.length){
+
+list.innerHTML =
+
+`<div class="loading">
+No players found.
+</div>`;
+
+return;
+
+}
+
+
+filteredPlayers.forEach(
+player=>{
 
 const row =
 document.createElement(
@@ -1022,14 +1096,18 @@ row.className =
 
 const info =
 document.createElement(
-"span"
+"div"
 );
+
+info.className =
+"player-info";
+
 
 info.innerHTML =
 
-`<b>${player[0]}</b>
+`<b>${player.name}</b>
 <span class="small">
-${player[1]}
+${player.team} • ${player.position}
 </span>`;
 
 
@@ -1049,18 +1127,25 @@ button.onclick =
 function(){
 
 nominate(
-player[0],
-player[1]
+player.name,
+player.position,
+player.team
 );
 
 };
 
 
-row.appendChild(info);
+row.appendChild(
+info
+);
 
-row.appendChild(button);
+row.appendChild(
+button
+);
 
-list.appendChild(row);
+list.appendChild(
+row
+);
 
 });
 
@@ -1073,7 +1158,8 @@ list.appendChild(row);
 
 async function nominate(
 name,
-position
+position,
+team
 ){
 
 if(!isCommissioner){
@@ -1088,6 +1174,8 @@ state.active={
 name:name,
 
 position:position,
+
+team:team,
 
 sold:false
 
@@ -1352,6 +1440,7 @@ const roster =
 state.rosters[team] ||
 [];
 
+
 const spent =
 
 roster.reduce(
@@ -1404,7 +1493,9 @@ $${maxBid}
 `;
 
 
-table.appendChild(row);
+table.appendChild(
+row
+);
 
 });
 
@@ -1628,6 +1719,8 @@ resetDraft
 loadTeams();
 
 render();
+
+loadPlayers();
 
 loadDraft();
 
