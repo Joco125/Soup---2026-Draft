@@ -9,49 +9,208 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b1020;color:#fff;font-family:Arial,sans-serif}
-header{padding:20px 30px;background:#11182b;border-bottom:1px solid #293553;display:flex;justify-content:space-between;align-items:center}
-h1{margin:0;font-size:25px}
-.container{max-width:1500px;margin:auto;padding:20px}
-.layout{display:grid;grid-template-columns:2fr 1fr;gap:20px}
-.card{background:#11182b;border:1px solid #293553;border-radius:14px;padding:20px;margin-bottom:20px}
-.auction{text-align:center;padding:45px 20px}
-.label{color:#9da9c0;font-size:13px;font-weight:bold;letter-spacing:1px}
-.player{font-size:42px;font-weight:bold;margin-top:15px}
-.position{color:#4f8cff;font-size:20px;font-weight:bold;margin-top:5px}
-.sold{color:#32c875;font-size:20px;font-weight:bold;margin-top:20px}
-input,select{width:100%;background:#0b1020;color:#fff;border:1px solid #293553;border-radius:8px;padding:11px}
-button{border:0;border-radius:8px;padding:10px 15px;font-weight:bold;cursor:pointer}
-.blue{background:#4f8cff;color:white}
-.green{background:#32c875;color:white}
-.gray{background:#26324d;color:white}
-.red{background:#ef5350;color:white}
-.controls{display:grid;grid-template-columns:1fr 150px 120px;gap:10px}
-.player-list{max-height:250px;overflow:auto;margin-top:10px}
-.player-row{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #293553}
-table{width:100%;border-collapse:collapse}
-th,td{padding:10px;text-align:left;border-bottom:1px solid #293553}
-th{color:#9da9c0;font-size:12px}
-.money{font-weight:bold}
-.small{color:#9da9c0;font-size:12px}
-.status{padding:8px 12px;border-radius:20px;background:#26324d;color:#9da9c0;font-size:13px}
-.online{color:#32c875}
-@media(max-width:900px){.layout{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.player{font-size:32px}}
+
+body{
+  margin:0;
+  background:#0b1020;
+  color:#fff;
+  font-family:Arial,sans-serif
+}
+
+header{
+  padding:20px 30px;
+  background:#11182b;
+  border-bottom:1px solid #293553;
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+
+h1{
+  margin:0;
+  font-size:25px
+}
+
+.container{
+  max-width:1500px;
+  margin:auto;
+  padding:20px
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:20px
+}
+
+.card{
+  background:#11182b;
+  border:1px solid #293553;
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:20px
+}
+
+.auction{
+  text-align:center;
+  padding:45px 20px
+}
+
+.label{
+  color:#9da9c0;
+  font-size:13px;
+  font-weight:bold;
+  letter-spacing:1px
+}
+
+.player{
+  font-size:42px;
+  font-weight:bold;
+  margin-top:15px
+}
+
+.position{
+  color:#4f8cff;
+  font-size:20px;
+  font-weight:bold;
+  margin-top:5px
+}
+
+.sold{
+  color:#32c875;
+  font-size:20px;
+  font-weight:bold;
+  margin-top:20px
+}
+
+input,select{
+  width:100%;
+  background:#0b1020;
+  color:#fff;
+  border:1px solid #293553;
+  border-radius:8px;
+  padding:11px
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:10px 15px;
+  font-weight:bold;
+  cursor:pointer
+}
+
+.green{
+  background:#32c875;
+  color:white
+}
+
+.gray{
+  background:#26324d;
+  color:white
+}
+
+.red{
+  background:#ef5350;
+  color:white
+}
+
+.controls{
+  display:grid;
+  grid-template-columns:1fr 150px 120px;
+  gap:10px
+}
+
+.player-list{
+  max-height:250px;
+  overflow:auto;
+  margin-top:10px
+}
+
+.player-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  border-bottom:1px solid #293553
+}
+
+table{
+  width:100%;
+  border-collapse:collapse
+}
+
+th,td{
+  padding:10px;
+  text-align:left;
+  border-bottom:1px solid #293553
+}
+
+th{
+  color:#9da9c0;
+  font-size:12px
+}
+
+.money{
+  font-weight:bold
+}
+
+.small{
+  color:#9da9c0;
+  font-size:12px
+}
+
+.status{
+  padding:8px 12px;
+  border-radius:20px;
+  background:#26324d;
+  color:#9da9c0;
+  font-size:13px
+}
+
+.online{
+  color:#32c875
+}
+
+@media(max-width:900px){
+
+.layout{
+  grid-template-columns:1fr
+}
+
+.controls{
+  grid-template-columns:1fr
+}
+
+.player{
+  font-size:32px
+}
+
+}
 </style>
 </head>
 
 <body>
 
 <header>
+
 <div>
+
 <h1>🏈 Soup 2026 Fantasy Auction Draft</h1>
-<div class="small">10 Teams • $200 Budget • Offline Auction</div>
+
+<div class="small">
+10 Teams • $200 Budget • 15 Players
+</div>
+
 </div>
 
 <div>
-<span id="connection" class="status">Connecting...</span>
+<span id="connection" class="status">
+Connecting...
+</span>
 </div>
+
 </header>
+
 
 <div class="container">
 
@@ -59,9 +218,14 @@ th{color:#9da9c0;font-size:12px}
 
 <div>
 
+
+<!-- ACTIVE AUCTION -->
+
 <div class="card auction">
 
-<div class="label">ACTIVE AUCTION</div>
+<div class="label">
+ACTIVE AUCTION
+</div>
 
 <div id="playerName" class="player">
 No Player Nominated
@@ -76,7 +240,9 @@ No Player Nominated
 </div>
 
 
-<div class="card" id="commissioner">
+<!-- COMMISSIONER CONTROLS -->
+
+<div class="card">
 
 <h2>Commissioner Controls</h2>
 
@@ -101,7 +267,10 @@ min="1"
 placeholder="Winning bid"
 >
 
-<button class="green" onclick="sellPlayer()">
+<button
+class="green"
+onclick="sellPlayer()"
+>
 SELL
 </button>
 
@@ -109,16 +278,24 @@ SELL
 
 <br>
 
-<button class="gray" onclick="undoLast()">
+<button
+class="gray"
+onclick="undoLast()"
+>
 Undo Last Sale
 </button>
 
-<button class="red" onclick="resetDraft()">
+<button
+class="red"
+onclick="resetDraft()"
+>
 Reset Draft
 </button>
 
 </div>
 
+
+<!-- DRAFT HISTORY -->
 
 <div class="card">
 
@@ -127,6 +304,7 @@ Reset Draft
 <table>
 
 <thead>
+
 <tr>
 <th>#</th>
 <th>Player</th>
@@ -134,6 +312,7 @@ Reset Draft
 <th>Team</th>
 <th>Price</th>
 </tr>
+
 </thead>
 
 <tbody id="history"></tbody>
@@ -145,6 +324,8 @@ Reset Draft
 </div>
 
 
+<!-- TEAM STATUS -->
+
 <div>
 
 <div class="card">
@@ -154,12 +335,14 @@ Reset Draft
 <table>
 
 <thead>
+
 <tr>
 <th>Team</th>
 <th>$ Left</th>
 <th>Players</th>
 <th>Max Bid</th>
 </tr>
+
 </thead>
 
 <tbody id="teams"></tbody>
@@ -178,11 +361,11 @@ Reset Draft
 <script>
 
 /* =========================================================
-   SUPABASE CONNECTION
+   SUPABASE
    ========================================================= */
 
 const SUPABASE_URL =
-"https://hbwszhzcbmlqidkppzoe.supabase.co/rest/v1/";
+"https://hbwszhzcbmlqidkppzoe.supabase.co";
 
 const SUPABASE_KEY =
 "sb_publishable_JT3NCra2viuuGm3jJFCF-g_pc_1X3VK";
@@ -195,10 +378,11 @@ SUPABASE_KEY
 
 
 /* =========================================================
-   LEAGUE
+   TEAMS
    ========================================================= */
 
 const teams = [
+
 "Joco",
 "Bij",
 "Steguin",
@@ -209,8 +393,13 @@ const teams = [
 "Dave",
 "Jeff",
 "Lati"
+
 ];
 
+
+/* =========================================================
+   PLAYERS
+   ========================================================= */
 
 const players = [
 
@@ -255,37 +444,53 @@ const players = [
 ];
 
 
+/* =========================================================
+   INITIAL STATE
+   ========================================================= */
+
 let state = {
+
 rosters:{},
+
 history:[],
+
 active:null
+
 };
 
 
 teams.forEach(team=>{
+
 state.rosters[team]=[];
+
 });
 
 
 /* =========================================================
-   DATABASE
+   LOAD DRAFT FROM SUPABASE
    ========================================================= */
 
 async function loadDraft(){
 
 const {data,error} =
+
 await supabaseClient
+
 .from("draft_state")
+
 .select("*")
+
 .eq("draft_code","JCO26")
+
 .limit(1);
+
 
 if(error){
 
 console.error(error);
 
 document.getElementById("connection")
-.textContent="Database Error";
+.textContent="DATABASE ERROR";
 
 return;
 
@@ -294,33 +499,47 @@ return;
 
 if(data && data.length){
 
-state =
-data[0].state || state;
+if(data[0].state){
+
+state=data[0].state;
 
 }
 
+}
+
+
+document.getElementById("connection")
+.textContent="LIVE";
+
+document.getElementById("connection")
+.classList.add("online");
 
 render();
 
 }
 
 
+/* =========================================================
+   SAVE DRAFT
+   ========================================================= */
+
 async function saveDraft(){
 
 const {error} =
+
 await supabaseClient
+
 .from("draft_state")
-.upsert({
 
-id:1,
-
-draft_code:"JCO26",
+.update({
 
 state:state,
 
 updated_at:new Date().toISOString()
 
-});
+})
+
+.eq("id",1);
 
 
 if(error){
@@ -335,97 +554,62 @@ alert("Could not save draft.");
 
 
 /* =========================================================
-   REALTIME
+   CHECK DATABASE EVERY 2 SECONDS
    ========================================================= */
 
-supabaseClient
-.channel("draft-live")
-.on(
-"postgres_changes",
-{
-event:"*",
-schema:"public",
-table:"draft_state"
-},
-payload=>{
+async function checkForUpdates(){
 
-if(payload.new &&
-payload.new.state){
+const {data,error} =
 
-state =
-payload.new.state;
+await supabaseClient
+
+.from("draft_state")
+
+.select("state,updated_at")
+
+.eq("draft_code","JCO26")
+
+.limit(1);
+
+
+const connection =
+document.getElementById("connection");
+
+
+if(error){
+
+console.error(error);
+
+connection.textContent="DATABASE ERROR";
+
+connection.classList.remove("online");
+
+return;
+
+}
+
+
+connection.textContent="LIVE";
+
+connection.classList.add("online");
+
+
+if(data && data.length && data[0].state){
+
+state=data[0].state;
 
 render();
 
 }
 
-})
-.subscribe(status=>{
-
-const el =
-document.getElementById("connection");
-
-if(status==="SUBSCRIBED"){
-
-el.textContent="LIVE";
-
-el.classList.add("online");
-
-}else{
-
-el.textContent=status;
-
-}
-
-});
-
-   /* =========================================================
-   LIVE DATABASE CHECK
-   ========================================================= */
-
-async function checkForUpdates(){
-
-  const {data, error} =
-    await supabaseClient
-      .from("draft_state")
-      .select("state, updated_at")
-      .eq("draft_code","JCO26")
-      .limit(1);
-
-  const connection =
-    document.getElementById("connection");
-
-  if(error){
-
-    console.error(error);
-
-    connection.textContent = "DATABASE ERROR";
-
-    connection.classList.remove("online");
-
-    return;
-  }
-
-  connection.textContent = "LIVE";
-
-  connection.classList.add("online");
-
-  if(data && data.length && data[0].state){
-
-    state = data[0].state;
-
-    render();
-
-  }
-
 }
 
 
-/* Check for changes every 2 seconds */
+setInterval(
+checkForUpdates,
+2000
+);
 
-setInterval(checkForUpdates, 2000);
-
-checkForUpdates();
 
 /* =========================================================
    TEAM DROPDOWN
@@ -435,6 +619,7 @@ function loadTeams(){
 
 const dropdown =
 document.getElementById("winningTeam");
+
 
 teams.forEach(team=>{
 
@@ -453,32 +638,46 @@ dropdown.appendChild(option);
 
 
 /* =========================================================
-   PLAYER SEARCH
+   SEARCH PLAYERS
    ========================================================= */
 
 function searchPlayers(){
 
 const query =
+
 document.getElementById("search")
 .value
 .toLowerCase();
 
+
 const sold =
-state.history.map(x=>x.name);
+
+state.history.map(
+x=>x.name
+);
+
 
 const list =
 document.getElementById("playerList");
 
+
 list.innerHTML="";
+
 
 players
 
-.filter(x=>
-x[0].toLowerCase().includes(query)
+.filter(player=>
+
+player[0]
+.toLowerCase()
+.includes(query)
+
 )
 
-.filter(x=>
-!sold.includes(x[0])
+.filter(player=>
+
+!sold.includes(player[0])
+
 )
 
 .forEach(player=>{
@@ -486,13 +685,20 @@ x[0].toLowerCase().includes(query)
 const row =
 document.createElement("div");
 
+
 row.className="player-row";
+
 
 row.innerHTML=`
 
 <span>
+
 <b>${player[0]}</b>
-<span class="small">${player[1]}</span>
+
+<span class="small">
+${player[1]}
+</span>
+
 </span>
 
 <button
@@ -504,6 +710,7 @@ Nominate
 
 `;
 
+
 list.appendChild(row);
 
 });
@@ -512,10 +719,13 @@ list.appendChild(row);
 
 
 /* =========================================================
-   NOMINATE
+   NOMINATE PLAYER
    ========================================================= */
 
-function nominate(name,position){
+async function nominate(
+name,
+position
+){
 
 state.active={
 
@@ -527,22 +737,25 @@ sold:false
 
 };
 
+
 render();
 
-saveDraft();
+await saveDraft();
 
 }
 
 
 /* =========================================================
-   SELL
+   SELL PLAYER
    ========================================================= */
 
 async function sellPlayer(){
 
 if(!state.active){
 
-alert("Nominate a player first.");
+alert(
+"Nominate a player first."
+);
 
 return;
 
@@ -550,19 +763,26 @@ return;
 
 
 const team =
-document.getElementById("winningTeam")
-.value;
+
+document.getElementById(
+"winningTeam"
+).value;
+
 
 const bid =
+
 Number(
-document.getElementById("winningBid")
-.value
+document.getElementById(
+"winningBid"
+).value
 );
 
 
-if(!bid){
+if(!bid || bid<1){
 
-alert("Enter a winning bid.");
+alert(
+"Enter a winning bid."
+);
 
 return;
 
@@ -570,10 +790,16 @@ return;
 
 
 const spent =
+
 state.rosters[team]
+
 .reduce(
-(sum,x)=>sum+x.price,
+
+(sum,x)=>
+sum+x.price,
+
 0
+
 );
 
 
@@ -615,9 +841,13 @@ price:bid
 };
 
 
-state.rosters[team].push(purchase);
+state.rosters[team]
+.push(purchase);
 
-state.history.push(purchase);
+
+state.history
+.push(purchase);
+
 
 state.active={
 
@@ -628,7 +858,10 @@ sold:true
 };
 
 
-document.getElementById("winningBid").value="";
+document.getElementById(
+"winningBid"
+).value="";
+
 
 render();
 
@@ -655,11 +888,15 @@ state.history.pop();
 
 
 const index =
+
 state.rosters[last.team]
+
 .findIndex(
+
 x=>
 x.name===last.name &&
 x.price===last.price
+
 );
 
 
@@ -688,7 +925,11 @@ async function resetDraft(){
 
 if(!confirm(
 "RESET THE ENTIRE DRAFT?"
-)) return;
+)){
+
+return;
+
+}
 
 
 state={
@@ -703,7 +944,9 @@ active:null
 
 
 teams.forEach(team=>{
+
 state.rosters[team]=[];
+
 });
 
 
@@ -723,16 +966,23 @@ function renderTeams(){
 const table =
 document.getElementById("teams");
 
+
 table.innerHTML="";
 
 
 teams.forEach(team=>{
 
 const spent =
+
 state.rosters[team]
+
 .reduce(
-(sum,x)=>sum+x.price,
+
+(sum,x)=>
+sum+x.price,
+
 0
+
 );
 
 
@@ -745,6 +995,7 @@ const spots =
 
 
 const maxBid =
+
 Math.max(
 0,
 remaining-(spots-1)
@@ -757,7 +1008,9 @@ document.createElement("tr");
 
 row.innerHTML=`
 
-<td><b>${team}</b></td>
+<td>
+<b>${team}</b>
+</td>
 
 <td class="money">
 $${remaining}
@@ -782,13 +1035,14 @@ table.appendChild(row);
 
 
 /* =========================================================
-   HISTORY
+   DRAFT HISTORY
    ========================================================= */
 
 function renderHistory(){
 
 const table =
 document.getElementById("history");
+
 
 table.innerHTML="";
 
@@ -799,21 +1053,31 @@ state.history.forEach(
 const row =
 document.createElement("tr");
 
+
 row.innerHTML=`
 
-<td>${index+1}</td>
+<td>
+${index+1}
+</td>
 
-<td><b>${player.name}</b></td>
+<td>
+<b>${player.name}</b>
+</td>
 
-<td>${player.position}</td>
+<td>
+${player.position}
+</td>
 
-<td>${player.team}</td>
+<td>
+${player.team}
+</td>
 
 <td class="money">
 $${player.price}
 </td>
 
 `;
+
 
 table.appendChild(row);
 
@@ -829,13 +1093,19 @@ table.appendChild(row);
 function renderActive(){
 
 const name =
-document.getElementById("playerName");
+document.getElementById(
+"playerName"
+);
 
 const position =
-document.getElementById("playerPosition");
+document.getElementById(
+"playerPosition"
+);
 
 const sold =
-document.getElementById("soldMessage");
+document.getElementById(
+"soldMessage"
+);
 
 
 if(!state.active){
@@ -855,6 +1125,7 @@ return;
 name.textContent=
 state.active.name;
 
+
 position.textContent=
 state.active.position;
 
@@ -864,8 +1135,10 @@ if(state.active.sold){
 sold.innerHTML=`
 
 <div class="sold">
+
 SOLD — ${state.active.team}
 — $${state.active.price}
+
 </div>
 
 `;
