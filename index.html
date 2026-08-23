@@ -1751,7 +1751,7 @@ document.getElementById(
 
 table.innerHTML="";
 
-teams.forEach(team=>{
+const teamData = teams.map(team=>{
 
 const roster =
 state.rosters[team] ||
@@ -1778,6 +1778,24 @@ Math.max(
 remaining-(spots-1)
 );
 
+return {
+team:team,
+maxBid:maxBid
+};
+
+});
+
+
+/* Sort highest Max Bid first */
+
+teamData.sort(
+(a,b)=>
+b.maxBid-a.maxBid
+);
+
+
+teamData.forEach(data=>{
+
 const row =
 document.createElement(
 "tr"
@@ -1786,11 +1804,11 @@ document.createElement(
 row.innerHTML = `
 
 <td>
-<b>${team}</b>
+<b>${data.team}</b>
 </td>
 
 <td class="money">
-$${maxBid}
+$${data.maxBid}
 </td>
 
 `;
@@ -1800,7 +1818,6 @@ table.appendChild(row);
 });
 
 }
-
 
 /* =========================================================
    RECENT DRAFTED PLAYERS
