@@ -379,6 +379,53 @@ el.textContent=status;
 
 });
 
+   /* =========================================================
+   LIVE DATABASE CHECK
+   ========================================================= */
+
+async function checkForUpdates(){
+
+  const {data, error} =
+    await supabaseClient
+      .from("draft_state")
+      .select("state, updated_at")
+      .eq("draft_code","JCO26")
+      .limit(1);
+
+  const connection =
+    document.getElementById("connection");
+
+  if(error){
+
+    console.error(error);
+
+    connection.textContent = "DATABASE ERROR";
+
+    connection.classList.remove("online");
+
+    return;
+  }
+
+  connection.textContent = "LIVE";
+
+  connection.classList.add("online");
+
+  if(data && data.length && data[0].state){
+
+    state = data[0].state;
+
+    render();
+
+  }
+
+}
+
+
+/* Check for changes every 2 seconds */
+
+setInterval(checkForUpdates, 2000);
+
+checkForUpdates();
 
 /* =========================================================
    TEAM DROPDOWN
