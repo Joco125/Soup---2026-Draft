@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
 box-sizing:border-box
 }
@@ -136,7 +137,10 @@ font-size:11px;
 letter-spacing:.5px
 }
 
-/* POSITION COLORS */
+
+/* =========================================================
+   POSITION COLORS
+   ========================================================= */
 
 .slot-label{
 font-weight:bold;
@@ -191,21 +195,104 @@ font-weight:bold;
 color:#32c875
 }
 
+
+/* =========================================================
+   MOBILE TEAM SELECTOR
+   ========================================================= */
+
+.mobile-team-selector{
+display:none
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media(max-width:600px){
 
 header{
-padding:12px 16px
+padding:12px 14px;
+gap:10px
+}
+
+header h1{
+font-size:19px
+}
+
+header .small{
+font-size:10px;
+margin-top:3px
+}
+
+header > div:last-child{
+width:100%;
+display:grid !important;
+grid-template-columns:1fr 1fr;
+gap:7px !important
+}
+
+header > div:last-child .status{
+grid-column:1 / -1;
+text-align:center;
+padding:6px 10px;
+font-size:11px
+}
+
+header > div:last-child a{
+width:100%;
+text-align:center;
+padding:9px 8px;
+font-size:12px
 }
 
 .container{
 padding:12px
 }
 
+.mobile-team-selector{
+display:block;
+margin-bottom:15px
+}
+
+.mobile-team-selector select{
+width:100%;
+background:#11182b;
+color:#fff;
+border:1px solid #293553;
+border-radius:10px;
+padding:14px;
+font-size:16px;
+font-weight:bold
+}
+
 .teams-grid{
-grid-template-columns:1fr
+display:block
+}
+
+.team-card{
+display:none
+}
+
+.team-card.mobile-selected{
+display:flex
 }
 
 }
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media(min-width:601px){
+
+.team-card{
+display:flex
+}
+
+}
+
 </style>
 </head>
 
@@ -245,7 +332,18 @@ Connecting...
 
 <div class="container">
 
+
+<!-- MOBILE TEAM SELECTOR -->
+
+<div class="mobile-team-selector">
+
+<select id="mobileTeamSelect"></select>
+
+</div>
+
+
 <div id="teamsGrid" class="teams-grid"></div>
+
 
 </div>
 
@@ -327,7 +425,7 @@ const SLOT_DEFS = [
    STATE
    ========================================================= */
 
-let state = {
+let state={
 
 rosters:{},
 history:[],
@@ -338,7 +436,7 @@ active:null
 
 function normalizeState(saved){
 
-const clean = {
+const clean={
 
 rosters:{},
 history:[],
@@ -347,8 +445,11 @@ active:null
 };
 
 teams.forEach(team=>{
+
 clean.rosters[team]=[];
+
 });
+
 
 if(saved && saved.rosters){
 
@@ -356,7 +457,7 @@ teams.forEach(team=>{
 
 if(Array.isArray(saved.rosters[team])){
 
-clean.rosters[team] =
+clean.rosters[team]=
 saved.rosters[team];
 
 }
@@ -365,19 +466,22 @@ saved.rosters[team];
 
 }
 
+
 if(saved && Array.isArray(saved.history)){
 
-clean.history =
+clean.history=
 saved.history;
 
 }
 
+
 if(saved && saved.active){
 
-clean.active =
+clean.active=
 saved.active;
 
 }
+
 
 return clean;
 
@@ -390,7 +494,7 @@ return clean;
 
 function assignRosterToSlots(roster){
 
-const slots =
+const slots=
 
 SLOT_DEFS.map(def=>({
 
@@ -406,7 +510,7 @@ player:null
 
 roster.forEach(player=>{
 
-const slot =
+const slot=
 slots.find(s=>
 
 !s.player &&
@@ -423,8 +527,7 @@ player.position
 
 if(slot){
 
-slot.player =
-player;
+slot.player=player;
 
 }
 
@@ -435,7 +538,7 @@ player;
 
 roster.forEach(player=>{
 
-const alreadyPlaced =
+const alreadyPlaced=
 
 slots.some(s=>
 
@@ -455,7 +558,7 @@ return;
 
 }
 
-const slot =
+const slot=
 slots.find(s=>
 
 !s.player &&
@@ -470,8 +573,7 @@ player.position
 
 if(slot){
 
-slot.player =
-player;
+slot.player=player;
 
 }
 
@@ -482,7 +584,7 @@ player;
 
 roster.forEach(player=>{
 
-const alreadyPlaced =
+const alreadyPlaced=
 
 slots.some(s=>
 
@@ -502,7 +604,7 @@ return;
 
 }
 
-const slot =
+const slot=
 slots.find(s=>
 
 !s.player &&
@@ -513,8 +615,7 @@ s.label==="BENCH"
 
 if(slot){
 
-slot.player =
-player;
+slot.player=player;
 
 }
 
@@ -532,35 +633,96 @@ return slots;
 
 function setConnection(text,isError){
 
-const element =
+const element=
 document.getElementById(
 "connection"
 );
 
-element.textContent =
-text;
+element.textContent=text;
 
-element.classList.remove(
-"online"
-);
-
-element.classList.remove(
-"error"
-);
+element.classList.remove("online");
+element.classList.remove("error");
 
 if(isError){
 
-element.classList.add(
-"error"
-);
+element.classList.add("error");
 
 }else if(text==="LIVE"){
 
-element.classList.add(
-"online"
+element.classList.add("online");
+
+}
+
+}
+
+
+/* =========================================================
+   MOBILE TEAM SELECTOR
+   ========================================================= */
+
+function setupMobileTeamSelector(){
+
+const selector=
+document.getElementById(
+"mobileTeamSelect"
+);
+
+if(!selector){
+
+return;
+
+}
+
+selector.innerHTML="";
+
+teams.forEach((team,index)=>{
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=team;
+option.textContent=team;
+
+if(index===0){
+
+option.selected=true;
+
+}
+
+selector.appendChild(option);
+
+});
+
+
+selector.onchange=function(){
+
+document
+.querySelectorAll(".team-card")
+.forEach(card=>{
+
+card.classList.remove(
+"mobile-selected"
+);
+
+});
+
+
+const selected=
+document.querySelector(
+`.team-card[data-team="${CSS.escape(this.value)}"]`
+);
+
+if(selected){
+
+selected.classList.add(
+"mobile-selected"
 );
 
 }
+
+};
 
 }
 
@@ -571,7 +733,7 @@ element.classList.add(
 
 function render(){
 
-const grid =
+const grid=
 document.getElementById(
 "teamsGrid"
 );
@@ -581,48 +743,47 @@ grid.innerHTML="";
 
 teams.forEach(team=>{
 
-const roster =
-state.rosters[team] ||
+const roster=
+state.rosters[team]||
 [];
 
-
-const spent =
-
+const spent=
 roster.reduce(
 (sum,player)=>
 sum+Number(player.price),
 0
 );
 
-
-const remaining =
+const remaining=
 200-spent;
 
-
-const slots =
+const slots=
 assignRosterToSlots(roster);
 
 
-const card =
+const card=
 document.createElement(
 "div"
 );
 
-card.className =
+card.className=
 "team-card";
+
+card.dataset.team=
+team;
 
 
 /* TEAM HEADER */
 
-const teamHeader =
+const teamHeader=
 document.createElement(
 "div"
 );
 
-teamHeader.className =
+teamHeader.className=
 "team-card-header";
 
-teamHeader.innerHTML = `
+teamHeader.innerHTML=`
 
 <div class="team-name">
 ${team}
@@ -645,12 +806,12 @@ teamHeader
 
 /* TABLE */
 
-const table =
+const table=
 document.createElement(
 "table"
 );
 
-const tbody =
+const tbody=
 document.createElement(
 "tbody"
 );
@@ -658,7 +819,7 @@ document.createElement(
 
 slots.forEach(slot=>{
 
-const row =
+const row=
 document.createElement(
 "tr"
 );
@@ -666,16 +827,18 @@ document.createElement(
 
 if(slot.player){
 
-row.innerHTML = `
+row.innerHTML=`
 
 <td class="slot-label ${slot.className}">
 ${slot.label}
 </td>
 
 <td>
+
 <div class="player-name">
 ${slot.player.name}
 </div>
+
 </td>
 
 <td class="price">
@@ -686,7 +849,7 @@ $${slot.player.price}
 
 }else{
 
-row.innerHTML = `
+row.innerHTML=`
 
 <td class="slot-label ${slot.className}">
 ${slot.label}
@@ -702,27 +865,84 @@ Empty
 
 }
 
+tbody.appendChild(row);
 
-tbody.appendChild(
-row
+});
+
+
+table.appendChild(tbody);
+
+card.appendChild(table);
+
+grid.appendChild(card);
+
+});
+
+
+/*
+Re-apply selected mobile team
+after every render.
+*/
+
+const selector=
+document.getElementById(
+"mobileTeamSelect"
+);
+
+if(selector){
+
+const selectedTeam=
+selector.value ||
+teams[0];
+
+selector.innerHTML="";
+
+teams.forEach(team=>{
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=team;
+option.textContent=team;
+
+if(team===selectedTeam){
+
+option.selected=true;
+
+}
+
+selector.appendChild(option);
+
+});
+
+
+document
+.querySelectorAll(".team-card")
+.forEach(card=>{
+
+card.classList.remove(
+"mobile-selected"
 );
 
 });
 
 
-table.appendChild(
-tbody
+const selectedCard=
+document.querySelector(
+`.team-card[data-team="${CSS.escape(selectedTeam)}"]`
 );
 
-card.appendChild(
-table
+if(selectedCard){
+
+selectedCard.classList.add(
+"mobile-selected"
 );
 
-grid.appendChild(
-card
-);
+}
 
-});
+}
 
 }
 
@@ -733,7 +953,7 @@ card
 
 async function loadState(){
 
-const {data,error} =
+const{data,error}=
 
 await supabaseClient
 .from("draft_state")
@@ -765,7 +985,7 @@ data.length &&
 data[0].state
 ){
 
-state =
+state=
 normalizeState(
 data[0].state
 );
@@ -784,6 +1004,17 @@ render();
 
 
 /* =========================================================
+   START
+   ========================================================= */
+
+setupMobileTeamSelector();
+
+render();
+
+loadState();
+
+
+/* =========================================================
    LIVE UPDATES
    ========================================================= */
 
@@ -791,14 +1022,6 @@ setInterval(
 loadState,
 2000
 );
-
-
-/* =========================================================
-   START
-   ========================================================= */
-
-loadState();
-
 
 </script>
 
