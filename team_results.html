@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Soup 2026 - Team Results</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+box-sizing:border-box
+}
+
+html,body{
+margin:0;
+width:100%;
+min-height:100%;
+background:#0b1020;
+color:#fff;
+font-family:Arial,sans-serif
+}
+
+header{
+padding:15px 30px;
+background:#11182b;
+border-bottom:1px solid #293553;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:10px
+}
+
+h1{
+margin:0;
+font-size:25px
+}
+
+.small{
+color:#9da9c0;
+font-size:12px
+}
+
+.status{
+padding:8px 12px;
+border-radius:20px;
+background:#26324d;
+color:#9da9c0;
+font-size:13px
+}
+
+.online{
+color:#32c875
+}
+
+.error{
+color:#ef5350
+}
+
+a.button,
+button{
+border:0;
+border-radius:8px;
+padding:10px 15px;
+font-weight:bold;
+cursor:pointer;
+text-decoration:none;
+display:inline-block
+}
+
+.blue{
+background:#4f8cff;
+color:white
+}
+
+.container{
+max-width:1700px;
+margin:auto;
+padding:20px
+}
+
+.teams-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+gap:18px
+}
+
+.team-card{
+background:#11182b;
+border:1px solid #293553;
+border-radius:14px;
+padding:16px;
+display:flex;
+flex-direction:column
+}
+
+.team-card-header{
+display:flex;
+justify-content:space-between;
+align-items:baseline;
+margin-bottom:10px
+}
+
+.team-name{
+font-size:19px;
+font-weight:bold
+}
+
+.team-budget{
+font-size:13px;
+color:#9da9c0;
+text-align:right
+}
+
+.team-budget b{
+color:#32c875
+}
+
+table{
+width:100%;
+border-collapse:collapse
+}
+
+th,td{
+padding:8px 6px;
+text-align:left;
+border-bottom:1px solid #293553;
+font-size:14px
+}
+
+th{
+color:#9da9c0;
+font-size:11px;
+letter-spacing:.5px
+}
+
+.slot-label{
+color:#4f8cff;
+font-weight:bold;
+font-size:12px;
+width:52px
+}
+
+.slot-flex{
+color:#f5a623
+}
+
+.slot-bench{
+color:#697792
+}
+
+.player-name{
+font-weight:bold
+}
+
+.player-meta{
+color:#9da9c0;
+font-size:12px
+}
+
+.empty-slot{
+color:#4a5578;
+font-style:italic
+}
+
+.price{
+text-align:right;
+font-weight:bold;
+color:#32c875
+}
+
+@media(max-width:600px){
+
+header{
+padding:12px 16px
+}
+
+.container{
+padding:12px
+}
+
+.teams-grid{
+grid-template-columns:1fr
+}
+
+}
+</style>
+</head>
+
+
+<body>
+
+
+<header>
+
+<div>
+
+<h1>🏈 Team Results</h1>
+
+<div class="small">
+Soup 2026 Fantasy Auction Draft
+</div>
+
+</div>
+
+<div style="display:flex;align-items:center;gap:10px">
+
+<a
+href="soup_2026_auction_draft.html"
+class="button blue"
+>
+Back to Draft
+</a>
+
+<span id="connection" class="status">
+Connecting...
+</span>
+
+</div>
+
+</header>
+
+
+<div class="container">
+
+<div id="teamsGrid" class="teams-grid"></div>
+
+</div>
+
+
+<script>
+
+
+/* =========================================================
+   SUPABASE
+   ========================================================= */
+
+const SUPABASE_URL =
+"https://hbwszhzcbmlqidkppzoe.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_JT3NCra2viuuGm3jJFCF-g_pc_1X3VK";
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =========================================================
+   TEAMS
+   ========================================================= */
+
+const teams = [
+
+"Joco",
+"Bij",
+"Steguin",
+"Mike Gabbay",
+"Allie + Ikey",
+"Jack + Ike B",
+"Ben",
+"Dave",
+"Jeff",
+"Lati"
+
+];
+
+
+/* =========================================================
+   ROSTER SLOTS
+   ========================================================= */
+
+/*
+Order matters: exact-position slots are
+filled first, then FLEX, then BENCH.
+*/
+
+const SLOT_DEFS = [
+
+{label:"QB",accepts:["QB"]},
+{label:"QB",accepts:["QB"]},
+{label:"WR",accepts:["WR"]},
+{label:"WR",accepts:["WR"]},
+{label:"RB",accepts:["RB"]},
+{label:"RB",accepts:["RB"]},
+{label:"TE",accepts:["TE"]},
+{label:"FLEX",accepts:["RB","WR","TE"]},
+{label:"FLEX",accepts:["RB","WR","TE"]},
+{label:"K",accepts:["K"]},
+{label:"D",accepts:["DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]}
+
+];
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let state = {
+
+rosters:{},
+history:[],
+active:null
+
+};
+
+
+function normalizeState(saved){
+
+const clean = {
+
+rosters:{},
+history:[],
+active:null
+
+};
+
+teams.forEach(team=>{
+clean.rosters[team]=[];
+});
+
+if(saved && saved.rosters){
+
+teams.forEach(team=>{
+
+if(Array.isArray(saved.rosters[team])){
+
+clean.rosters[team] =
+saved.rosters[team];
+
+}
+
+});
+
+}
+
+if(saved && Array.isArray(saved.history)){
+
+clean.history =
+saved.history;
+
+}
+
+return clean;
+
+}
+
+
+/* =========================================================
+   ASSIGN ROSTER TO SLOTS
+   ========================================================= */
+
+function assignRosterToSlots(roster){
+
+/*
+roster is an array of purchases
+in the order they were drafted:
+{name, position, team, price}
+*/
+
+const slots =
+
+SLOT_DEFS.map(def=>({
+
+label:def.label,
+
+accepts:def.accepts,
+
+player:null
+
+}));
+
+
+/*
+Pass 1: exact-position slots only
+(skip FLEX and BENCH).
+*/
+
+roster.forEach(player=>{
+
+const slot =
+slots.find(s=>
+
+!s.player &&
+
+s.label!=="FLEX" &&
+
+s.label!=="BENCH" &&
+
+s.accepts.includes(
+player.position
+)
+
+);
+
+if(slot){
+
+slot.player =
+player;
+
+}
+
+});
+
+
+/*
+Pass 2: FLEX slots for anyone
+not already placed.
+*/
+
+roster.forEach(player=>{
+
+const alreadyPlaced =
+
+slots.some(s=>
+
+s.player &&
+
+s.player.name===
+player.name &&
+
+s.player.price===
+player.price
+
+);
+
+if(alreadyPlaced){
+
+return;
+
+}
+
+const slot =
+slots.find(s=>
+
+!s.player &&
+
+s.label==="FLEX" &&
+
+s.accepts.includes(
+player.position
+)
+
+);
+
+if(slot){
+
+slot.player =
+player;
+
+}
+
+});
+
+
+/*
+Pass 3: BENCH for everyone else.
+*/
+
+roster.forEach(player=>{
+
+const alreadyPlaced =
+
+slots.some(s=>
+
+s.player &&
+
+s.player.name===
+player.name &&
+
+s.player.price===
+player.price
+
+);
+
+if(alreadyPlaced){
+
+return;
+
+}
+
+const slot =
+slots.find(s=>
+
+!s.player &&
+
+s.label==="BENCH"
+
+);
+
+if(slot){
+
+slot.player =
+player;
+
+}
+
+});
+
+
+return slots;
+
+}
+
+
+/* =========================================================
+   CONNECTION
+   ========================================================= */
+
+function setConnection(text,isError){
+
+const element =
+document.getElementById(
+"connection"
+);
+
+element.textContent =
+text;
+
+element.classList.remove(
+"online"
+);
+
+element.classList.remove(
+"error"
+);
+
+if(isError){
+
+element.classList.add(
+"error"
+);
+
+}else if(text==="LIVE"){
+
+element.classList.add(
+"online"
+);
+
+}
+
+}
+
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+
+function render(){
+
+const grid =
+document.getElementById(
+"teamsGrid"
+);
+
+grid.innerHTML="";
+
+teams.forEach(team=>{
+
+const roster =
+state.rosters[team] ||
+[];
+
+const spent =
+
+roster.reduce(
+(sum,player)=>
+sum+Number(player.price),
+0
+);
+
+const remaining =
+200-spent;
+
+const slots =
+assignRosterToSlots(roster);
+
+
+const card =
+document.createElement(
+"div"
+);
+
+card.className =
+"team-card";
+
+
+const header =
+document.createElement(
+"div"
+);
+
+header.className =
+"team-card-header";
+
+header.innerHTML = `
+
+<div class="team-name">
+${team}
+</div>
+
+<div class="team-budget">
+Spent <b>$${spent}</b><br>
+$${remaining} left
+</div>
+
+`;
+
+card.appendChild(header);
+
+
+const table =
+document.createElement(
+"table"
+);
+
+const tbody =
+document.createElement(
+"tbody"
+);
+
+slots.forEach(slot=>{
+
+const row =
+document.createElement(
+"tr"
+);
+
+const slotClass =
+
+slot.label==="FLEX" ?
+"slot-flex" :
+
+slot.label==="BENCH" ?
+"slot-bench" :
+
+"";
+
+if(slot.player){
+
+row.innerHTML = `
+
+<td class="slot-label ${slotClass}">
+${slot.label}
+</td>
+
+<td>
+<div class="player-name">
+${slot.player.name}
+</div>
+<div class="player-meta">
+${slot.player.position} - ${slot.player.team}
+</div>
+</td>
+
+<td class="price">
+$${slot.player.price}
+</td>
+
+`;
+
+}else{
+
+row.innerHTML = `
+
+<td class="slot-label ${slotClass}">
+${slot.label}
+</td>
+
+<td class="empty-slot">
+Empty
+</td>
+
+<td></td>
+
+`;
+
+}
+
+tbody.appendChild(row);
+
+});
+
+table.appendChild(tbody);
+
+card.appendChild(table);
+
+
+grid.appendChild(card);
+
+});
+
+}
+
+
+/* =========================================================
+   LOAD + POLL
+   ========================================================= */
+
+async function loadState(){
+
+const {data,error} =
+
+await supabaseClient
+.from("draft_state")
+.select("state")
+.eq("draft_code","JCO26")
+.limit(1);
+
+if(error){
+
+console.error(
+"LOAD ERROR:",
+error
+);
+
+setConnection(
+"DATABASE ERROR",
+true
+);
+
+return;
+
+}
+
+if(data && data.length && data[0].state){
+
+state =
+normalizeState(
+data[0].state
+);
+
+}
+
+setConnection(
+"LIVE",
+false
+);
+
+render();
+
+}
+
+
+setInterval(
+loadState,
+2000
+);
+
+
+loadState();
+
+
+</script>
+
+</body>
+</html>
