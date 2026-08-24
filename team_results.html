@@ -9,7 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
 box-sizing:border-box
 }
@@ -137,39 +136,10 @@ font-size:11px;
 letter-spacing:.5px
 }
 
-
-/* =========================================================
-   POSITION COLORS
-   ========================================================= */
-
 .slot-label{
 font-weight:bold;
 font-size:12px;
 width:70px
-}
-
-.slot-qb{
-color:#4f8cff
-}
-
-.slot-rb{
-color:#32c875
-}
-
-.slot-wr{
-color:#f5a623
-}
-
-.slot-te{
-color:#b56cff
-}
-
-.slot-k{
-color:#ffe066
-}
-
-.slot-d{
-color:#ef5350
 }
 
 .slot-flex{
@@ -180,14 +150,12 @@ color:#ff4fd8
 color:#697792
 }
 
-
-/* =========================================================
-   PLAYER
-   ========================================================= */
-
 .player-name{
-font-weight:bold;
-font-size:14px
+font-weight:bold
+}
+
+.player-meta{
+font-size:12px
 }
 
 .empty-slot{
@@ -201,10 +169,63 @@ font-weight:bold;
 color:#32c875
 }
 
+/* Position colors */
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
+.position-QB{
+color:#4f8cff;
+font-weight:bold
+}
+
+.position-RB{
+color:#32c875;
+font-weight:bold
+}
+
+.position-WR{
+color:#f5a623;
+font-weight:bold
+}
+
+.position-TE{
+color:#b56cff;
+font-weight:bold
+}
+
+.position-K{
+color:#ffd54f;
+font-weight:bold
+}
+
+.position-DST{
+color:#ef5350;
+font-weight:bold
+}
+
+/* Slot colors */
+
+.slot-QB{
+color:#4f8cff
+}
+
+.slot-WR{
+color:#f5a623
+}
+
+.slot-RB{
+color:#32c875
+}
+
+.slot-TE{
+color:#b56cff
+}
+
+.slot-K{
+color:#ffd54f
+}
+
+.slot-D{
+color:#ef5350
+}
 
 @media(max-width:600px){
 
@@ -221,7 +242,6 @@ grid-template-columns:1fr
 }
 
 }
-
 </style>
 </head>
 
@@ -241,10 +261,7 @@ Soup 2026 Fantasy Auction Draft
 
 </div>
 
-
 <div style="display:flex;align-items:center;gap:10px">
-
-<!-- FIXED: points to your main index.html page -->
 
 <a
 href="index.html"
@@ -253,10 +270,7 @@ class="button blue"
 Back to Draft
 </a>
 
-<span
-id="connection"
-class="status"
->
+<span id="connection" class="status">
 Connecting...
 </span>
 
@@ -267,10 +281,7 @@ Connecting...
 
 <div class="container">
 
-<div
-id="teamsGrid"
-class="teams-grid"
-></div>
+<div id="teamsGrid" class="teams-grid"></div>
 
 </div>
 
@@ -285,10 +296,8 @@ class="teams-grid"
 const SUPABASE_URL =
 "https://hbwszhzcbmlqidkppzoe.supabase.co";
 
-
 const SUPABASE_KEY =
 "sb_publishable_JT3NCra2viuuGm3jJFCF-g_pc_1X3VK";
-
 
 const supabaseClient =
 window.supabase.createClient(
@@ -323,85 +332,22 @@ const teams = [
 
 const SLOT_DEFS = [
 
-{
-label:"QB",
-accepts:["QB"]
-},
-
-{
-label:"QB",
-accepts:["QB"]
-},
-
-{
-label:"WR",
-accepts:["WR"]
-},
-
-{
-label:"WR",
-accepts:["WR"]
-},
-
-{
-label:"RB",
-accepts:["RB"]
-},
-
-{
-label:"RB",
-accepts:["RB"]
-},
-
-{
-label:"TE",
-accepts:["TE"]
-},
-
-{
-label:"FLEX",
-accepts:["RB","WR","TE"]
-},
-
-{
-label:"FLEX",
-accepts:["RB","WR","TE"]
-},
-
-{
-label:"K",
-accepts:["K"]
-},
-
-{
-label:"D",
-accepts:["DEF","DST"]
-},
-
-{
-label:"BENCH",
-accepts:["QB","RB","WR","TE","K","DEF","DST"]
-},
-
-{
-label:"BENCH",
-accepts:["QB","RB","WR","TE","K","DEF","DST"]
-},
-
-{
-label:"BENCH",
-accepts:["QB","RB","WR","TE","K","DEF","DST"]
-},
-
-{
-label:"BENCH",
-accepts:["QB","RB","WR","TE","K","DEF","DST"]
-},
-
-{
-label:"BENCH",
-accepts:["QB","RB","WR","TE","K","DEF","DST"]
-}
+{label:"QB",accepts:["QB"]},
+{label:"QB",accepts:["QB"]},
+{label:"WR",accepts:["WR"]},
+{label:"WR",accepts:["WR"]},
+{label:"RB",accepts:["RB"]},
+{label:"RB",accepts:["RB"]},
+{label:"TE",accepts:["TE"]},
+{label:"FLEX",accepts:["RB","WR","TE"]},
+{label:"FLEX",accepts:["RB","WR","TE"]},
+{label:"K",accepts:["K"]},
+{label:"D",accepts:["DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]}
 
 ];
 
@@ -419,10 +365,6 @@ active:null
 };
 
 
-/* =========================================================
-   NORMALIZE STATE
-   ========================================================= */
-
 function normalizeState(saved){
 
 const clean = {
@@ -433,13 +375,9 @@ active:null
 
 };
 
-
 teams.forEach(team=>{
-
 clean.rosters[team]=[];
-
 });
-
 
 if(saved && saved.rosters){
 
@@ -456,7 +394,6 @@ saved.rosters[team];
 
 }
 
-
 if(saved && Array.isArray(saved.history)){
 
 clean.history =
@@ -464,6 +401,12 @@ saved.history;
 
 }
 
+if(saved && saved.active){
+
+clean.active =
+saved.active;
+
+}
 
 return clean;
 
@@ -489,9 +432,7 @@ player:null
 }));
 
 
-/* =========================================================
-   PASS 1 — EXACT POSITION
-   ========================================================= */
+/* Exact-position slots */
 
 roster.forEach(player=>{
 
@@ -510,7 +451,6 @@ player.position
 
 );
 
-
 if(slot){
 
 slot.player =
@@ -521,9 +461,7 @@ player;
 });
 
 
-/* =========================================================
-   PASS 2 — FLEX
-   ========================================================= */
+/* FLEX slots */
 
 roster.forEach(player=>{
 
@@ -536,18 +474,16 @@ s.player &&
 s.player.name===
 player.name &&
 
-Number(s.player.price)===
-Number(player.price)
+s.player.price===
+player.price
 
 );
-
 
 if(alreadyPlaced){
 
 return;
 
 }
-
 
 const slot =
 slots.find(s=>
@@ -562,7 +498,6 @@ player.position
 
 );
 
-
 if(slot){
 
 slot.player =
@@ -573,9 +508,7 @@ player;
 });
 
 
-/* =========================================================
-   PASS 3 — BENCH
-   ========================================================= */
+/* BENCH */
 
 roster.forEach(player=>{
 
@@ -588,18 +521,16 @@ s.player &&
 s.player.name===
 player.name &&
 
-Number(s.player.price)===
-Number(player.price)
+s.player.price===
+player.price
 
 );
-
 
 if(alreadyPlaced){
 
 return;
 
 }
-
 
 const slot =
 slots.find(s=>
@@ -609,7 +540,6 @@ slots.find(s=>
 s.label==="BENCH"
 
 );
-
 
 if(slot){
 
@@ -627,71 +557,18 @@ return slots;
 
 
 /* =========================================================
-   POSITION CLASS
-   ========================================================= */
-
-function getPositionClass(position){
-
-if(position==="QB"){
-
-return "slot-qb";
-
-}
-
-if(position==="RB"){
-
-return "slot-rb";
-
-}
-
-if(position==="WR"){
-
-return "slot-wr";
-
-}
-
-if(position==="TE"){
-
-return "slot-te";
-
-}
-
-if(position==="K"){
-
-return "slot-k";
-
-}
-
-if(position==="DEF" ||
-position==="DST"){
-
-return "slot-d";
-
-}
-
-return "";
-
-}
-
-
-/* =========================================================
    CONNECTION
    ========================================================= */
 
-function setConnection(
-text,
-isError
-){
+function setConnection(text,isError){
 
 const element =
 document.getElementById(
 "connection"
 );
 
-
 element.textContent =
 text;
-
 
 element.classList.remove(
 "online"
@@ -700,7 +577,6 @@ element.classList.remove(
 element.classList.remove(
 "error"
 );
-
 
 if(isError){
 
@@ -730,16 +606,13 @@ document.getElementById(
 "teamsGrid"
 );
 
-
 grid.innerHTML="";
-
 
 teams.forEach(team=>{
 
 const roster =
 state.rosters[team] ||
 [];
-
 
 const spent =
 
@@ -749,89 +622,55 @@ sum+Number(player.price),
 0
 );
 
-
 const remaining =
 200-spent;
 
-
 const slots =
-assignRosterToSlots(
-roster
-);
+assignRosterToSlots(roster);
 
-
-/* =========================================================
-   TEAM CARD
-   ========================================================= */
 
 const card =
 document.createElement(
 "div"
 );
 
-
 card.className =
 "team-card";
 
 
-/* =========================================================
-   TEAM HEADER
-   ========================================================= */
-
-const teamHeader =
+const header =
 document.createElement(
 "div"
 );
 
-
-teamHeader.className =
+header.className =
 "team-card-header";
 
-
-teamHeader.innerHTML = `
+header.innerHTML = `
 
 <div class="team-name">
 ${team}
 </div>
 
 <div class="team-budget">
-
-Spent
-<b>$${spent}</b>
-
-<br>
-
+Spent <b>$${spent}</b><br>
 $${remaining} left
-
 </div>
 
 `;
 
+card.appendChild(header);
 
-card.appendChild(
-teamHeader
-);
-
-
-/* =========================================================
-   TABLE
-   ========================================================= */
 
 const table =
 document.createElement(
 "table"
 );
 
-
 const tbody =
 document.createElement(
 "tbody"
 );
-
-
-/* =========================================================
-   ROSTER ROWS
-   ========================================================= */
 
 slots.forEach(slot=>{
 
@@ -841,43 +680,24 @@ document.createElement(
 );
 
 
-let slotClass="";
-
+let slotClass = "";
 
 if(slot.label==="FLEX"){
 
-slotClass =
-"slot-flex";
+slotClass="slot-flex";
 
-}else if(
-slot.label==="BENCH"
-){
+}else if(slot.label==="BENCH"){
 
-slotClass =
-"slot-bench";
-
-}else if(
-slot.player
-){
-
-slotClass =
-getPositionClass(
-slot.player.position
-);
+slotClass="slot-bench";
 
 }else{
 
 slotClass =
-getPositionClass(
-slot.label
-);
+"slot-" +
+slot.label;
 
 }
 
-
-/* =========================================================
-   PLAYER EXISTS
-   ========================================================= */
 
 if(slot.player){
 
@@ -893,6 +713,10 @@ ${slot.label}
 ${slot.player.name}
 </div>
 
+<div class="player-meta position-${slot.player.position}">
+${slot.player.position}
+</div>
+
 </td>
 
 <td class="price">
@@ -901,14 +725,7 @@ $${slot.player.price}
 
 `;
 
-}
-
-
-/* =========================================================
-   EMPTY SLOT
-   ========================================================= */
-
-else{
+}else{
 
 row.innerHTML = `
 
@@ -926,27 +743,15 @@ Empty
 
 }
 
-
-tbody.appendChild(
-row
-);
+tbody.appendChild(row);
 
 });
 
+table.appendChild(tbody);
 
-table.appendChild(
-tbody
-);
+card.appendChild(table);
 
-
-card.appendChild(
-table
-);
-
-
-grid.appendChild(
-card
-);
+grid.appendChild(card);
 
 });
 
@@ -954,7 +759,7 @@ card
 
 
 /* =========================================================
-   LOAD STATE
+   LOAD + POLL
    ========================================================= */
 
 async function loadState(){
@@ -962,18 +767,10 @@ async function loadState(){
 const {data,error} =
 
 await supabaseClient
-
 .from("draft_state")
-
 .select("state")
-
-.eq(
-"draft_code",
-"JCO26"
-)
-
+.eq("draft_code","JCO26")
 .limit(1);
-
 
 if(error){
 
@@ -982,23 +779,16 @@ console.error(
 error
 );
 
-
 setConnection(
 "DATABASE ERROR",
 true
 );
 
-
 return;
 
 }
 
-
-if(
-data &&
-data.length &&
-data[0].state
-){
+if(data && data.length && data[0].state){
 
 state =
 normalizeState(
@@ -1007,31 +797,21 @@ data[0].state
 
 }
 
-
 setConnection(
 "LIVE",
 false
 );
-
 
 render();
 
 }
 
 
-/* =========================================================
-   LIVE UPDATES
-   ========================================================= */
-
 setInterval(
 loadState,
 2000
 );
 
-
-/* =========================================================
-   START
-   ========================================================= */
 
 loadState();
 
