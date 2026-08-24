@@ -907,6 +907,17 @@ sum+Number(player.price),
 const remaining=
 200-spent;
 
+const spotsLeft =
+16 - roster.length;
+
+const maxBid =
+remaining === 0
+? 0
+: Math.max(
+1,
+remaining - (spotsLeft - 1)
+);   
+   
 const slots=
 assignRosterToSlots(roster);
 
