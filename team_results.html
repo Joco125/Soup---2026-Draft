@@ -136,13 +136,39 @@ font-size:11px;
 letter-spacing:.5px
 }
 
+/* POSITION COLORS */
+
 .slot-label{
 font-weight:bold;
 font-size:12px;
 width:70px
 }
 
+.slot-qb{
+color:#ff6b6b
+}
+
+.slot-wr{
+color:#4f8cff
+}
+
+.slot-rb{
+color:#32c875
+}
+
+.slot-te{
+color:#b56cff
+}
+
 .slot-flex{
+color:#f5a623
+}
+
+.slot-k{
+color:#00d4aa
+}
+
+.slot-d{
 color:#ff4fd8
 }
 
@@ -154,10 +180,6 @@ color:#697792
 font-weight:bold
 }
 
-.player-meta{
-font-size:12px
-}
-
 .empty-slot{
 color:#4a5578;
 font-style:italic
@@ -167,64 +189,6 @@ font-style:italic
 text-align:right;
 font-weight:bold;
 color:#32c875
-}
-
-/* Position colors */
-
-.position-QB{
-color:#4f8cff;
-font-weight:bold
-}
-
-.position-RB{
-color:#32c875;
-font-weight:bold
-}
-
-.position-WR{
-color:#f5a623;
-font-weight:bold
-}
-
-.position-TE{
-color:#b56cff;
-font-weight:bold
-}
-
-.position-K{
-color:#ffd54f;
-font-weight:bold
-}
-
-.position-DST{
-color:#ef5350;
-font-weight:bold
-}
-
-/* Slot colors */
-
-.slot-QB{
-color:#4f8cff
-}
-
-.slot-WR{
-color:#f5a623
-}
-
-.slot-RB{
-color:#32c875
-}
-
-.slot-TE{
-color:#b56cff
-}
-
-.slot-K{
-color:#ffd54f
-}
-
-.slot-D{
-color:#ef5350
 }
 
 @media(max-width:600px){
@@ -332,22 +296,29 @@ const teams = [
 
 const SLOT_DEFS = [
 
-{label:"QB",accepts:["QB"]},
-{label:"QB",accepts:["QB"]},
-{label:"WR",accepts:["WR"]},
-{label:"WR",accepts:["WR"]},
-{label:"RB",accepts:["RB"]},
-{label:"RB",accepts:["RB"]},
-{label:"TE",accepts:["TE"]},
-{label:"FLEX",accepts:["RB","WR","TE"]},
-{label:"FLEX",accepts:["RB","WR","TE"]},
-{label:"K",accepts:["K"]},
-{label:"D",accepts:["DST"]},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"]}
+{label:"QB",accepts:["QB"],className:"slot-qb"},
+{label:"QB",accepts:["QB"],className:"slot-qb"},
+
+{label:"WR",accepts:["WR"],className:"slot-wr"},
+{label:"WR",accepts:["WR"],className:"slot-wr"},
+
+{label:"RB",accepts:["RB"],className:"slot-rb"},
+{label:"RB",accepts:["RB"],className:"slot-rb"},
+
+{label:"TE",accepts:["TE"],className:"slot-te"},
+
+{label:"FLEX",accepts:["RB","WR","TE"],className:"slot-flex"},
+{label:"FLEX",accepts:["RB","WR","TE"],className:"slot-flex"},
+
+{label:"K",accepts:["K"],className:"slot-k"},
+
+{label:"D",accepts:["DST"],className:"slot-d"},
+
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"},
+{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"}
 
 ];
 
@@ -424,15 +395,14 @@ const slots =
 SLOT_DEFS.map(def=>({
 
 label:def.label,
-
 accepts:def.accepts,
-
+className:def.className,
 player:null
 
 }));
 
 
-/* Exact-position slots */
+/* EXACT POSITION SLOTS */
 
 roster.forEach(player=>{
 
@@ -461,7 +431,7 @@ player;
 });
 
 
-/* FLEX slots */
+/* FLEX */
 
 roster.forEach(player=>{
 
@@ -474,8 +444,8 @@ s.player &&
 s.player.name===
 player.name &&
 
-s.player.price===
-player.price
+Number(s.player.price)===
+Number(player.price)
 
 );
 
@@ -521,8 +491,8 @@ s.player &&
 s.player.name===
 player.name &&
 
-s.player.price===
-player.price
+Number(s.player.price)===
+Number(player.price)
 
 );
 
@@ -608,11 +578,13 @@ document.getElementById(
 
 grid.innerHTML="";
 
+
 teams.forEach(team=>{
 
 const roster =
 state.rosters[team] ||
 [];
+
 
 const spent =
 
@@ -622,8 +594,10 @@ sum+Number(player.price),
 0
 );
 
+
 const remaining =
 200-spent;
+
 
 const slots =
 assignRosterToSlots(roster);
@@ -638,29 +612,38 @@ card.className =
 "team-card";
 
 
-const header =
+/* TEAM HEADER */
+
+const teamHeader =
 document.createElement(
 "div"
 );
 
-header.className =
+teamHeader.className =
 "team-card-header";
 
-header.innerHTML = `
+teamHeader.innerHTML = `
 
 <div class="team-name">
 ${team}
 </div>
 
 <div class="team-budget">
+
 Spent <b>$${spent}</b><br>
+
 $${remaining} left
+
 </div>
 
 `;
 
-card.appendChild(header);
+card.appendChild(
+teamHeader
+);
 
+
+/* TABLE */
 
 const table =
 document.createElement(
@@ -672,6 +655,7 @@ document.createElement(
 "tbody"
 );
 
+
 slots.forEach(slot=>{
 
 const row =
@@ -680,43 +664,18 @@ document.createElement(
 );
 
 
-let slotClass = "";
-
-if(slot.label==="FLEX"){
-
-slotClass="slot-flex";
-
-}else if(slot.label==="BENCH"){
-
-slotClass="slot-bench";
-
-}else{
-
-slotClass =
-"slot-" +
-slot.label;
-
-}
-
-
 if(slot.player){
 
 row.innerHTML = `
 
-<td class="slot-label ${slotClass}">
+<td class="slot-label ${slot.className}">
 ${slot.label}
 </td>
 
 <td>
-
 <div class="player-name">
 ${slot.player.name}
 </div>
-
-<div class="player-meta position-${slot.player.position}">
-${slot.player.position}
-</div>
-
 </td>
 
 <td class="price">
@@ -729,7 +688,7 @@ $${slot.player.price}
 
 row.innerHTML = `
 
-<td class="slot-label ${slotClass}">
+<td class="slot-label ${slot.className}">
 ${slot.label}
 </td>
 
@@ -743,15 +702,25 @@ Empty
 
 }
 
-tbody.appendChild(row);
+
+tbody.appendChild(
+row
+);
 
 });
 
-table.appendChild(tbody);
 
-card.appendChild(table);
+table.appendChild(
+tbody
+);
 
-grid.appendChild(card);
+card.appendChild(
+table
+);
+
+grid.appendChild(
+card
+);
 
 });
 
@@ -759,7 +728,7 @@ grid.appendChild(card);
 
 
 /* =========================================================
-   LOAD + POLL
+   LOAD STATE
    ========================================================= */
 
 async function loadState(){
@@ -771,6 +740,7 @@ await supabaseClient
 .select("state")
 .eq("draft_code","JCO26")
 .limit(1);
+
 
 if(error){
 
@@ -788,7 +758,12 @@ return;
 
 }
 
-if(data && data.length && data[0].state){
+
+if(
+data &&
+data.length &&
+data[0].state
+){
 
 state =
 normalizeState(
@@ -796,6 +771,7 @@ data[0].state
 );
 
 }
+
 
 setConnection(
 "LIVE",
@@ -807,11 +783,19 @@ render();
 }
 
 
+/* =========================================================
+   LIVE UPDATES
+   ========================================================= */
+
 setInterval(
 loadState,
 2000
 );
 
+
+/* =========================================================
+   START
+   ========================================================= */
 
 loadState();
 
