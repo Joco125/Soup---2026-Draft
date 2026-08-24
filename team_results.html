@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +24,15 @@ color:#fff;
 font-family:Arial,sans-serif
 }
 
+body{
+overflow-x:hidden
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 header{
 padding:15px 30px;
 background:#11182b;
@@ -30,7 +40,6 @@ border-bottom:1px solid #293553;
 display:flex;
 justify-content:space-between;
 align-items:center;
-flex-wrap:wrap;
 gap:10px
 }
 
@@ -42,6 +51,34 @@ font-size:25px
 .small{
 color:#9da9c0;
 font-size:12px
+}
+
+.header-buttons{
+display:flex;
+align-items:center;
+gap:10px
+}
+
+
+/* SAME BUTTON SIZE AS COMMISSIONER BUTTON */
+
+.header-button{
+border:0;
+border-radius:8px;
+padding:10px 15px;
+font-weight:bold;
+cursor:pointer;
+text-decoration:none;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+height:40px;
+font-size:14px
+}
+
+.blue{
+background:#4f8cff;
+color:white
 }
 
 .status{
@@ -60,21 +97,10 @@ color:#32c875
 color:#ef5350
 }
 
-a.button,
-button{
-border:0;
-border-radius:8px;
-padding:10px 15px;
-font-weight:bold;
-cursor:pointer;
-text-decoration:none;
-display:inline-block
-}
 
-.blue{
-background:#4f8cff;
-color:white
-}
+/* =========================================================
+   MAIN
+   ========================================================= */
 
 .container{
 max-width:1700px;
@@ -87,6 +113,11 @@ display:grid;
 grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
 gap:18px
 }
+
+
+/* =========================================================
+   TEAM CARD
+   ========================================================= */
 
 .team-card{
 background:#11182b;
@@ -118,6 +149,11 @@ text-align:right
 .team-budget b{
 color:#32c875
 }
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
 
 table{
 width:100%;
@@ -197,11 +233,23 @@ color:#32c875
 
 
 /* =========================================================
-   MOBILE TEAM SELECTOR
+   MOBILE SELECTOR
    ========================================================= */
 
 .mobile-team-selector{
 display:none
+}
+
+.mobile-team-selector select{
+width:100%;
+background:#11182b;
+color:#fff;
+border:1px solid #293553;
+border-radius:10px;
+padding:14px;
+font-size:16px;
+font-weight:bold;
+appearance:auto
 }
 
 
@@ -213,7 +261,9 @@ display:none
 
 header{
 padding:12px 14px;
-gap:10px
+display:flex;
+align-items:center;
+justify-content:space-between
 }
 
 header h1{
@@ -225,46 +275,41 @@ font-size:10px;
 margin-top:3px
 }
 
-header > div:last-child{
-width:100%;
-display:grid !important;
+.header-buttons{
+display:grid;
 grid-template-columns:1fr 1fr;
-gap:7px !important
+gap:7px;
+width:auto
 }
 
-header > div:last-child .status{
+.header-button{
+height:38px;
+padding:9px 10px;
+font-size:12px;
+white-space:nowrap
+}
+
+.header-buttons .status{
 grid-column:1 / -1;
 text-align:center;
 padding:6px 10px;
 font-size:11px
 }
 
-header > div:last-child a{
-width:100%;
-text-align:center;
-padding:9px 8px;
-font-size:12px
-}
-
 .container{
 padding:12px
 }
+
+
+/* SHOW DROPDOWN */
 
 .mobile-team-selector{
 display:block;
 margin-bottom:15px
 }
 
-.mobile-team-selector select{
-width:100%;
-background:#11182b;
-color:#fff;
-border:1px solid #293553;
-border-radius:10px;
-padding:14px;
-font-size:16px;
-font-weight:bold
-}
+
+/* ONLY SELECTED TEAM IS SHOWN */
 
 .teams-grid{
 display:block
@@ -278,6 +323,22 @@ display:none
 display:flex
 }
 
+
+/* Make mobile roster easier to read */
+
+.team-card table td{
+padding:10px 6px;
+font-size:14px
+}
+
+.team-name{
+font-size:18px
+}
+
+.team-budget{
+font-size:12px
+}
+
 }
 
 
@@ -286,6 +347,10 @@ display:flex
    ========================================================= */
 
 @media(min-width:601px){
+
+.mobile-team-selector{
+display:none
+}
 
 .team-card{
 display:flex
@@ -312,16 +377,20 @@ Soup 2026 Fantasy Auction Draft
 
 </div>
 
-<div style="display:flex;align-items:center;gap:10px">
+
+<div class="header-buttons">
 
 <a
 href="index.html"
-class="button blue"
+class="header-button blue"
 >
 Back to Draft
 </a>
 
-<span id="connection" class="status">
+<span
+id="connection"
+class="status"
+>
 Connecting...
 </span>
 
@@ -333,16 +402,27 @@ Connecting...
 <div class="container">
 
 
-<!-- MOBILE TEAM SELECTOR -->
+<!-- =====================================================
+     MOBILE TEAM DROPDOWN
+     ===================================================== -->
 
 <div class="mobile-team-selector">
 
-<select id="mobileTeamSelect"></select>
+<select id="mobileTeamSelect">
+
+</select>
 
 </div>
 
 
-<div id="teamsGrid" class="teams-grid"></div>
+<!-- =====================================================
+     TEAM GRID
+     ===================================================== -->
+
+<div
+id="teamsGrid"
+class="teams-grid"
+></div>
 
 
 </div>
@@ -389,7 +469,7 @@ const teams = [
 
 
 /* =========================================================
-   ROSTER SLOTS
+   16 ROSTER SLOTS
    ========================================================= */
 
 const SLOT_DEFS = [
@@ -433,6 +513,10 @@ active:null
 
 };
 
+
+/* =========================================================
+   NORMALIZE STATE
+   ========================================================= */
 
 function normalizeState(saved){
 
@@ -640,16 +724,25 @@ document.getElementById(
 
 element.textContent=text;
 
-element.classList.remove("online");
-element.classList.remove("error");
+element.classList.remove(
+"online"
+);
+
+element.classList.remove(
+"error"
+);
 
 if(isError){
 
-element.classList.add("error");
+element.classList.add(
+"error"
+);
 
 }else if(text==="LIVE"){
 
-element.classList.add("online");
+element.classList.add(
+"online"
+);
 
 }
 
@@ -657,10 +750,10 @@ element.classList.add("online");
 
 
 /* =========================================================
-   MOBILE TEAM SELECTOR
+   BUILD MOBILE DROPDOWN
    ========================================================= */
 
-function setupMobileTeamSelector(){
+function buildMobileSelector(){
 
 const selector=
 document.getElementById(
@@ -673,9 +766,13 @@ return;
 
 }
 
+const current=
+selector.value ||
+teams[0];
+
 selector.innerHTML="";
 
-teams.forEach((team,index)=>{
+teams.forEach(team=>{
 
 const option=
 document.createElement(
@@ -685,21 +782,46 @@ document.createElement(
 option.value=team;
 option.textContent=team;
 
-if(index===0){
+if(team===current){
 
 option.selected=true;
 
 }
 
-selector.appendChild(option);
+selector.appendChild(
+option
+);
 
 });
 
+}
 
-selector.onchange=function(){
+
+/* =========================================================
+   SHOW SELECTED MOBILE TEAM
+   ========================================================= */
+
+function showMobileTeam(){
+
+const selector=
+document.getElementById(
+"mobileTeamSelect"
+);
+
+if(!selector){
+
+return;
+
+}
+
+const selectedTeam=
+selector.value ||
+teams[0];
 
 document
-.querySelectorAll(".team-card")
+.querySelectorAll(
+".team-card"
+)
 .forEach(card=>{
 
 card.classList.remove(
@@ -708,21 +830,20 @@ card.classList.remove(
 
 });
 
-
-const selected=
+const selectedCard=
 document.querySelector(
-`.team-card[data-team="${CSS.escape(this.value)}"]`
+'.team-card[data-team="' +
+CSS.escape(selectedTeam) +
+'"]'
 );
 
-if(selected){
+if(selectedCard){
 
-selected.classList.add(
+selectedCard.classList.add(
 "mobile-selected"
 );
 
 }
-
-};
 
 }
 
@@ -834,11 +955,9 @@ ${slot.label}
 </td>
 
 <td>
-
 <div class="player-name">
 ${slot.player.name}
 </div>
-
 </td>
 
 <td class="price">
@@ -879,72 +998,27 @@ grid.appendChild(card);
 });
 
 
-/*
-Re-apply selected mobile team
-after every render.
-*/
+/* Rebuild selector without losing current team */
 
-const selector=
-document.getElementById(
-"mobileTeamSelect"
-);
+buildMobileSelector();
 
-if(selector){
-
-const selectedTeam=
-selector.value ||
-teams[0];
-
-selector.innerHTML="";
-
-teams.forEach(team=>{
-
-const option=
-document.createElement(
-"option"
-);
-
-option.value=team;
-option.textContent=team;
-
-if(team===selectedTeam){
-
-option.selected=true;
+showMobileTeam();
 
 }
 
-selector.appendChild(option);
 
-});
-
+/* =========================================================
+   DROPDOWN EVENT
+   ========================================================= */
 
 document
-.querySelectorAll(".team-card")
-.forEach(card=>{
-
-card.classList.remove(
-"mobile-selected"
+.getElementById(
+"mobileTeamSelect"
+)
+.addEventListener(
+"change",
+showMobileTeam
 );
-
-});
-
-
-const selectedCard=
-document.querySelector(
-`.team-card[data-team="${CSS.escape(selectedTeam)}"]`
-);
-
-if(selectedCard){
-
-selectedCard.classList.add(
-"mobile-selected"
-);
-
-}
-
-}
-
-}
 
 
 /* =========================================================
@@ -953,7 +1027,10 @@ selectedCard.classList.add(
 
 async function loadState(){
 
-const{data,error}=
+const{
+data,
+error
+}=
 
 await supabaseClient
 .from("draft_state")
@@ -1007,8 +1084,6 @@ render();
    START
    ========================================================= */
 
-setupMobileTeamSelector();
-
 render();
 
 loadState();
@@ -1027,3 +1102,4 @@ loadState,
 
 </body>
 </html>
+```
