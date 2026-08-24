@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -772,11 +771,31 @@ return;
 
 }
 
-const current=
+
+/*
+Use the saved team first.
+
+This allows the selection to survive:
+- render()
+- database updates
+- leaving the page
+- coming back to the page
+- refreshing the page
+*/
+
+const savedTeam =
+localStorage.getItem(
+"selectedTeam"
+);
+
+const current =
+savedTeam ||
 selector.value ||
 teams[0];
 
+
 selector.innerHTML="";
+
 
 teams.forEach(team=>{
 
@@ -786,6 +805,7 @@ document.createElement(
 );
 
 option.value=team;
+
 option.textContent=team;
 
 if(team===current){
@@ -824,6 +844,7 @@ const selectedTeam=
 selector.value ||
 teams[0];
 
+
 document
 .querySelectorAll(
 ".team-card"
@@ -836,12 +857,14 @@ card.classList.remove(
 
 });
 
+
 const selectedCard=
 document.querySelector(
 '.team-card[data-team="' +
 CSS.escape(selectedTeam) +
 '"]'
 );
+
 
 if(selectedCard){
 
@@ -961,9 +984,11 @@ ${slot.label}
 </td>
 
 <td>
+
 <div class="player-name">
 ${slot.player.name}
 </div>
+
 </td>
 
 <td class="price">
@@ -1004,7 +1029,10 @@ grid.appendChild(card);
 });
 
 
-/* Rebuild selector without losing current team */
+/*
+Rebuild selector while preserving
+the selected team.
+*/
 
 buildMobileSelector();
 
@@ -1023,7 +1051,20 @@ document
 )
 .addEventListener(
 "change",
-showMobileTeam
+function(){
+
+/*
+Save the selected team in the browser.
+*/
+
+localStorage.setItem(
+"selectedTeam",
+this.value
+);
+
+showMobileTeam();
+
+}
 );
 
 
@@ -1108,4 +1149,3 @@ loadState,
 
 </body>
 </html>
-```
