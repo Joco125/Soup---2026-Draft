@@ -671,8 +671,17 @@ SUPABASE_KEY
 const COMMISSIONER_PIN =
 "0125";
 
+
+/*
+   REMEMBER COMMISSIONER MODE
+
+   If the user previously entered Commissioner Mode,
+   keep them in Commissioner Mode when they return
+   to this page.
+*/
+
 let isCommissioner =
-false;
+localStorage.getItem("commissionerMode") === "true";
 
 
 /* =========================================================
@@ -1251,6 +1260,13 @@ if(entered===COMMISSIONER_PIN){
 
 isCommissioner=true;
 
+/* Remember Commissioner Mode */
+
+localStorage.setItem(
+"commissionerMode",
+"true"
+);
+
 document.getElementById(
 "loginBox"
 ).style.display="none";
@@ -1301,6 +1317,12 @@ document.getElementById(
 function logout(){
 
 isCommissioner=false;
+
+/* Forget Commissioner Mode */
+
+localStorage.removeItem(
+"commissionerMode"
+);
 
 document.getElementById(
 "commissioner"
@@ -1983,6 +2005,36 @@ searchPlayers();
 
 
 /* =========================================================
+   RESTORE COMMISSIONER UI
+   ========================================================= */
+
+function restoreCommissionerMode(){
+
+if(!isCommissioner){
+
+return;
+
+}
+
+document.getElementById(
+"commissioner"
+).style.display="block";
+
+document.getElementById(
+"commissionerBadge"
+).style.display="inline-block";
+
+document.getElementById(
+"commissionerMenuButton"
+).textContent=
+"Exit Commissioner";
+
+loadTeams();
+
+}
+
+
+/* =========================================================
    BUTTONS
    ========================================================= */
 
@@ -2071,6 +2123,8 @@ resetDraft
    ========================================================= */
 
 loadTeams();
+
+restoreCommissionerMode();
 
 render();
 
