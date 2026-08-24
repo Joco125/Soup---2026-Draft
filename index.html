@@ -1461,8 +1461,10 @@ element.classList.add("online");
 
 function toggleCommissionerMenu(){
 
-/* If already in Commissioner Mode, exit */
+const box =
+document.getElementById("loginBox");
 
+/* If already in Commissioner Mode, exit */
 if(isCommissioner){
 
 logout();
@@ -1471,13 +1473,7 @@ return;
 
 }
 
-
-/* Otherwise show login */
-
-const box=
-document.getElementById(
-"loginBox"
-);
+/* Otherwise toggle login box */
 
 if(box.style.display==="block"){
 
@@ -1494,6 +1490,37 @@ document
 }
 
 }
+
+
+/* =========================================================
+   CLOSE LOGIN BOX WHEN CLICKING OUTSIDE
+   ========================================================= */
+
+document.addEventListener(
+"click",
+function(event){
+
+const box =
+document.getElementById("loginBox");
+
+const button =
+document.getElementById("commissionerMenuButton");
+
+/* Only do this when the login box is open
+   and we are NOT already in Commissioner Mode */
+
+if(
+!isCommissioner &&
+box.style.display==="block" &&
+!box.contains(event.target) &&
+event.target !== button
+){
+
+box.style.display="none";
+
+}
+
+});
 
 
 /* =========================================================
