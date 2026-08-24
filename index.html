@@ -1951,8 +1951,10 @@ const spots =
 
 const maxBid =
 
-Math.max(
-0,
+remaining === 0
+? 0
+: Math.max(
+1,
 remaining-(spots-1)
 );
 
