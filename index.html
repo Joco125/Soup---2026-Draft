@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
 box-sizing:border-box
 }
@@ -289,6 +290,11 @@ flex-wrap:wrap
 flex:1
 }
 
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media(max-width:1000px){
 
 html,body{
@@ -296,12 +302,56 @@ overflow:auto
 }
 
 header{
-height:auto
+height:auto;
+min-height:100px;
+padding:12px 14px;
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap
+}
+
+header h1{
+font-size:18px;
+line-height:1.2
+}
+
+header .small{
+font-size:10px;
+margin-top:3px
+}
+
+header > div:first-child{
+flex:1;
+min-width:0
+}
+
+header > div:last-child{
+width:100%;
+display:grid !important;
+grid-template-columns:1fr 1fr;
+gap:7px !important
+}
+
+header > div:last-child .status{
+grid-column:1 / -1;
+text-align:center;
+padding:6px 10px;
+font-size:11px
+}
+
+header > div:last-child button,
+header > div:last-child a{
+width:100%;
+text-align:center;
+padding:9px 8px;
+font-size:12px
 }
 
 .container{
 height:auto;
-overflow:visible
+overflow:visible;
+padding:12px
 }
 
 .layout{
@@ -310,7 +360,12 @@ grid-template-columns:1fr
 }
 
 .auction{
-height:auto
+height:auto;
+padding:25px 15px
+}
+
+.player{
+font-size:30px
 }
 
 .team-card{
@@ -318,6 +373,7 @@ height:500px
 }
 
 }
+
 </style>
 </head>
 
@@ -340,7 +396,7 @@ height:500px
 <a
 href="team_results.html"
 class="blue"
-style="text-decoration:none;display:inline-block;padding:10px 15px;border-radius:8px;font-weight:bold"
+style="text-decoration:none;display:inline-block"
 >
 Team Results
 </a>
@@ -351,7 +407,7 @@ class="blue"
 >
 Commissioner
 </button>
-   
+
 <span id="commissionerBadge" class="status">
 COMMISSIONER
 </span>
@@ -912,13 +968,13 @@ const players = [
 
 function emptyState(){
 
-const rosters = {};
+const rosters={};
 
 teams.forEach(team=>{
 rosters[team]=[];
 });
 
-return {
+return{
 rosters:rosters,
 history:[],
 active:null
@@ -926,18 +982,12 @@ active:null
 
 }
 
-let state =
-emptyState();
+let state=emptyState();
 
-
-/* =========================================================
-   NORMALIZE STATE
-   ========================================================= */
 
 function normalizeState(saved){
 
-const clean =
-emptyState();
+const clean=emptyState();
 
 if(saved && saved.rosters){
 
@@ -945,7 +995,7 @@ teams.forEach(team=>{
 
 if(Array.isArray(saved.rosters[team])){
 
-clean.rosters[team] =
+clean.rosters[team]=
 saved.rosters[team];
 
 }
@@ -956,15 +1006,13 @@ saved.rosters[team];
 
 if(saved && Array.isArray(saved.history)){
 
-clean.history =
-saved.history;
+clean.history=saved.history;
 
 }
 
 if(saved && saved.active){
 
-clean.active =
-saved.active;
+clean.active=saved.active;
 
 }
 
@@ -979,7 +1027,7 @@ return clean;
 
 async function loadDraft(){
 
-const {data,error} =
+const{data,error}=
 
 await supabaseClient
 .from("draft_state")
@@ -1002,13 +1050,13 @@ return;
 
 if(data && data.length && data[0].state){
 
-state =
-normalizeState(data[0].state);
+state=normalizeState(
+data[0].state
+);
 
 }else{
 
-state =
-emptyState();
+state=emptyState();
 
 }
 
@@ -1028,7 +1076,7 @@ render();
 
 async function saveDraft(){
 
-const {error} =
+const{error}=
 
 await supabaseClient
 .from("draft_state")
@@ -1064,17 +1112,12 @@ alert(
 
 async function checkForUpdates(){
 
-const {data,error} =
+const{data,error}=
 
 await supabaseClient
 .from("draft_state")
-.select(
-"state,updated_at"
-)
-.eq(
-"draft_code",
-"JCO26"
-)
+.select("state,updated_at")
+.eq("draft_code","JCO26")
 .limit(1);
 
 if(error){
@@ -1102,8 +1145,7 @@ if(data &&
 data.length &&
 data[0].state){
 
-state =
-normalizeState(
+state=normalizeState(
 data[0].state
 );
 
@@ -1123,38 +1165,25 @@ checkForUpdates,
    CONNECTION
    ========================================================= */
 
-function setConnection(
-text,
-isError
-){
+function setConnection(text,isError){
 
-const element =
+const element=
 document.getElementById(
 "connection"
 );
 
-element.textContent =
-text;
+element.textContent=text;
 
-element.classList.remove(
-"online"
-);
-
-element.classList.remove(
-"error"
-);
+element.classList.remove("online");
+element.classList.remove("error");
 
 if(isError){
 
-element.classList.add(
-"error"
-);
+element.classList.add("error");
 
 }else if(text==="LIVE"){
 
-element.classList.add(
-"online"
-);
+element.classList.add("online");
 
 }
 
@@ -1167,7 +1196,7 @@ element.classList.add(
 
 function toggleCommissionerMenu(){
 
-const box =
+const box=
 document.getElementById(
 "loginBox"
 );
@@ -1195,36 +1224,30 @@ document
 
 function login(){
 
-const entered =
+const entered=
 document.getElementById(
 "pinInput"
 ).value;
 
-if(entered ===
-COMMISSIONER_PIN){
+if(entered===COMMISSIONER_PIN){
 
-isCommissioner =
-true;
+isCommissioner=true;
 
 document.getElementById(
 "loginBox"
-).style.display =
-"none";
+).style.display="none";
 
 document.getElementById(
 "commissioner"
-).style.display =
-"block";
+).style.display="block";
 
 document.getElementById(
 "commissionerBadge"
-).style.display =
-"inline-block";
+).style.display="inline-block";
 
 document.getElementById(
 "loginMessage"
-).textContent =
-"";
+).textContent="";
 
 loadTeams();
 
@@ -1236,7 +1259,7 @@ render();
 
 document.getElementById(
 "loginMessage"
-).textContent =
+).textContent=
 "Incorrect PIN.";
 
 }
@@ -1250,18 +1273,15 @@ document.getElementById(
 
 function logout(){
 
-isCommissioner =
-false;
+isCommissioner=false;
 
 document.getElementById(
 "commissioner"
-).style.display =
-"none";
+).style.display="none";
 
 document.getElementById(
 "commissionerBadge"
-).style.display =
-"none";
+).style.display="none";
 
 document.getElementById(
 "pinInput"
@@ -1277,8 +1297,7 @@ document.getElementById(
 
 document.getElementById(
 "loginBox"
-).style.display =
-"none";
+).style.display="none";
 
 }
 
@@ -1289,7 +1308,7 @@ document.getElementById(
 
 function loadTeams(){
 
-const dropdown =
+const dropdown=
 document.getElementById(
 "winningTeam"
 );
@@ -1298,20 +1317,13 @@ dropdown.innerHTML="";
 
 teams.forEach(team=>{
 
-const option =
-document.createElement(
-"option"
-);
+const option=
+document.createElement("option");
 
-option.value =
-team;
+option.value=team;
+option.textContent=team;
 
-option.textContent =
-team;
-
-dropdown.appendChild(
-option
-);
+dropdown.appendChild(option);
 
 });
 
@@ -1330,14 +1342,14 @@ return;
 
 }
 
-const query =
+const query=
 document.getElementById(
 "search"
 ).value
 .toLowerCase()
 .trim();
 
-const list =
+const list=
 document.getElementById(
 "playerList"
 );
@@ -1350,7 +1362,7 @@ return;
 
 }
 
-const soldNames =
+const soldNames=
 new Set(
 state.history.map(
 x=>x.name
@@ -1358,43 +1370,27 @@ x=>x.name
 );
 
 players
-
 .filter(player=>
-
 player[0]
 .toLowerCase()
 .includes(query)
-
 )
-
 .filter(player=>
-
-!soldNames.has(
-player[0]
+!soldNames.has(player[0])
 )
-
-)
-
 .forEach(player=>{
 
-const row =
-document.createElement(
-"div"
-);
+const row=
+document.createElement("div");
 
-row.className =
-"player-row";
+row.className="player-row";
 
+const info=
+document.createElement("div");
 
-const info =
-document.createElement(
-"div"
-);
+info.className="player-info";
 
-info.className =
-"player-info";
-
-info.innerHTML = `
+info.innerHTML=`
 
 <b>${player[0]}</b>
 
@@ -1408,20 +1404,13 @@ ${player[2]}
 
 `;
 
+const button=
+document.createElement("button");
 
-const button =
-document.createElement(
-"button"
-);
+button.className="gray";
+button.textContent="Nominate";
 
-button.className =
-"gray";
-
-button.textContent =
-"Nominate";
-
-button.onclick =
-function(){
+button.onclick=function(){
 
 nominate(
 player[0],
@@ -1431,11 +1420,8 @@ player[2]
 
 };
 
-
 row.appendChild(info);
-
 row.appendChild(button);
-
 list.appendChild(row);
 
 });
@@ -1462,11 +1448,8 @@ return;
 state.active={
 
 name:name,
-
 teamCode:teamCode,
-
 position:position,
-
 sold:false
 
 };
@@ -1514,8 +1497,7 @@ return;
 
 }
 
-state.active =
-null;
+state.active=null;
 
 document.getElementById(
 "search"
@@ -1564,14 +1546,12 @@ return;
 
 }
 
-const team =
-
+const team=
 document.getElementById(
 "winningTeam"
 ).value;
 
-const bid =
-
+const bid=
 Number(
 document.getElementById(
 "winningBid"
@@ -1588,34 +1568,33 @@ return;
 
 }
 
-const roster =
+const roster=
 state.rosters[team];
 
-if(roster.length >= 16){
+if(roster.length>=16){
 
 alert(
-team + " already has 16 players and is full."
+team+" already has 16 players and is full."
 );
 
 return;
 
 }
 
-const spent =
-
+const spent=
 roster.reduce(
 (sum,player)=>
 sum+Number(player.price),
 0
 );
 
-const remaining =
+const remaining=
 200-spent;
 
-const spotsLeft =
+const spotsLeft=
 16-roster.length;
 
-const maxBid =
+const maxBid=
 remaining-(spotsLeft-1);
 
 if(bid>maxBid){
@@ -1632,30 +1611,19 @@ return;
 
 const purchase={
 
-name:
-state.active.name,
-
-position:
-state.active.position,
-
-team:
-team,
-
-price:
-bid
+name:state.active.name,
+position:state.active.position,
+team:team,
+price:bid
 
 };
 
-state.rosters[team]
-.push(purchase);
-
-state.history
-.push(purchase);
+state.rosters[team].push(purchase);
+state.history.push(purchase);
 
 state.active={
 
 ...purchase,
-
 sold:true
 
 };
@@ -1697,36 +1665,27 @@ return;
 
 }
 
-const last =
+const last=
 state.history.pop();
 
-const roster =
+const roster=
 state.rosters[last.team];
 
-const index =
-
+const index=
 roster.findIndex(
 player=>
-
-player.name===
-last.name &&
-
+player.name===last.name &&
 Number(player.price)===
 Number(last.price)
-
 );
 
 if(index>=0){
 
-roster.splice(
-index,
-1
-);
+roster.splice(index,1);
 
 }
 
-state.active =
-null;
+state.active=null;
 
 render();
 
@@ -1747,7 +1706,7 @@ return;
 
 }
 
-const answer =
+const answer=
 confirm(
 "RESET THE ENTIRE DRAFT?"
 );
@@ -1758,8 +1717,7 @@ return;
 
 }
 
-state =
-emptyState();
+state=emptyState();
 
 document.getElementById(
 "search"
@@ -1782,74 +1740,62 @@ await saveDraft();
 
 function renderTeams(){
 
-const table =
+const table=
 document.getElementById(
 "teams"
 );
 
 table.innerHTML="";
 
-const teamData =
+const teamData=
 teams.map(team=>{
 
-const roster =
-state.rosters[team] ||
-[];
+const roster=
+state.rosters[team]||[];
 
-const spent =
-
+const spent=
 roster.reduce(
 (sum,player)=>
 sum+Number(player.price),
 0
 );
 
-const remaining =
-Math.max(
-0,
-200-spent
-);
+const remaining=
+Math.max(0,200-spent);
 
-const spots =
+const spots=
 16-roster.length;
 
-const maxBid =
+const maxBid=
 
-remaining === 0
-? 0
-: Math.max(
+remaining===0
+?0
+:Math.max(
 1,
 remaining-(spots-1)
 );
 
-return {
+return{
 
 team:team,
-
 maxBid:maxBid,
-
-rosterLength:
-roster.length
+rosterLength:roster.length
 
 };
 
 });
-
 
 teamData.sort(
 (a,b)=>
 b.maxBid-a.maxBid
 );
 
-
 teamData.forEach(data=>{
 
-const row =
-document.createElement(
-"tr"
-);
+const row=
+document.createElement("tr");
 
-row.innerHTML = `
+row.innerHTML=`
 
 <td>
 <b>${data.team}</b>
@@ -1874,25 +1820,23 @@ table.appendChild(row);
 
 function renderHistory(){
 
-const table =
+const table=
 document.getElementById(
 "history"
 );
 
 table.innerHTML="";
 
-const recentPlayers =
+const recentPlayers=
 [...state.history].reverse();
 
 recentPlayers.forEach(
 (player,index)=>{
 
-const row =
-document.createElement(
-"tr"
-);
+const row=
+document.createElement("tr");
 
-row.innerHTML = `
+row.innerHTML=`
 
 <td>
 ${state.history.length-index}
@@ -1929,46 +1873,42 @@ table.appendChild(row);
 
 function renderActive(){
 
-const name =
+const name=
 document.getElementById(
 "playerName"
 );
 
-const position =
+const position=
 document.getElementById(
 "playerPosition"
 );
 
-const sold =
+const sold=
 document.getElementById(
 "soldMessage"
 );
 
 if(!state.active){
 
-name.textContent =
+name.textContent=
 "No Player Nominated";
 
-position.textContent =
-"—";
-
-sold.innerHTML =
-"";
+position.textContent="—";
+sold.innerHTML="";
 
 return;
 
 }
 
-name.textContent =
+name.textContent=
 state.active.name;
 
-position.textContent =
+position.textContent=
 state.active.position;
-
 
 if(state.active.sold){
 
-sold.innerHTML = `
+sold.innerHTML=`
 
 <div class="sold">
 
@@ -1995,9 +1935,7 @@ sold.innerHTML="";
 function render(){
 
 renderActive();
-
 renderTeams();
-
 renderHistory();
 
 if(isCommissioner){
@@ -2022,7 +1960,6 @@ document
 toggleCommissionerMenu
 );
 
-
 document
 .getElementById(
 "loginButton"
@@ -2031,7 +1968,6 @@ document
 "click",
 login
 );
-
 
 document
 .getElementById(
@@ -2049,7 +1985,6 @@ login();
 
 });
 
-
 document
 .getElementById(
 "search"
@@ -2058,7 +1993,6 @@ document
 "input",
 searchPlayers
 );
-
 
 document
 .getElementById(
@@ -2069,7 +2003,6 @@ document
 sellPlayer
 );
 
-
 document
 .getElementById(
 "unNominateButton"
@@ -2079,7 +2012,6 @@ document
 unNominate
 );
 
-
 document
 .getElementById(
 "undoButton"
@@ -2088,7 +2020,6 @@ document
 "click",
 undoLast
 );
-
 
 document
 .getElementById(
