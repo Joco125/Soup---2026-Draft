@@ -1743,8 +1743,6 @@ return;
 const roster =
 state.rosters[team];
 
-const spent =
-
 if(roster.length >= 15){
 
 alert(
@@ -1754,7 +1752,9 @@ team + " already has 15 players and is full."
 return;
 
 }
-  
+
+const spent =
+
 roster.reduce(
 (sum,player)=>
 sum+Number(player.price),
