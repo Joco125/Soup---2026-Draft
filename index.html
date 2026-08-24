@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -264,7 +263,6 @@ flex:1;
 overflow:auto
 }
 
-/* BIGGER TEAM STATUS */
 .team-card table th,
 .team-card table td{
 padding:18px 16px;
@@ -376,8 +374,6 @@ Connecting...
 </header>
 
 
-<!-- COMMISSIONER LOGIN -->
-
 <div
 id="loginBox"
 class="card"
@@ -416,12 +412,8 @@ class="small"
 <div class="layout">
 
 
-<!-- LEFT SIDE -->
-
 <div class="left-column">
 
-
-<!-- ACTIVE AUCTION -->
 
 <div class="card auction">
 
@@ -441,8 +433,6 @@ No Player Nominated
 
 </div>
 
-
-<!-- COMMISSIONER CONTROLS -->
 
 <div
 class="card"
@@ -519,8 +509,6 @@ Reset Draft
 </div>
 
 
-<!-- RECENT DRAFTED PLAYERS -->
-
 <div class="card history-card">
 
 <h2 style="margin-top:0">
@@ -554,8 +542,6 @@ Recent Drafted Players
 
 </div>
 
-
-<!-- RIGHT SIDE -->
 
 <div class="right-column">
 
@@ -597,10 +583,6 @@ Team Status
 <script>
 
 
-/* =========================================================
-   SUPABASE
-   ========================================================= */
-
 const SUPABASE_URL =
 "https://hbwszhzcbmlqidkppzoe.supabase.co";
 
@@ -614,20 +596,12 @@ SUPABASE_KEY
 );
 
 
-/* =========================================================
-   COMMISSIONER PIN
-   ========================================================= */
-
 const COMMISSIONER_PIN =
 "0125";
 
 let isCommissioner =
 false;
 
-
-/* =========================================================
-   TEAMS
-   ========================================================= */
 
 const teams = [
 
@@ -643,11 +617,6 @@ const teams = [
 "Lati"
 
 ];
-
-
-/* =========================================================
-   PLAYERS
-   ========================================================= */
 
 
 const players = [
@@ -1166,12 +1135,6 @@ const players = [
   ["Lil'Jordan Humphrey","DEN","WR"]
 ];
 
-];
-
-
-/* =========================================================
-   STATE
-   ========================================================= */
 
 function emptyState(){
 
@@ -1192,10 +1155,6 @@ active:null
 let state =
 emptyState();
 
-
-/* =========================================================
-   NORMALIZE STATE
-   ========================================================= */
 
 function normalizeState(saved){
 
@@ -1235,10 +1194,6 @@ return clean;
 
 }
 
-
-/* =========================================================
-   LOAD DRAFT
-   ========================================================= */
 
 async function loadDraft(){
 
@@ -1285,10 +1240,6 @@ render();
 }
 
 
-/* =========================================================
-   SAVE
-   ========================================================= */
-
 async function saveDraft(){
 
 const {error} =
@@ -1303,7 +1254,7 @@ updated_at:
 new Date().toISOString()
 
 })
-.eq("id",1);
+.eq("draft_code","JCO26");
 
 if(error){
 
@@ -1320,10 +1271,6 @@ alert(
 
 }
 
-
-/* =========================================================
-   LIVE UPDATES
-   ========================================================= */
 
 async function checkForUpdates(){
 
@@ -1382,10 +1329,6 @@ checkForUpdates,
 );
 
 
-/* =========================================================
-   CONNECTION
-   ========================================================= */
-
 function setConnection(
 text,
 isError
@@ -1424,10 +1367,6 @@ element.classList.add(
 }
 
 
-/* =========================================================
-   COMMISSIONER MENU
-   ========================================================= */
-
 function toggleCommissionerMenu(){
 
 const box =
@@ -1451,10 +1390,6 @@ document
 
 }
 
-
-/* =========================================================
-   COMMISSIONER LOGIN
-   ========================================================= */
 
 function login(){
 
@@ -1507,10 +1442,6 @@ document.getElementById(
 }
 
 
-/* =========================================================
-   TEAMS
-   ========================================================= */
-
 function loadTeams(){
 
 const dropdown =
@@ -1541,10 +1472,6 @@ option
 
 }
 
-
-/* =========================================================
-   SEARCH PLAYERS
-   ========================================================= */
 
 function searchPlayers(){
 
@@ -1667,10 +1594,6 @@ list.appendChild(row);
 }
 
 
-/* =========================================================
-   NOMINATE
-   ========================================================= */
-
 async function nominate(
 name,
 teamCode,
@@ -1709,10 +1632,6 @@ await saveDraft();
 
 }
 
-
-/* =========================================================
-   UN-NOMINATE
-   ========================================================= */
 
 async function unNominate(){
 
@@ -1755,10 +1674,6 @@ await saveDraft();
 
 }
 
-
-/* =========================================================
-   SELL
-   ========================================================= */
 
 async function sellPlayer(){
 
@@ -1893,10 +1808,6 @@ await saveDraft();
 }
 
 
-/* =========================================================
-   UNDO LAST SALE
-   ========================================================= */
-
 async function undoLast(){
 
 if(!isCommissioner){
@@ -1949,10 +1860,6 @@ await saveDraft();
 }
 
 
-/* =========================================================
-   RESET
-   ========================================================= */
-
 async function resetDraft(){
 
 if(!isCommissioner){
@@ -1989,10 +1896,6 @@ await saveDraft();
 
 }
 
-
-/* =========================================================
-   TEAM STATUS
-   ========================================================= */
 
 function renderTeams(){
 
@@ -2038,8 +1941,6 @@ maxBid:maxBid
 });
 
 
-/* Sort highest Max Bid first */
-
 teamData.sort(
 (a,b)=>
 b.maxBid-a.maxBid
@@ -2071,10 +1972,6 @@ table.appendChild(row);
 
 }
 
-/* =========================================================
-   RECENT DRAFTED PLAYERS
-   ========================================================= */
-
 function renderHistory(){
 
 const table =
@@ -2097,10 +1994,6 @@ return;
 
 }
 
-
-/*
-Most recent player first.
-*/
 
 const recentPlayers =
 [...state.history].reverse();
@@ -2144,10 +2037,6 @@ table.appendChild(row);
 
 }
 
-
-/* =========================================================
-   ACTIVE PLAYER
-   ========================================================= */
 
 function renderActive(){
 
@@ -2210,17 +2099,7 @@ sold.innerHTML="";
 }
 
 
-/* =========================================================
-   RENDER
-   ========================================================= */
-
 function render(){
-
-/*
-Always render all public sections,
-including Recent Drafted Players,
-regardless of commissioner mode.
-*/
 
 renderActive();
 
@@ -2236,10 +2115,6 @@ searchPlayers();
 
 }
 
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
 
 document
 .getElementById(
@@ -2328,10 +2203,6 @@ resetDraft
 );
 
 
-/* =========================================================
-   START
-   ========================================================= */
-
 loadTeams();
 
 render();
@@ -2342,4 +2213,3 @@ loadDraft();
 
 </body>
 </html>
-```
