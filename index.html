@@ -1,69 +1,57 @@
-\<!DOCTYPE html>
-\<html lang="en">
-\<head>
-\<meta charset="UTF-8">
-\<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-\<title>Soup 2026 Fantasy Auction Draft\</title>
-
-\<script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)">\</script>
-
-\<style>
-
-\*{
-box-sizing\:border-box
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soup 2026 Fantasy Auction Draft</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{
+box-sizing:border-box
 }
-
 html,body{
 margin:0;
 width:100%;
 height:100%;
-overflow\:hidden
+overflow:hidden
 }
-
 body{
 background:#0b1020;
 color:#fff;
-font-family\:Arial,sans-serif
+font-family:Arial,sans-serif
 }
-
 header{
 height:82px;
 padding:15px 30px;
 background:#11182b;
 border-bottom:1px solid #293553;
-display\:flex;
-justify-content\:space-between;
-align-items\:center
+display:flex;
+justify-content:space-between;
+align-items:center
 }
-
 h1{
 margin:0;
 font-size:25px
 }
-
 .container{
-height\:calc(100vh - 82px);
+height:calc(100vh - 82px);
 max-width:1700px;
-margin\:auto;
+margin:auto;
 padding:18px 20px;
-overflow\:hidden
+overflow:hidden
 }
-
 .layout{
 height:100%;
-display\:grid;
+display:grid;
 grid-template-columns:1.45fr 1fr;
 gap:18px
 }
-
 .left-column,
 .right-column{
 min-height:0;
-display\:flex;
-flex-direction\:column
+display:flex;
+flex-direction:column
 }
-
 .card{
 background:#11182b;
 border:1px solid #293553;
@@ -71,41 +59,35 @@ border-radius:14px;
 padding:18px;
 margin-bottom:18px
 }
-
 .auction{
 height:230px;
-text-align\:center;
+text-align:center;
 padding:35px 20px;
 flex-shrink:0
 }
-
 .label{
 color:#9da9c0;
 font-size:13px;
-font-weight\:bold;
+font-weight:bold;
 letter-spacing:1px
 }
-
 .player{
 font-size:42px;
-font-weight\:bold;
+font-weight:bold;
 margin-top:15px
 }
-
 .position{
 color:#4f8cff;
 font-size:20px;
-font-weight\:bold;
+font-weight:bold;
 margin-top:5px
 }
-
 .sold{
 color:#32c875;
 font-size:20px;
-font-weight\:bold;
+font-weight:bold;
 margin-top:20px
 }
-
 input,select{
 width:100%;
 background:#0b1020;
@@ -114,106 +96,89 @@ border:1px solid #293553;
 border-radius:8px;
 padding:11px
 }
-
 button{
 border:0;
 border-radius:8px;
 padding:10px 15px;
-font-weight\:bold;
-cursor\:pointer
+font-weight:bold;
+cursor:pointer
 }
-
 .green{
 background:#32c875;
-color\:white
+color:white
 }
-
 .gray{
 background:#26324d;
-color\:white
+color:white
 }
-
 .red{
 background:#ef5350;
-color\:white
+color:white
 }
-
 button.blue,
 a.blue{
 background:#4f8cff;
-color\:white;
+color:white;
 border:0;
 border-radius:8px;
 padding:10px 15px;
-font-weight\:bold;
-cursor\:pointer;
-text-decoration\:none;
-display\:inline-block;
-text-align\:center;
+font-weight:bold;
+cursor:pointer;
+text-decoration:none;
+display:inline-block;
+text-align:center;
 }
-
 .controls{
-display\:grid;
+display:grid;
 grid-template-columns:1fr 150px 120px;
 gap:10px
 }
-
 .player-list{
 height:150px;
-overflow\:auto;
+overflow:auto;
 margin-top:10px
 }
-
 .player-row{
-display\:flex;
-justify-content\:space-between;
-align-items\:center;
+display:flex;
+justify-content:space-between;
+align-items:center;
 padding:9px 10px;
 border-bottom:1px solid #293553
 }
-
 .player-info{
-display\:flex;
-align-items\:center;
+display:flex;
+align-items:center;
 gap:10px
 }
-
 .player-team{
 color:#9da9c0;
 font-size:13px
 }
-
 .player-pos{
 color:#4f8cff;
 font-size:12px;
-font-weight\:bold
+font-weight:bold
 }
-
 table{
 width:100%;
-border-collapse\:collapse
+border-collapse:collapse
 }
-
 th,td{
 padding:10px;
-text-align\:left;
+text-align:left;
 border-bottom:1px solid #293553
 }
-
 th{
 color:#9da9c0;
 font-size:12px
 }
-
 .money{
-font-weight\:bold
+font-weight:bold
 }
-
 .small{
 color:#9da9c0;
 font-size:12px
 }
-
 .status{
 padding:8px 12px;
 border-radius:20px;
@@ -221,490 +186,336 @@ background:#26324d;
 color:#9da9c0;
 font-size:13px
 }
-
 .online{
 color:#32c875
 }
-
 .error{
 color:#ef5350
 }
-
-\#commissioner{
-display\:none;
+#commissioner{
+display:none;
 flex-shrink:0
 }
-
-\#loginBox{
-display\:none;
-position\:absolute;
+#loginBox{
+display:none;
+position:absolute;
 top:72px;
 right:25px;
 width:300px;
 z-index:100;
-text-align\:center;
+text-align:center;
 box-shadow:0 10px 30px rgba(0,0,0,.4)
 }
-
-\#commissionerBadge{
-display\:none
+#commissionerBadge{
+display:none
 }
-
 .history-card{
 flex:1;
 min-height:0;
-overflow\:hidden
+overflow:hidden
 }
-
 .history-table-wrapper{
-height\:calc(100% - 50px);
-overflow\:auto
+height:calc(100% - 50px);
+overflow:auto
 }
-
 .team-card{
 height:100%;
 margin-bottom:0;
-display\:flex;
-flex-direction\:column
+display:flex;
+flex-direction:column
 }
-
 .team-table-wrapper{
 flex:1;
-overflow\:auto
+overflow:auto
 }
-
 .team-card table th,
 .team-card table td{
 padding:18px 15px;
 font-size:20px
 }
-
-\#search{
+#search{
 margin-top:5px
 }
-
 .search-help{
 margin-top:6px;
 color:#697792;
 font-size:11px
 }
-
 .commissioner-buttons{
-display\:flex;
+display:flex;
 gap:10px;
-flex-wrap\:wrap
+flex-wrap:wrap
 }
-
 .commissioner-buttons button{
 flex:1
 }
-
-
-
-/\* =========================================================
-   MOBILE
-   \========================================================= \*/
-
+/* =========================================================
+MOBILE
+========================================================= */
 @media(max-width:1000px){
-
 html,body{
-overflow\:auto
+overflow:auto
 }
-
 header{
-height\:auto;
+height:auto;
 min-height:100px;
 padding:12px 14px;
-display\:flex;
-align-items\:center;
+display:flex;
+align-items:center;
 gap:10px;
-flex-wrap\:wrap
+flex-wrap:wrap
 }
-
 header h1{
 font-size:18px;
 line-height:1.2
 }
-
 header .small{
 font-size:10px;
 margin-top:3px
 }
-
-header > div\:first-child{
+header > div:first-child{
 flex:1;
 min-width:0
 }
-
-header > div\:last-child{
+header > div:last-child{
 width:100%;
-display\:grid !important;
+display:grid !important;
 grid-template-columns:1fr 1fr;
 gap:7px !important
 }
-
-header > div\:last-child .status{
+header > div:last-child .status{
 grid-column:1 / -1;
-text-align\:center;
+text-align:center;
 padding:6px 10px;
 font-size:11px
 }
-
-header > div\:last-child button,
-header > div\:last-child a{
+header > div:last-child button,
+header > div:last-child a{
 width:100%;
-text-align\:center;
+text-align:center;
 padding:9px 8px;
 font-size:12px
 }
-
 .container{
-height\:auto;
-overflow\:visible;
+height:auto;
+overflow:visible;
 padding:12px
 }
-
 .layout{
-height\:auto;
+height:auto;
 grid-template-columns:1fr
 }
-
 .auction{
-height\:auto;
+height:auto;
 padding:25px 15px
 }
-
 .player{
 font-size:30px
 }
-
 .team-card{
 height:500px
 }
-
 }
-
-\</style>
-\</head>
-
-\<body>
-
-\<header>
-
-\<div>
-
-\<h1>🏈 Soup 2026 Fantasy Auction Draft\</h1>
-
-\<div class="small">
+</style>
+</head>
+<body>
+<header>
+<div>
+<h1>🏈 Soup 2026 Fantasy Auction Draft</h1>
+<div class="small">
 10 Teams • $200 Budget • 16 Players
-\</div>
-
-\</div>
-
-\<div style="display\:flex;align-items\:center;gap:10px">
-
-\<a href="team\_results.html" class="blue">
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<a href="team_results.html" class="blue">
 Team Results
-\</a>
-
-\<button
+</a>
+<button
 id="commissionerMenuButton"
 class="blue"
-\>
+>
 Commissioner
-\</button>
-
-\<span id="commissionerBadge" class="status">
+</button>
+<span id="commissionerBadge" class="status">
 COMMISSIONER
-\</span>
-
-\<span id="connection" class="status">
+</span>
+<span id="connection" class="status">
 Connecting...
-\</span>
-
-\</div>
-
-\</header>
-
-
-
-\<!-- COMMISSIONER LOGIN -->
-
-\<div
+</span>
+</div>
+</header>
+<!-- COMMISSIONER LOGIN -->
+<div
 id="loginBox"
 class="card"
-\>
-
-\<h3 style="margin-top:0">
+>
+<h3 style="margin-top:0">
 Commissioner Login
-\</h3>
-
-\<input
+</h3>
+<input
 id="pinInput"
 type="password"
 placeholder="Commissioner PIN"
-\>
-
-\<br>\<br>
-
-\<button
+>
+<br><br>
+<button
 id="loginButton"
 class="blue"
 style="width:100%"
-\>
+>
 Enter Commissioner Mode
-\</button>
-
-\<p
+</button>
+<p
 id="loginMessage"
 class="small"
-\>\</p>
-
-\</div>
-
-
-
-\<div class="container">
-
-\<div class="layout">
-
-
-
-\<!-- LEFT SIDE -->
-
-\<div class="left-column">
-
-
-
-\<!-- ACTIVE AUCTION -->
-
-\<div class="card auction">
-
-\<div class="label">
+></p>
+</div>
+<div class="container">
+<div class="layout">
+<!-- LEFT SIDE -->
+<div class="left-column">
+<!-- ACTIVE AUCTION -->
+<div class="card auction">
+<div class="label">
 ACTIVE AUCTION
-\</div>
-
-\<div id="playerName" class="player">
+</div>
+<div id="playerName" class="player">
 No Player Nominated
-\</div>
-
-\<div id="playerPosition" class="position">
+</div>
+<div id="playerPosition" class="position">
 —
-\</div>
-
-\<div id="soldMessage">\</div>
-
-\</div>
-
-
-
-\<!-- COMMISSIONER CONTROLS -->
-
-\<div
+</div>
+<div id="soldMessage"></div>
+</div>
+<!-- COMMISSIONER CONTROLS -->
+<div
 class="card"
 id="commissioner"
-\>
-
-\<h2 style="margin-top:0">
+>
+<h2 style="margin-top:0">
 Commissioner Controls
-\</h2>
-
-\<input
+</h2>
+<input
 id="search"
 placeholder="Search player..."
-\>
-
-\<div class="search-help">
+>
+<div class="search-help">
 Players will appear when you type.
-\</div>
-
-\<div
+</div>
+<div
 id="playerList"
 class="player-list"
-\>\</div>
-
-\<br>
-
-\<div class="controls">
-
-\<select id="winningTeam">\</select>
-
-\<input
+></div>
+<br>
+<div class="controls">
+<select id="winningTeam"></select>
+<input
 id="winningBid"
 type="number"
 min="1"
 placeholder="Winning bid"
-\>
-
-\<button
+>
+<button
 id="sellButton"
 class="green"
-\>
+>
 SELL
-\</button>
-
-\</div>
-
-\<br>
-
-\<div class="commissioner-buttons">
-
-\<button
+</button>
+</div>
+<br>
+<div class="commissioner-buttons">
+<button
 id="unNominateButton"
 class="gray"
-\>
+>
 Un-Nominate
-\</button>
-
-\<button
+</button>
+<button
 id="undoButton"
 class="gray"
-\>
+>
 Undo Last Sale
-\</button>
-
-\<button
+</button>
+<button
 id="resetButton"
 class="red"
-\>
+>
 Reset Draft
-\</button>
-
-\</div>
-
-\</div>
-
-
-
-\<!-- RECENT DRAFTED PLAYERS -->
-
-\<div class="card history-card">
-
-\<h2 style="margin-top:0">
+</button>
+</div>
+</div>
+<!-- RECENT DRAFTED PLAYERS -->
+<div class="card history-card">
+<h2 style="margin-top:0">
 Recent Drafted Players
-\</h2>
-
-\<div class="history-table-wrapper">
-
-\<table>
-
-\<thead>
-
-\<tr>
-\<th>#\</th>
-\<th>Player\</th>
-\<th>Pos\</th>
-\<th>Team\</th>
-\<th>Price\</th>
-\</tr>
-
-\</thead>
-
-\<tbody id="history">\</tbody>
-
-\</table>
-
-\</div>
-
-\</div>
-
-
-
-\</div>
-
-
-
-\<!-- RIGHT SIDE -->
-
-\<div class="right-column">
-
-\<div class="card team-card">
-
-\<h2 style="margin-top:0">
+</h2>
+<div class="history-table-wrapper">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Player</th>
+<th>Pos</th>
+<th>Team</th>
+<th>Price</th>
+</tr>
+</thead>
+<tbody id="history"></tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- RIGHT SIDE -->
+<div class="right-column">
+<div class="card team-card">
+<h2 style="margin-top:0">
 Team Status
-\</h2>
-
-\<div class="team-table-wrapper">
-
-\<table>
-
-\<thead>
-
-\<tr>
-\<th>Team\</th>
-\<th>Max Bid\</th>
-\</tr>
-
-\</thead>
-
-\<tbody id="teams">\</tbody>
-
-\</table>
-
-\</div>
-
-\</div>
-
-\</div>
-
-
-
-\</div>
-
-\</div>
-
-
-
-\<script>
-
-
-
-/\* =========================================================
-   SUPABASE
-   \========================================================= \*/
-
-const SUPABASE\_URL =
-"[https://hbwszhzcbmlqidkppzoe.supabase.co](https://hbwszhzcbmlqidkppzoe.supabase.co)";
-
-const SUPABASE\_KEY =
-"sb\_publishable\_JT3NCra2viuuGm3jJFCF-g\_pc\_1X3VK";
-
+</h2>
+<div class="team-table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Team</th>
+<th>Max Bid</th>
+</tr>
+</thead>
+<tbody id="teams"></tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+/* =========================================================
+SUPABASE
+========================================================= */
+const SUPABASE_URL =
+"https://hbwszhzcbmlqidkppzoe.supabase.co";
+const SUPABASE_KEY =
+"sb_publishable_JT3NCra2viuuGm3jJFCF-g_pc_1X3VK";
 const supabaseClient =
-window\.supabase.createClient(
-SUPABASE\_URL,
-SUPABASE\_KEY
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
 );
-
-
-
-/\* =========================================================
-   COMMISSIONER PIN
-   \========================================================= \*/
-
-const COMMISSIONER\_PIN =
+/* =========================================================
+COMMISSIONER PIN
+========================================================= */
+const COMMISSIONER_PIN =
 "0125";
-
-
-
-/\*
-   REMEMBER COMMISSIONER MODE
-
-   If the user previously entered Commissioner Mode,
-   keep them in Commissioner Mode when they return
-   to this page.
-\*/
-
+/*
+REMEMBER COMMISSIONER MODE
+If the user previously entered Commissioner Mode,
+keep them in Commissioner Mode when they return
+to this page.
+*/
 let isCommissioner =
 localStorage.getItem("commissionerMode") === "true";
-
-
-
-/\* =========================================================
-   TEAMS
-   \========================================================= \*/
-
+/* =========================================================
+TEAMS
+========================================================= */
 const teams = [
-
 "Joco",
 "Bij",
 "Steguin",
@@ -715,1026 +526,828 @@ const teams = [
 "Dave",
 "Jeff",
 "Lati"
-
 ];
-
-
-
-/\* =========================================================
-   PLAYERS
-   \========================================================= \*/
-
+/* =========================================================
+PLAYERS
+========================================================= */
 const players = [
-
- ["Ja'Marr Chase","CIN","WR"],
-  ["Jahmyr Gibbs","DET","RB"],
-  ["Puka Nacua","LAR","WR"],
-  ["Bijan Robinson","ATL","RB"],
-  ["Jaxon Smith-Njigba","SEA","WR"],
-  ["Amon-Ra St. Brown","DET","WR"],
-  ["CeeDee Lamb","DAL","WR"],
-  ["Justin Jefferson","MIN","WR"],
-  ["Christian McCaffrey","SF","RB"],
-  ["Drake London","ATL","WR"],
-  ["Jonathan Taylor","IND","RB"],
-  ["A.J. Brown","NE","WR"],
-  ["Nico Collins","HOU","WR"],
-  ["Chase Brown","CIN","RB"],
-  ["James Cook III","BUF","RB"],
-  ["Brock Bowers","LV","TE"],
-  ["Chris Olave","NO","WR"],
-  ["George Pickens","DAL","WR"],
-  ["Trey McBride","ARI","TE"],
-  ["De'Von Achane","MIA","RB"],
-  ["Rashee Rice","KC","WR"],
-  ["DeVonta Smith","PHI","WR"],
-  ["Omarion Hampton","LAC","RB"],
-  ["Saquon Barkley","PHI","RB"],
-  ["Malik Nabers","NYG","WR"],
-  ["Josh Allen","BUF","QB"],
-  ["Kenneth Walker III","KC","RB"],
-  ["Zay Flowers","BAL","WR"],
-  ["Garrett Wilson","NYJ","WR"],
-  ["Lamar Jackson","BAL","QB"],
-  ["Tetairoa McMillan","CAR","WR"],
-  ["Jaylen Waddle","DEN","WR"],
-  ["Ladd McConkey","LAC","WR"],
-  ["Tee Higgins","CIN","WR"],
-  ["Derrick Henry","BAL","RB"],
-  ["Drake Maye","NE","QB"],
-  ["Colston Loveland","CHI","TE"],
-  ["Emeka Egbuka","TB","WR"],
-  ["Ashton Jeanty","LV","RB"],
-  ["Breece Hall","NYJ","RB"],
-  ["Jeremiyah Love","ARI","RB"],
-  ["Kyren Williams","LAR","RB"],
-  ["Javonte Williams","DAL","RB"],
-  ["Josh Jacobs","GB","RB"],
-  ["Terry McLaurin","WAS","WR"],
-  ["Joe Burrow","CIN","QB"],
-  ["Luther Burden III","CHI","WR"],
-  ["Travis Etienne Jr.","NO","RB"],
-  ["Davante Adams","LAR","WR"],
-  ["DJ Moore","BUF","WR"],
-  ["Jayden Daniels","WAS","QB"],
-  ["Tyler Warren","IND","TE"],
-  ["Mike Evans","SF","WR"],
-  ["Jameson Williams","DET","WR"],
-  ["D'Andre Swift","CHI","RB"],
-  ["Cam Skattebo","NYG","RB"],
-  ["Rome Odunze","CHI","WR"],
-  ["Christian Watson","GB","WR"],
-  ["Jalen Hurts","PHI","QB"],
-  ["Bucky Irving","TB","RB"],
-  ["David Montgomery","HOU","RB"],
-  ["Quinshon Judkins","CLE","RB"],
-  ["Parker Washington","JAC","WR"],
-  ["Caleb Williams","CHI","QB"],
-  ["Carnell Tate","TEN","WR"],
-  ["Bhayshul Tuten","JAC","RB"],
-  ["TreVeyon Henderson","NE","RB"],
-  ["Marvin Harrison Jr.","ARI","WR"],
-  ["Justin Herbert","LAC","QB"],
-  ["Jadarian Price","SEA","RB"],
-  ["Harold Fannin Jr.","CLE","TE"],
-  ["Brian Thomas Jr.","JAC","WR"],
-  ["Chris Godwin Jr.","TB","WR"],
-  ["Trevor Lawrence","JAC","QB"],
-  ["Jaylen Warren","PIT","RB"],
-  ["Tucker Kraft","GB","TE"],
-  ["Dak Prescott","DAL","QB"],
-  ["DK Metcalf","PIT","WR"],
-  ["Rhamondre Stevenson","NE","RB"],
-  ["Kyle Pitts Sr.","ATL","TE"],
-  ["Michael Pittman Jr.","PIT","WR"],
-  ["Tony Pollard","TEN","RB"],
-  ["Sam LaPorta","DET","TE"],
-  ["Courtland Sutton","DEN","WR"],
-  ["Wan'Dale Robinson","TEN","WR"],
-  ["Josh Downs","IND","WR"],
-  ["Rico Dowdle","PIT","RB"],
-  ["Michael Wilson","ARI","WR"],
-  ["Jonathon Brooks","CAR","RB"],
-  ["RJ Harvey","DEN","RB"],
-  ["Brock Purdy","SF","QB"],
-  ["Quentin Johnston","LAC","WR"],
-  ["Jaxson Dart","NYG","QB"],
-  ["Stefon Diggs","WAS","WR"],
-  ["Travis Kelce","KC","TE"],
-  ["Chuba Hubbard","CAR","RB"],
-  ["Kenny Gainwell","TB","RB"],
-  ["George Kittle","SF","TE"],
-  ["Alec Pierce","IND","WR"],
-  ["Bo Nix","DEN","QB"],
-  ["Patrick Mahomes II","KC","QB"],
-  ["J.K. Dobbins","DEN","RB"],
-  ["Jakobi Meyers","JAC","WR"],
-  ["Matthew Stafford","LAR","QB"],
-  ["Jayden Reed","GB","WR"],
-  ["Jordan Addison","MIN","WR"],
-  ["Jared Goff","DET","QB"],
-  ["Rachaad White","WAS","RB"],
-  ["Makai Lemon","PHI","WR"],
-  ["Blake Corum","LAR","RB"],
-  ["Dalton Kincaid","BUF","TE"],
-  ["Kyler Murray","MIN","QB"],
-  ["Kyle Monangai","CHI","RB"],
-  ["Aaron Jones Sr.","MIN","RB"],
-  ["Jacory Croskey-Merritt","WAS","RB"],
-  ["Jake Ferguson","DAL","TE"],
-  ["Jordan Mason","MIN","RB"],
-  ["Baker Mayfield","TB","QB"],
-  ["Dallas Goedert","PHI","TE"],
-  ["Jordan Love","GB","QB"],
-  ["Isaiah Likely","NYG","TE"],
-  ["KC Concepcion","CLE","WR"],
-  ["Khalil Shakir","BUF","WR"],
-  ["Jalen Coker","CAR","WR"],
-  ["Tyler Shough","NO","QB"],
-  ["Xavier Worthy","KC","WR"],
-  ["Matthew Golden","GB","WR"],
-  ["Jordyn Tyson","NO","WR"],
-  ["Romeo Doubs","NE","WR"],
-  ["Mark Andrews","BAL","TE"],
-  ["Malik Willis","MIA","QB"],
-  ["Juwan Johnson","NO","TE"],
-  ["Tyler Allgeier","ARI","RB"],
-  ["Tyjae Spears","TEN","RB"],
-  ["Woody Marks","HOU","RB"],
-  ["Chris Rodriguez Jr.","JAC","RB"],
-  ["Sam Darnold","SEA","QB"],
-  ["De'Zhaun Stribling","SF","WR"],
-  ["Deebo Samuel Sr.","SF","WR"],
-  ["C.J. Stroud","HOU","QB"],
-  ["Dylan Sampson","CLE","RB"],
-  ["Tyrone Tracy Jr.","NYG","RB"],
-  ["Denzel Boston","CLE","WR"],
-  ["Daniel Jones","IND","QB"],
-  ["Keaton Mitchell","LAC","RB"],
-  ["Zach Charbonnet","SEA","RB"],
-  ["Rashid Shaheed","SEA","WR"],
-  ["Cam Ward","TEN","QB"],
-  ["Chig Okonkwo","WAS","TE"],
-  ["Brenton Strange","JAC","TE"],
-  ["Jonah Coleman","DEN","RB"],
-  ["Alvin Kamara","NO","RB"],
-  ["Hunter Henry","NE","TE"],
-  ["Isiah Pacheco","DET","RB"],
-  ["Houston Texans","HOU","DST"],
-  ["Dalton Schultz","HOU","TE"],
-  ["Bryce Young","CAR","QB"],
-  ["Tre Tucker","LV","WR"],
-  ["Adonai Mitchell","NYJ","WR"],
-  ["Jerry Jeudy","CLE","WR"],
-  ["Jauan Jennings","MIN","WR"],
-  ["Tank Bigsby","PHI","RB"],
-  ["Jalen McMillan","TB","WR"],
-  ["Braelon Allen","NYJ","RB"],
-  ["Brian Robinson Jr.","ATL","RB"],
-  ["Denver Broncos","DEN","DST"],
-  ["Tre' Harris","LAC","WR"],
-  ["Seattle Seahawks","SEA","DST"],
-  ["Los Angeles Rams","LAR","DST"],
-  ["T.J. Hockenson","MIN","TE"],
-  ["Omar Cooper Jr.","NYJ","WR"],
-  ["Jacoby Brissett","ARI","QB"],
-  ["Jalen Nailor","LV","WR"],
-  ["MarShawn Lloyd","GB","RB"],
-  ["Philadelphia Eagles","PHI","DST"],
-  ["Malik Washington","MIA","WR"],
-  ["Ryan Flournoy","DAL","WR"],
-  ["Dontayvion Wicks","PHI","WR"],
-  ["Ray Davis","BUF","RB"],
-  ["Pat Bryant","DEN","WR"],
-  ["Travis Hunter","JAC","WR"],
-  ["Brandon Aubrey","DAL","K"],
-  ["Emmett Johnson","KC","RB"],
-  ["Oronde Gadsden II","LAC","TE"],
-  ["Pittsburgh Steelers","PIT","DST"],
-  ["Jaylin Noel","HOU","WR"],
-  ["New England Patriots","NE","DST"],
-  ["Sean Tucker","TB","RB"],
-  ["Mike Washington Jr.","LV","RB"],
-  ["Minnesota Vikings","MIN","DST"],
-  ["AJ Barner","SEA","TE"],
-  ["Jacksonville Jaguars","JAC","DST"],
-  ["Keenan Allen","IND","WR"],
-  ["Cameron Dicker","LAC","K"],
-  ["Los Angeles Chargers","LAC","DST"],
-  ["Ka'imi Fairbairn","HOU","K"],
-  ["Tank Dell","HOU","WR"],
-  ["Cam Little","JAC","K"],
-  ["Calvin Ridley","TEN","WR"],
-  ["Kayshon Boutte","NE","WR"],
-  ["Kimani Vidal","LAC","RB"],
-  ["Baltimore Ravens","BAL","DST"],
-  ["Nicholas Singleton","TEN","RB"],
-  ["Jason Myers","SEA","K"],
-  ["Gunnar Helm","TEN","TE"],
-  ["James Conner","ARI","RB"],
-  ["Kenyon Sadiq","NYJ","TE"],
-  ["Tyler Loop","BAL","K"],
-  ["Eddy Pineiro","SF","K"],
-  ["Terrance Ferguson","LAR","TE"],
-  ["Aaron Rodgers","PIT","QB"],
-  ["Geno Smith","NYJ","QB"],
-  ["Troy Franklin","DEN","WR"],
-  ["Green Bay Packers","GB","DST"],
-  ["Isaac TeSlaa","DET","WR"],
-  ["Kansas City Chiefs","KC","DST"],
-  ["Darnell Mooney","NYG","WR"],
-  ["Cairo Santos","CHI","K"],
-  ["Jaydon Blue","DAL","RB"],
-  ["Rashod Bateman","BAL","WR"],
-  ["Jake Bates","DET","K"],
-  ["Evan McPherson","CIN","K"],
-  ["Kaytron Allen","WAS","RB"],
-  ["Emanuel Wilson","SEA","RB"],
-  ["Harrison Mevis","LAR","K"],
-  ["Pat Freiermuth","PIT","TE"],
-  ["Detroit Lions","DET","DST"],
-  ["Cooper Kupp","SEA","WR"],
-  ["Andy Borregales","NE","K"],
-  ["Chase McLaughlin","TB","K"],
-  ["Zachariah Branch","ATL","WR"],
-  ["Cade Otton","TB","TE"],
-  ["Germie Bernard","PIT","WR"],
-  ["Buffalo Bills","BUF","DST"],
-  ["Antonio Williams","WAS","WR"],
-  ["Cleveland Browns","CLE","DST"],
-  ["Jaylen Wright","MIA","RB"],
-  ["Jack Bech","LV","WR"],
-  ["Evan Engram","DEN","TE"],
-  ["Justice Hill","BAL","RB"],
-  ["Harrison Butker","KC","K"],
-  ["Greg Dulcich","MIA","TE"],
-  ["George Holani","SEA","RB"],
-  ["David Njoku","LAC","TE"],
-  ["Ollie Gordon II","MIA","RB"],
-  ["Fernando Mendoza","LV","QB"],
-  ["Malachi Fields","NYG","WR"],
-  ["Chimere Dike","TEN","WR"],
-  ["Chris Boswell","PIT","K"],
-  ["Keon Coleman","BUF","WR"],
-  ["Ted Hurst III","TB","WR"],
-  ["Ja'Kobi Lane","BAL","WR"],
-  ["Chris Bell","MIA","WR"],
-  ["Devaughn Vele","NO","WR"],
-  ["Isaiah Davis","NYJ","RB"],
-  ["Demond Claiborne","MIN","RB"],
-  ["Elic Ayomanor","TEN","WR"],
-  ["Tua Tagovailoa","ATL","QB"],
-  ["Colby Parkinson","LAR","TE"],
-  ["Kaelon Black","SF","RB"],
-  ["Caleb Douglas","MIA","WR"],
-  ["Tory Horton","SEA","WR"],
-  ["Elijah Sarratt","BAL","WR"],
-  ["Christian Kirk","SF","WR"],
-  ["Will Reichard","MIN","K"],
-  ["Samaje Perine","CIN","RB"],
-  ["Jordan James","SF","RB"],
-  ["Ty Johnson","BUF","RB"],
-  ["LeQuint Allen Jr.","JAC","RB"],
-  ["Wil Lutz","DEN","K"],
-  ["Chris Brooks","GB","RB"],
-  ["Najee Harris","NYG","RB"],
-  ["Mason Taylor","NYJ","TE"],
-  ["Darius Slayton","NYG","WR"],
-  ["San Francisco 49ers","SF","DST"],
-  ["Tyquan Thornton","KC","WR"],
-  ["Xavier Legette","CAR","WR"],
-  ["Theo Johnson","NYG","TE"],
-  ["Kirk Cousins","LV","QB"],
-  ["Cyrus Allen","KC","WR"],
-  ["Michael Penix Jr.","ATL","QB"],
-  ["Marvin Mims Jr.","DEN","WR"],
-  ["Oscar Delp","NO","TE"],
-  ["Eli Stowers","PHI","TE"],
-  ["Trey Benson","ARI","RB"],
-  ["DJ Giddens","IND","RB"],
-  ["Deshaun Watson","CLE","QB"],
-  ["Atlanta Falcons","ATL","DST"],
-  ["Shedeur Sanders","CLE","QB"],
-  ["Devin Neal","NO","RB"],
-  ["Brashard Smith","KC","RB"],
-  ["Malik Davis","DAL","RB"],
-  ["New Orleans Saints","NO","DST"],
-  ["Seth McGowan","IND","RB"],
-  ["Kendre Miller","NO","RB"],
-  ["Adam Randall","BAL","RB"],
-  ["Kaleb Johnson","PIT","RB"],
-  ["Hollywood Brown","PHI","WR"],
-  ["Kyle Williams","NE","WR"],
-  ["Emari Demercado","KC","RB"],
-  ["Devin Singletary","NYG","RB"],
-  ["Isaiah Bond","CLE","WR"],
-  ["Mike Gesicki","CIN","TE"],
-  ["Mack Hollins","NE","WR"],
-  ["Brandon Aiyuk","SF","WR"],
-  ["Trevor Etienne","CAR","RB"],
-  ["Skyler Bell","BUF","WR"],
-  ["Charlie Smyth","NO","K"],
-  ["Isaac Guerendo","SF","RB"],
-  ["Indianapolis Colts","IND","DST"],
-  ["Jerome Ford","WAS","RB"],
-  ["Andrei Iosivas","CIN","WR"],
-  ["Chicago Bears","CHI","DST"],
-  ["Tahj Brooks","CIN","RB"],
-  ["Jake Tonges","SF","TE"],
-  ["Tyreek Hill","FA","WR"],
-  ["Jaleel McLaughlin","DEN","RB"],
-  ["Audric Estime","NO","RB"],
-  ["Darren Waller","CAR","TE"],
-  ["Jarquez Hunter","LAR","RB"],
-  ["Will Shipley","PHI","RB"],
-  ["Darnell Washington","PIT","TE"],
-  ["Jahan Dotson","ATL","WR"],
-  ["Michael Mayer","LV","TE"],
-  ["Dallas Cowboys","DAL","DST"],
-  ["Elijah Arroyo","SEA","TE"],
-  ["DeMario Douglas","NE","WR"],
-  ["Jalen Tolbert","MIA","WR"],
-  ["J.J. McCarthy","MIN","QB"],
-  ["Carson Beck","ARI","QB"],
-  ["Joe Mixon","FA","RB"],
-  ["Kareem Hunt","FA","RB"],
-  ["Bryce Lance","NO","WR"],
-  ["Tyler Higbee","LAR","TE"],
-  ["Xavier Hutchinson","HOU","WR"],
-  ["Cedric Tillman","CLE","WR"],
-  ["Jalen Royals","KC","WR"],
-  ["Charlie Kolar","LAC","TE"],
-  ["Konata Mumpfield","LAR","WR"],
-  ["Olamide Zaccheaus","ATL","WR"],
-  ["Chris Brazzell II","CAR","WR"],
-  ["Tez Johnson","TB","WR"],
-  ["Erick All Jr.","CIN","TE"],
-  ["Carolina Panthers","CAR","DST"],
-  ["Cole Kmet","CHI","TE"],
-  ["Calvin Austin III","NYG","WR"],
-  ["Mac Jones","SF","QB"],
-  ["Eli Raridon","NE","TE"],
-  ["Max Klare","LAR","TE"],
-  ["New York Giants","NYG","DST"],
-  ["Jake Elliott","PHI","K"],
-  ["Luke McCaffrey","WAS","WR"],
-  ["Noah Gray","KC","TE"],
-  ["Bam Knight","ARI","RB"],
-  ["Dawson Knox","BUF","TE"],
-  ["Eli Heidenreich","PIT","RB"],
-  ["Kendrick Bourne","ARI","WR"],
-  ["Joshua Palmer","BUF","WR"],
-  ["Ja'Tavion Sanders","CAR","TE"],
-  ["Justin Fields","KC","QB"],
-  ["Brenen Thompson","LAC","WR"],
-  ["Tampa Bay Buccaneers","TB","DST"],
-  ["Tyler Bass","BUF","K"],
-  ["Tennessee Titans","TEN","DST"],
-  ["Justin Joly","DEN","TE"],
-  ["Ty Simpson","LAR","QB"],
-  ["Malik Benson","LV","WR"],
-  ["Zane Gonzalez","FA","K"],
-  ["Michael Carter","TEN","RB"],
-  ["Nick Folk","ATL","K"],
-  ["Cincinnati Bengals","CIN","DST"],
-  ["Treylon Burks","WAS","WR"],
-  ["Trey Smack","GB","K"],
-  ["Kalif Raymond","CHI","WR"],
-  ["Roman Wilson","PIT","WR"],
-  ["Anthony Richardson Sr.","IND","QB"],
-  ["Jawhar Jordan","HOU","RB"],
-  ["Kevin Coleman Jr.","MIA","WR"],
-  ["Savion Williams","GB","WR"],
-  ["Phil Mafah","DAL","RB"],
-  ["Raheim Sanders","CLE","RB"],
-  ["KaVontae Turpin","DAL","WR"],
-  ["Blake Grupe","IND","K"],
-  ["Dont'e Thornton Jr.","LV","WR"],
-  ["Noah Fant","NO","TE"],
-  ["John Metchie III","CAR","WR"],
-  ["Joe Flacco","CIN","QB"],
-  ["Jaylin Lane","WAS","WR"],
-  ["Nick Westbrook-Ikhine","IND","WR"],
-  ["Miami Dolphins","MIA","DST"],
-  ["Jam Miller","NE","RB"],
-  ["Tutu Atwell","MIA","WR"],
-  ["Zavion Thomas","CHI","WR"],
-  ["Tommy Tremble","CAR","TE"],
-  ["Ryan Fitzgerald","CAR","K"],
-  ["Demarcus Robinson","SF","WR"],
-  ["CJ Daniels","LAR","WR"],
-  ["Jameis Winston","NYG","QB"],
-  ["Joey Slye","TEN","K"],
-  ["J'Mari Taylor","JAC","RB"],
-  ["Kyle Juszczyk","SF","RB"],
-  ["Devontez Walker","BAL","WR"],
-  ["Roschon Johnson","CHI","RB"],
-  ["Chad Ryland","ARI","K"],
-  ["Luke Musgrave","GB","TE"],
-  ["Marcus Mariota","WAS","QB"],
-  ["Mitchell Evans","CAR","TE"],
-  ["Daniel Carlson","LV","K"],
-  ["Washington Commanders","WAS","DST"],
-  ["Colbie Young","CIN","WR"],
-  ["Ashton Dulin","IND","WR"],
-  ["Jordan Whittington","LAR","WR"],
-  ["Rasheen Ali","BAL","RB"],
-  ["Cade Klubnik","NYJ","QB"],
-  ["Austin Ekeler","FA","RB"],
-  ["Ben Sauls","NYG","K"],
-  ["Daniel Bellinger","TEN","TE"],
-  ["Sione Vaki","DET","RB"],
-  ["John Bates","WAS","TE"],
-  ["Ben Sinnott","WAS","TE"],
-  ["Las Vegas Raiders","LV","DST"],
-  ["Brandon McManus","FA","K"],
-  ["Joe Milton III","DAL","QB"],
-  ["Isaiah Williams","NYJ","WR"],
-  ["Austin Hooper","ATL","TE"],
-  ["Tommy Myers","FA","TE"],
-  ["Barion Brown","NO","WR"],
-  ["Tyler Goodson","ATL","RB"],
-  ["New York Jets","NYJ","DST"],
-  ["Zavier Scott","MIN","RB"],
-  ["Tai Felton","MIN","WR"],
-  ["Riley Leonard","IND","QB"],
-  ["Jeremy McNichols","WAS","RB"],
-  ["Khalil Herbert","SF","RB"],
-  ["Noah Whittington","HOU","RB"],
-  ["Dameon Pierce","PHI","RB"],
-  ["Ronnie Rivers","LAR","RB"],
-  ["Terrell Jennings","FA","RB"],
-  ["Elijah Higgins","ARI","TE"],
-  ["Ty Chandler","NO","RB"],
-  ["Spencer Shrader","IND","K"],
-  ["Odell Beckham Jr.","NYG","WR"],
-  ["Greg Dortch","DET","WR"],
-  ["Drew Stevens","WAS","K"],
-  ["Robert Henry Jr.","WAS","RB"],
-  ["Jake Moody","FA","K"],
-  ["Jacob Cowing","SF","WR"],
-  ["Dylan Laube","LV","RB"],
-  ["Marlin Klein","HOU","TE"],
-  ["Reggie Gilliam","NE","RB"],
-  ["Antonio Gibson","FA","RB"],
-  ["Xavier Smith","LAR","WR"],
-  ["Damien Martinez","GB","RB"],
-  ["Zach Ertz","FA","TE"],
-  ["Dyami Brown","WAS","WR"],
-  ["Hunter Luepke","DAL","RB"],
-  ["Roman Hemby","LV","RB"],
-  ["Quinn Ewers","MIA","QB"],
-  ["Elijah Moore","PHI","WR"],
-  ["Jonnu Smith","FA","TE"],
-  ["Tanner Koziol","JAC","TE"],
-  ["Deion Burks","IND","WR"],
-  ["Jahdae Walker","CHI","WR"],
-  ["Matt Hibner","BAL","TE"],
-  ["Will Kacmarek","MIA","TE"],
-  ["Miles Davis","CAR","RB"],
-  ["Xavier Restrepo","TEN","WR"],
-  ["Jalen Reagor","MIA","WR"],
-  ["Jackson Hawes","BUF","TE"],
-  ["Miles Sanders","FA","RB"],
-  ["Mitch Tinsley","CIN","WR"],
-  ["Tim Patrick","NYJ","WR"],
-  ["Frank Gore Jr.","BUF","RB"],
-  ["Donovan Edwards","MIA","RB"],
-  ["Elijah Mitchell","FA","RB"],
-  ["Josh Oliver","MIN","TE"],
-  ["Cash Jones","ATL","RB"],
-  ["Cedrick Wilson Jr.","DET","WR"],
-  ["Jason Sanders","NYJ","K"],
-  ["Scotty Miller","CHI","WR"],
-  ["Luke Schoonmaker","DAL","TE"],
-  ["Jaret Patterson","LAC","RB"],
-  ["Jordan Watkins","SF","WR"],
-  ["Marquez Valdes-Scantling","DAL","WR"],
-  ["Gardner Minshew II","ARI","QB"],
-  ["Theo Wease Jr.","MIA","WR"],
-  ["Juice Wells Jr.","ATL","WR"],
-  ["Taysom Hill","FA","TE"],
-  ["Sam Roush","CHI","TE"],
-  ["Myles Montgomery","FA","RB"],
-  ["Nate Boerkircher","JAC","TE"],
-  ["Michael Woods II","DEN","WR"],
-  ["Jaydn Ott","KC","RB"],
-  ["Van Jefferson","WAS","WR"],
-  ["Jeremy Ruckert","NYJ","TE"],
-  ["Travis Homer","PIT","RB"],
-  ["David Sills V","TB","WR"],
-  ["Jimmy Horn Jr.","CAR","WR"],
-  ["DeAndre Hopkins","BAL","WR"],
-  ["Michael Trigg","DAL","TE"],
-  ["Jalen Milroe","SEA","QB"],
-  ["Mason Rudolph","PIT","QB"],
-  ["Arizona Cardinals","ARI","DST"],
-  ["Mo Alie-Cox","IND","TE"],
-  ["Adam Trautman","DEN","TE"],
-  ["Tyler Lockett","LV","WR"],
-  ["Durham Smythe","BAL","TE"],
-  ["Foster Moreau","HOU","TE"],
-  ["Jermaine Burton","FA","WR"],
-  ["Tyler Conklin","DET","TE"],
-  ["Tyrod Taylor","GB","QB"],
-  ["Trey Lance","LAC","QB"],
-  ["Lil'Jordan Humphrey","DEN","WR"]
-
+["Ja'Marr Chase","CIN","WR"],
+["Jahmyr Gibbs","DET","RB"],
+["Puka Nacua","LAR","WR"],
+["Bijan Robinson","ATL","RB"],
+["Jaxon Smith-Njigba","SEA","WR"],
+["Amon-Ra St. Brown","DET","WR"],
+["CeeDee Lamb","DAL","WR"],
+["Justin Jefferson","MIN","WR"],
+["Christian McCaffrey","SF","RB"],
+["Drake London","ATL","WR"],
+["Jonathan Taylor","IND","RB"],
+["A.J. Brown","NE","WR"],
+["Nico Collins","HOU","WR"],
+["Chase Brown","CIN","RB"],
+["James Cook III","BUF","RB"],
+["Brock Bowers","LV","TE"],
+["Chris Olave","NO","WR"],
+["George Pickens","DAL","WR"],
+["Trey McBride","ARI","TE"],
+["De'Von Achane","MIA","RB"],
+["Rashee Rice","KC","WR"],
+["DeVonta Smith","PHI","WR"],
+["Omarion Hampton","LAC","RB"],
+["Saquon Barkley","PHI","RB"],
+["Malik Nabers","NYG","WR"],
+["Josh Allen","BUF","QB"],
+["Kenneth Walker III","KC","RB"],
+["Zay Flowers","BAL","WR"],
+["Garrett Wilson","NYJ","WR"],
+["Lamar Jackson","BAL","QB"],
+["Tetairoa McMillan","CAR","WR"],
+["Jaylen Waddle","DEN","WR"],
+["Ladd McConkey","LAC","WR"],
+["Tee Higgins","CIN","WR"],
+["Derrick Henry","BAL","RB"],
+["Drake Maye","NE","QB"],
+["Colston Loveland","CHI","TE"],
+["Emeka Egbuka","TB","WR"],
+["Ashton Jeanty","LV","RB"],
+["Breece Hall","NYJ","RB"],
+["Jeremiyah Love","ARI","RB"],
+["Kyren Williams","LAR","RB"],
+["Javonte Williams","DAL","RB"],
+["Josh Jacobs","GB","RB"],
+["Terry McLaurin","WAS","WR"],
+["Joe Burrow","CIN","QB"],
+["Luther Burden III","CHI","WR"],
+["Travis Etienne Jr.","NO","RB"],
+["Davante Adams","LAR","WR"],
+["DJ Moore","BUF","WR"],
+["Jayden Daniels","WAS","QB"],
+["Tyler Warren","IND","TE"],
+["Mike Evans","SF","WR"],
+["Jameson Williams","DET","WR"],
+["D'Andre Swift","CHI","RB"],
+["Cam Skattebo","NYG","RB"],
+["Rome Odunze","CHI","WR"],
+["Christian Watson","GB","WR"],
+["Jalen Hurts","PHI","QB"],
+["Bucky Irving","TB","RB"],
+["David Montgomery","HOU","RB"],
+["Quinshon Judkins","CLE","RB"],
+["Parker Washington","JAC","WR"],
+["Caleb Williams","CHI","QB"],
+["Carnell Tate","TEN","WR"],
+["Bhayshul Tuten","JAC","RB"],
+["TreVeyon Henderson","NE","RB"],
+["Marvin Harrison Jr.","ARI","WR"],
+["Justin Herbert","LAC","QB"],
+["Jadarian Price","SEA","RB"],
+["Harold Fannin Jr.","CLE","TE"],
+["Brian Thomas Jr.","JAC","WR"],
+["Chris Godwin Jr.","TB","WR"],
+["Trevor Lawrence","JAC","QB"],
+["Jaylen Warren","PIT","RB"],
+["Tucker Kraft","GB","TE"],
+["Dak Prescott","DAL","QB"],
+["DK Metcalf","PIT","WR"],
+["Rhamondre Stevenson","NE","RB"],
+["Kyle Pitts Sr.","ATL","TE"],
+["Michael Pittman Jr.","PIT","WR"],
+["Tony Pollard","TEN","RB"],
+["Sam LaPorta","DET","TE"],
+["Courtland Sutton","DEN","WR"],
+["Wan'Dale Robinson","TEN","WR"],
+["Josh Downs","IND","WR"],
+["Rico Dowdle","PIT","RB"],
+["Michael Wilson","ARI","WR"],
+["Jonathon Brooks","CAR","RB"],
+["RJ Harvey","DEN","RB"],
+["Brock Purdy","SF","QB"],
+["Quentin Johnston","LAC","WR"],
+["Jaxson Dart","NYG","QB"],
+["Stefon Diggs","WAS","WR"],
+["Travis Kelce","KC","TE"],
+["Chuba Hubbard","CAR","RB"],
+["Kenny Gainwell","TB","RB"],
+["George Kittle","SF","TE"],
+["Alec Pierce","IND","WR"],
+["Bo Nix","DEN","QB"],
+["Patrick Mahomes II","KC","QB"],
+["J.K. Dobbins","DEN","RB"],
+["Jakobi Meyers","JAC","WR"],
+["Matthew Stafford","LAR","QB"],
+["Jayden Reed","GB","WR"],
+["Jordan Addison","MIN","WR"],
+["Jared Goff","DET","QB"],
+["Rachaad White","WAS","RB"],
+["Makai Lemon","PHI","WR"],
+["Blake Corum","LAR","RB"],
+["Dalton Kincaid","BUF","TE"],
+["Kyler Murray","MIN","QB"],
+["Kyle Monangai","CHI","RB"],
+["Aaron Jones Sr.","MIN","RB"],
+["Jacory Croskey-Merritt","WAS","RB"],
+["Jake Ferguson","DAL","TE"],
+["Jordan Mason","MIN","RB"],
+["Baker Mayfield","TB","QB"],
+["Dallas Goedert","PHI","TE"],
+["Jordan Love","GB","QB"],
+["Isaiah Likely","NYG","TE"],
+["KC Concepcion","CLE","WR"],
+["Khalil Shakir","BUF","WR"],
+["Jalen Coker","CAR","WR"],
+["Tyler Shough","NO","QB"],
+["Xavier Worthy","KC","WR"],
+["Matthew Golden","GB","WR"],
+["Jordyn Tyson","NO","WR"],
+["Romeo Doubs","NE","WR"],
+["Mark Andrews","BAL","TE"],
+["Malik Willis","MIA","QB"],
+["Juwan Johnson","NO","TE"],
+["Tyler Allgeier","ARI","RB"],
+["Tyjae Spears","TEN","RB"],
+["Woody Marks","HOU","RB"],
+["Chris Rodriguez Jr.","JAC","RB"],
+["Sam Darnold","SEA","QB"],
+["De'Zhaun Stribling","SF","WR"],
+["Deebo Samuel Sr.","SF","WR"],
+["C.J. Stroud","HOU","QB"],
+["Dylan Sampson","CLE","RB"],
+["Tyrone Tracy Jr.","NYG","RB"],
+["Denzel Boston","CLE","WR"],
+["Daniel Jones","IND","QB"],
+["Keaton Mitchell","LAC","RB"],
+["Zach Charbonnet","SEA","RB"],
+["Rashid Shaheed","SEA","WR"],
+["Cam Ward","TEN","QB"],
+["Chig Okonkwo","WAS","TE"],
+["Brenton Strange","JAC","TE"],
+["Jonah Coleman","DEN","RB"],
+["Alvin Kamara","NO","RB"],
+["Hunter Henry","NE","TE"],
+["Isiah Pacheco","DET","RB"],
+["Houston Texans","HOU","DST"],
+["Dalton Schultz","HOU","TE"],
+["Bryce Young","CAR","QB"],
+["Tre Tucker","LV","WR"],
+["Adonai Mitchell","NYJ","WR"],
+["Jerry Jeudy","CLE","WR"],
+["Jauan Jennings","MIN","WR"],
+["Tank Bigsby","PHI","RB"],
+["Jalen McMillan","TB","WR"],
+["Braelon Allen","NYJ","RB"],
+["Brian Robinson Jr.","ATL","RB"],
+["Denver Broncos","DEN","DST"],
+["Tre' Harris","LAC","WR"],
+["Seattle Seahawks","SEA","DST"],
+["Los Angeles Rams","LAR","DST"],
+["T.J. Hockenson","MIN","TE"],
+["Omar Cooper Jr.","NYJ","WR"],
+["Jacoby Brissett","ARI","QB"],
+["Jalen Nailor","LV","WR"],
+["MarShawn Lloyd","GB","RB"],
+["Philadelphia Eagles","PHI","DST"],
+["Malik Washington","MIA","WR"],
+["Ryan Flournoy","DAL","WR"],
+["Dontayvion Wicks","PHI","WR"],
+["Ray Davis","BUF","RB"],
+["Pat Bryant","DEN","WR"],
+["Travis Hunter","JAC","WR"],
+["Brandon Aubrey","DAL","K"],
+["Emmett Johnson","KC","RB"],
+["Oronde Gadsden II","LAC","TE"],
+["Pittsburgh Steelers","PIT","DST"],
+["Jaylin Noel","HOU","WR"],
+["New England Patriots","NE","DST"],
+["Sean Tucker","TB","RB"],
+["Mike Washington Jr.","LV","RB"],
+["Minnesota Vikings","MIN","DST"],
+["AJ Barner","SEA","TE"],
+["Jacksonville Jaguars","JAC","DST"],
+["Keenan Allen","IND","WR"],
+["Cameron Dicker","LAC","K"],
+["Los Angeles Chargers","LAC","DST"],
+["Ka'imi Fairbairn","HOU","K"],
+["Tank Dell","HOU","WR"],
+["Cam Little","JAC","K"],
+["Calvin Ridley","TEN","WR"],
+["Kayshon Boutte","NE","WR"],
+["Kimani Vidal","LAC","RB"],
+["Baltimore Ravens","BAL","DST"],
+["Nicholas Singleton","TEN","RB"],
+["Jason Myers","SEA","K"],
+["Gunnar Helm","TEN","TE"],
+["James Conner","ARI","RB"],
+["Kenyon Sadiq","NYJ","TE"],
+["Tyler Loop","BAL","K"],
+["Eddy Pineiro","SF","K"],
+["Terrance Ferguson","LAR","TE"],
+["Aaron Rodgers","PIT","QB"],
+["Geno Smith","NYJ","QB"],
+["Troy Franklin","DEN","WR"],
+["Green Bay Packers","GB","DST"],
+["Isaac TeSlaa","DET","WR"],
+["Kansas City Chiefs","KC","DST"],
+["Darnell Mooney","NYG","WR"],
+["Cairo Santos","CHI","K"],
+["Jaydon Blue","DAL","RB"],
+["Rashod Bateman","BAL","WR"],
+["Jake Bates","DET","K"],
+["Evan McPherson","CIN","K"],
+["Kaytron Allen","WAS","RB"],
+["Emanuel Wilson","SEA","RB"],
+["Harrison Mevis","LAR","K"],
+["Pat Freiermuth","PIT","TE"],
+["Detroit Lions","DET","DST"],
+["Cooper Kupp","SEA","WR"],
+["Andy Borregales","NE","K"],
+["Chase McLaughlin","TB","K"],
+["Zachariah Branch","ATL","WR"],
+["Cade Otton","TB","TE"],
+["Germie Bernard","PIT","WR"],
+["Buffalo Bills","BUF","DST"],
+["Antonio Williams","WAS","WR"],
+["Cleveland Browns","CLE","DST"],
+["Jaylen Wright","MIA","RB"],
+["Jack Bech","LV","WR"],
+["Evan Engram","DEN","TE"],
+["Justice Hill","BAL","RB"],
+["Harrison Butker","KC","K"],
+["Greg Dulcich","MIA","TE"],
+["George Holani","SEA","RB"],
+["David Njoku","LAC","TE"],
+["Ollie Gordon II","MIA","RB"],
+["Fernando Mendoza","LV","QB"],
+["Malachi Fields","NYG","WR"],
+["Chimere Dike","TEN","WR"],
+["Chris Boswell","PIT","K"],
+["Keon Coleman","BUF","WR"],
+["Ted Hurst III","TB","WR"],
+["Ja'Kobi Lane","BAL","WR"],
+["Chris Bell","MIA","WR"],
+["Devaughn Vele","NO","WR"],
+["Isaiah Davis","NYJ","RB"],
+["Demond Claiborne","MIN","RB"],
+["Elic Ayomanor","TEN","WR"],
+["Tua Tagovailoa","ATL","QB"],
+["Colby Parkinson","LAR","TE"],
+["Kaelon Black","SF","RB"],
+["Caleb Douglas","MIA","WR"],
+["Tory Horton","SEA","WR"],
+["Elijah Sarratt","BAL","WR"],
+["Christian Kirk","SF","WR"],
+["Will Reichard","MIN","K"],
+["Samaje Perine","CIN","RB"],
+["Jordan James","SF","RB"],
+["Ty Johnson","BUF","RB"],
+["LeQuint Allen Jr.","JAC","RB"],
+["Wil Lutz","DEN","K"],
+["Chris Brooks","GB","RB"],
+["Najee Harris","NYG","RB"],
+["Mason Taylor","NYJ","TE"],
+["Darius Slayton","NYG","WR"],
+["San Francisco 49ers","SF","DST"],
+["Tyquan Thornton","KC","WR"],
+["Xavier Legette","CAR","WR"],
+["Theo Johnson","NYG","TE"],
+["Kirk Cousins","LV","QB"],
+["Cyrus Allen","KC","WR"],
+["Michael Penix Jr.","ATL","QB"],
+["Marvin Mims Jr.","DEN","WR"],
+["Oscar Delp","NO","TE"],
+["Eli Stowers","PHI","TE"],
+["Trey Benson","ARI","RB"],
+["DJ Giddens","IND","RB"],
+["Deshaun Watson","CLE","QB"],
+["Atlanta Falcons","ATL","DST"],
+["Shedeur Sanders","CLE","QB"],
+["Devin Neal","NO","RB"],
+["Brashard Smith","KC","RB"],
+["Malik Davis","DAL","RB"],
+["New Orleans Saints","NO","DST"],
+["Seth McGowan","IND","RB"],
+["Kendre Miller","NO","RB"],
+["Adam Randall","BAL","RB"],
+["Kaleb Johnson","PIT","RB"],
+["Hollywood Brown","PHI","WR"],
+["Kyle Williams","NE","WR"],
+["Emari Demercado","KC","RB"],
+["Devin Singletary","NYG","RB"],
+["Isaiah Bond","CLE","WR"],
+["Mike Gesicki","CIN","TE"],
+["Mack Hollins","NE","WR"],
+["Brandon Aiyuk","SF","WR"],
+["Trevor Etienne","CAR","RB"],
+["Skyler Bell","BUF","WR"],
+["Charlie Smyth","NO","K"],
+["Isaac Guerendo","SF","RB"],
+["Indianapolis Colts","IND","DST"],
+["Jerome Ford","WAS","RB"],
+["Andrei Iosivas","CIN","WR"],
+["Chicago Bears","CHI","DST"],
+["Tahj Brooks","CIN","RB"],
+["Jake Tonges","SF","TE"],
+["Tyreek Hill","FA","WR"],
+["Jaleel McLaughlin","DEN","RB"],
+["Audric Estime","NO","RB"],
+["Darren Waller","CAR","TE"],
+["Jarquez Hunter","LAR","RB"],
+["Will Shipley","PHI","RB"],
+["Darnell Washington","PIT","TE"],
+["Jahan Dotson","ATL","WR"],
+["Michael Mayer","LV","TE"],
+["Dallas Cowboys","DAL","DST"],
+["Elijah Arroyo","SEA","TE"],
+["DeMario Douglas","NE","WR"],
+["Jalen Tolbert","MIA","WR"],
+["J.J. McCarthy","MIN","QB"],
+["Carson Beck","ARI","QB"],
+["Joe Mixon","FA","RB"],
+["Kareem Hunt","FA","RB"],
+["Bryce Lance","NO","WR"],
+["Tyler Higbee","LAR","TE"],
+["Xavier Hutchinson","HOU","WR"],
+["Cedric Tillman","CLE","WR"],
+["Jalen Royals","KC","WR"],
+["Charlie Kolar","LAC","TE"],
+["Konata Mumpfield","LAR","WR"],
+["Olamide Zaccheaus","ATL","WR"],
+["Chris Brazzell II","CAR","WR"],
+["Tez Johnson","TB","WR"],
+["Erick All Jr.","CIN","TE"],
+["Carolina Panthers","CAR","DST"],
+["Cole Kmet","CHI","TE"],
+["Calvin Austin III","NYG","WR"],
+["Mac Jones","SF","QB"],
+["Eli Raridon","NE","TE"],
+["Max Klare","LAR","TE"],
+["New York Giants","NYG","DST"],
+["Jake Elliott","PHI","K"],
+["Luke McCaffrey","WAS","WR"],
+["Noah Gray","KC","TE"],
+["Bam Knight","ARI","RB"],
+["Dawson Knox","BUF","TE"],
+["Eli Heidenreich","PIT","RB"],
+["Kendrick Bourne","ARI","WR"],
+["Joshua Palmer","BUF","WR"],
+["Ja'Tavion Sanders","CAR","TE"],
+["Justin Fields","KC","QB"],
+["Brenen Thompson","LAC","WR"],
+["Tampa Bay Buccaneers","TB","DST"],
+["Tyler Bass","BUF","K"],
+["Tennessee Titans","TEN","DST"],
+["Justin Joly","DEN","TE"],
+["Ty Simpson","LAR","QB"],
+["Malik Benson","LV","WR"],
+["Zane Gonzalez","FA","K"],
+["Michael Carter","TEN","RB"],
+["Nick Folk","ATL","K"],
+["Cincinnati Bengals","CIN","DST"],
+["Treylon Burks","WAS","WR"],
+["Trey Smack","GB","K"],
+["Kalif Raymond","CHI","WR"],
+["Roman Wilson","PIT","WR"],
+["Anthony Richardson Sr.","IND","QB"],
+["Jawhar Jordan","HOU","RB"],
+["Kevin Coleman Jr.","MIA","WR"],
+["Savion Williams","GB","WR"],
+["Phil Mafah","DAL","RB"],
+["Raheim Sanders","CLE","RB"],
+["KaVontae Turpin","DAL","WR"],
+["Blake Grupe","IND","K"],
+["Dont'e Thornton Jr.","LV","WR"],
+["Noah Fant","NO","TE"],
+["John Metchie III","CAR","WR"],
+["Joe Flacco","CIN","QB"],
+["Jaylin Lane","WAS","WR"],
+["Nick Westbrook-Ikhine","IND","WR"],
+["Miami Dolphins","MIA","DST"],
+["Jam Miller","NE","RB"],
+["Tutu Atwell","MIA","WR"],
+["Zavion Thomas","CHI","WR"],
+["Tommy Tremble","CAR","TE"],
+["Ryan Fitzgerald","CAR","K"],
+["Demarcus Robinson","SF","WR"],
+["CJ Daniels","LAR","WR"],
+["Jameis Winston","NYG","QB"],
+["Joey Slye","TEN","K"],
+["J'Mari Taylor","JAC","RB"],
+["Kyle Juszczyk","SF","RB"],
+["Devontez Walker","BAL","WR"],
+["Roschon Johnson","CHI","RB"],
+["Chad Ryland","ARI","K"],
+["Luke Musgrave","GB","TE"],
+["Marcus Mariota","WAS","QB"],
+["Mitchell Evans","CAR","TE"],
+["Daniel Carlson","LV","K"],
+["Washington Commanders","WAS","DST"],
+["Colbie Young","CIN","WR"],
+["Ashton Dulin","IND","WR"],
+["Jordan Whittington","LAR","WR"],
+["Rasheen Ali","BAL","RB"],
+["Cade Klubnik","NYJ","QB"],
+["Austin Ekeler","FA","RB"],
+["Ben Sauls","NYG","K"],
+["Daniel Bellinger","TEN","TE"],
+["Sione Vaki","DET","RB"],
+["John Bates","WAS","TE"],
+["Ben Sinnott","WAS","TE"],
+["Las Vegas Raiders","LV","DST"],
+["Brandon McManus","FA","K"],
+["Joe Milton III","DAL","QB"],
+["Isaiah Williams","NYJ","WR"],
+["Austin Hooper","ATL","TE"],
+["Tommy Myers","FA","TE"],
+["Barion Brown","NO","WR"],
+["Tyler Goodson","ATL","RB"],
+["New York Jets","NYJ","DST"],
+["Zavier Scott","MIN","RB"],
+["Tai Felton","MIN","WR"],
+["Riley Leonard","IND","QB"],
+["Jeremy McNichols","WAS","RB"],
+["Khalil Herbert","SF","RB"],
+["Noah Whittington","HOU","RB"],
+["Dameon Pierce","PHI","RB"],
+["Ronnie Rivers","LAR","RB"],
+["Terrell Jennings","FA","RB"],
+["Elijah Higgins","ARI","TE"],
+["Ty Chandler","NO","RB"],
+["Spencer Shrader","IND","K"],
+["Odell Beckham Jr.","NYG","WR"],
+["Greg Dortch","DET","WR"],
+["Drew Stevens","WAS","K"],
+["Robert Henry Jr.","WAS","RB"],
+["Jake Moody","FA","K"],
+["Jacob Cowing","SF","WR"],
+["Dylan Laube","LV","RB"],
+["Marlin Klein","HOU","TE"],
+["Reggie Gilliam","NE","RB"],
+["Antonio Gibson","FA","RB"],
+["Xavier Smith","LAR","WR"],
+["Damien Martinez","GB","RB"],
+["Zach Ertz","FA","TE"],
+["Dyami Brown","WAS","WR"],
+["Hunter Luepke","DAL","RB"],
+["Roman Hemby","LV","RB"],
+["Quinn Ewers","MIA","QB"],
+["Elijah Moore","PHI","WR"],
+["Jonnu Smith","FA","TE"],
+["Tanner Koziol","JAC","TE"],
+["Deion Burks","IND","WR"],
+["Jahdae Walker","CHI","WR"],
+["Matt Hibner","BAL","TE"],
+["Will Kacmarek","MIA","TE"],
+["Miles Davis","CAR","RB"],
+["Xavier Restrepo","TEN","WR"],
+["Jalen Reagor","MIA","WR"],
+["Jackson Hawes","BUF","TE"],
+["Miles Sanders","FA","RB"],
+["Mitch Tinsley","CIN","WR"],
+["Tim Patrick","NYJ","WR"],
+["Frank Gore Jr.","BUF","RB"],
+["Donovan Edwards","MIA","RB"],
+["Elijah Mitchell","FA","RB"],
+["Josh Oliver","MIN","TE"],
+["Cash Jones","ATL","RB"],
+["Cedrick Wilson Jr.","DET","WR"],
+["Jason Sanders","NYJ","K"],
+["Scotty Miller","CHI","WR"],
+["Luke Schoonmaker","DAL","TE"],
+["Jaret Patterson","LAC","RB"],
+["Jordan Watkins","SF","WR"],
+["Marquez Valdes-Scantling","DAL","WR"],
+["Gardner Minshew II","ARI","QB"],
+["Theo Wease Jr.","MIA","WR"],
+["Juice Wells Jr.","ATL","WR"],
+["Taysom Hill","FA","TE"],
+["Sam Roush","CHI","TE"],
+["Myles Montgomery","FA","RB"],
+["Nate Boerkircher","JAC","TE"],
+["Michael Woods II","DEN","WR"],
+["Jaydn Ott","KC","RB"],
+["Van Jefferson","WAS","WR"],
+["Jeremy Ruckert","NYJ","TE"],
+["Travis Homer","PIT","RB"],
+["David Sills V","TB","WR"],
+["Jimmy Horn Jr.","CAR","WR"],
+["DeAndre Hopkins","BAL","WR"],
+["Michael Trigg","DAL","TE"],
+["Jalen Milroe","SEA","QB"],
+["Mason Rudolph","PIT","QB"],
+["Arizona Cardinals","ARI","DST"],
+["Mo Alie-Cox","IND","TE"],
+["Adam Trautman","DEN","TE"],
+["Tyler Lockett","LV","WR"],
+["Durham Smythe","BAL","TE"],
+["Foster Moreau","HOU","TE"],
+["Jermaine Burton","FA","WR"],
+["Tyler Conklin","DET","TE"],
+["Tyrod Taylor","GB","QB"],
+["Trey Lance","LAC","QB"],
+["Lil'Jordan Humphrey","DEN","WR"]
 ];
-
-
-
-/\* =========================================================
-   STATE
-   \========================================================= \*/
-
+/* =========================================================
+STATE
+========================================================= */
 function emptyState(){
-
 const rosters={};
-
 teams.forEach(team=>{
 rosters[team]=[];
 });
-
 return{
-rosters\:rosters,
+rosters:rosters,
 history:[],
-active\:null
+active:null
 };
-
 }
-
 let state=emptyState();
-
-
-
 function normalizeState(saved){
-
 const clean=emptyState();
-
 if(saved && saved.rosters){
-
 teams.forEach(team=>{
-
 if(Array.isArray(saved.rosters[team])){
-
 clean.rosters[team]=
 saved.rosters[team];
-
 }
-
 });
-
 }
-
 if(saved && Array.isArray(saved.history)){
-
 clean.history=saved.history;
-
 }
-
 if(saved && saved.active){
-
 clean.active=saved.active;
-
 }
-
 return clean;
-
 }
-
-
-
-/\* =========================================================
-   LOAD DRAFT
-   \========================================================= \*/
-
+/* =========================================================
+LOAD DRAFT
+========================================================= */
 async function loadDraft(){
-
 const{data,error}=
-
 await supabaseClient
-.from("draft\_state")
+.from("draft_state")
 .select("state")
-.eq("draft\_code","JCO26")
+.eq("draft_code","JCO26")
 .limit(1);
-
 if(error){
-
 console.error("LOAD ERROR:",error);
-
 setConnection(
 "DATABASE ERROR",
 true
 );
-
 return;
-
 }
-
 if(data && data.length && data[0].state){
-
 state=normalizeState(
 data[0].state
 );
-
 }else{
-
 state=emptyState();
-
 }
-
 setConnection(
 "LIVE",
 false
 );
-
 render();
-
 }
-
-
-
-/\* =========================================================
-   SAVE
-   \========================================================= \*/
-
+/* =========================================================
+SAVE
+========================================================= */
 async function saveDraft(){
-
 const{error}=
-
 await supabaseClient
-.from("draft\_state")
+.from("draft_state")
 .update({
-
-state\:state,
-
-updated\_at:
+state:state,
+updated_at:
 new Date().toISOString()
-
 })
 .eq("id",1);
-
 if(error){
-
 console.error(
 "SAVE ERROR:",
 error
 );
-
 alert(
 "Could not save draft."
 );
-
 }
-
 }
-
-
-
-/\* =========================================================
-   LIVE UPDATES
-   \========================================================= \*/
-
+/* =========================================================
+LIVE UPDATES
+========================================================= */
 async function checkForUpdates(){
-
 const{data,error}=
-
 await supabaseClient
-.from("draft\_state")
-.select("state,updated\_at")
-.eq("draft\_code","JCO26")
+.from("draft_state")
+.select("state,updated_at")
+.eq("draft_code","JCO26")
 .limit(1);
-
 if(error){
-
 console.error(
 "UPDATE ERROR:",
 error
 );
-
 setConnection(
 "DATABASE ERROR",
 true
 );
-
 return;
-
 }
-
 setConnection(
 "LIVE",
 false
 );
-
 if(data &&
 data.length &&
 data[0].state){
-
 state=normalizeState(
 data[0].state
 );
-
 render();
-
 }
-
 }
-
 setInterval(
 checkForUpdates,
 2000
 );
-
-
-
-/\* =========================================================
-   CONNECTION
-   \========================================================= \*/
-
+/* =========================================================
+CONNECTION
+========================================================= */
 function setConnection(text,isError){
-
 const element=
 document.getElementById(
 "connection"
 );
-
 element.textContent=text;
-
 element.classList.remove("online");
 element.classList.remove("error");
-
 if(isError){
-
 element.classList.add("error");
-
 }else if(text==="LIVE"){
-
 element.classList.add("online");
-
 }
-
 }
-
-
-
-/\* =========================================================
-   COMMISSIONER MENU
-   \========================================================= \*/
-
+/* =========================================================
+COMMISSIONER MENU
+========================================================= */
 function toggleCommissionerMenu(){
-
 const box =
 document.getElementById("loginBox");
-
-/\* If already in Commissioner Mode, exit \*/
+/* If already in Commissioner Mode, exit */
 if(isCommissioner){
-
 logout();
-
 return;
-
 }
-
-/\* Otherwise toggle login box \*/
-
+/* Otherwise toggle login box */
 if(box.style.display==="block"){
-
 box.style.display="none";
-
 }else{
-
 box.style.display="block";
-
 document
 .getElementById("pinInput")
 .focus();
-
 }
-
 }
-
-
-
-/\* =========================================================
-   CLOSE LOGIN BOX WHEN CLICKING OUTSIDE
-   \========================================================= \*/
-
+/* =========================================================
+CLOSE LOGIN BOX WHEN CLICKING OUTSIDE
+========================================================= */
 document.addEventListener(
 "click",
 function(event){
-
 const box =
 document.getElementById("loginBox");
-
 const button =
 document.getElementById("commissionerMenuButton");
-
-/\* Only do this when the login box is open
-   and we are NOT already in Commissioner Mode \*/
-
+/* Only do this when the login box is open
+and we are NOT already in Commissioner Mode */
 if(
 !isCommissioner &&
 box.style.display==="block" &&
 !box.contains(event.target) &&
 event.target !== button
 ){
-
 box.style.display="none";
-
 }
-
 });
-
-
-
-/\* =========================================================
-   COMMISSIONER LOGIN
-   \========================================================= \*/
-
+/* =========================================================
+COMMISSIONER LOGIN
+========================================================= */
 function login(){
-
 const entered=
 document.getElementById(
 "pinInput"
 ).value;
-
-if(entered===COMMISSIONER\_PIN){
-
+if(entered===COMMISSIONER_PIN){
 isCommissioner=true;
-
-/\* Remember Commissioner Mode \*/
-
+/* Remember Commissioner Mode */
 localStorage.setItem(
 "commissionerMode",
 "true"
 );
-
 document.getElementById(
 "loginBox"
 ).style.display="none";
-
 document.getElementById(
 "commissioner"
 ).style.display="block";
-
 document.getElementById(
 "commissionerBadge"
 ).style.display="inline-block";
-
-
-
-/\* Change button to Exit Commissioner \*/
-
+/* Change button to Exit Commissioner */
 document.getElementById(
 "commissionerMenuButton"
 ).textContent=
 "Exit Commissioner";
-
-
-
 document.getElementById(
 "loginMessage"
 ).textContent="";
-
 loadTeams();
-
 searchPlayers();
-
 render();
-
 }else{
-
 document.getElementById(
 "loginMessage"
 ).textContent=
 "Incorrect PIN.";
-
 }
-
 }
-
-
-
-/\* =========================================================
-   LOGOUT / EXIT COMMISSIONER MODE
-   \========================================================= \*/
-
+/* =========================================================
+LOGOUT / EXIT COMMISSIONER MODE
+========================================================= */
 function logout(){
-
 isCommissioner=false;
-
-/\* Forget Commissioner Mode \*/
-
+/* Forget Commissioner Mode */
 localStorage.removeItem(
 "commissionerMode"
 );
-
 document.getElementById(
 "commissioner"
 ).style.display="none";
-
 document.getElementById(
 "commissionerBadge"
 ).style.display="none";
-
-
-
-/\* Change button back to Commissioner \*/
-
+/* Change button back to Commissioner */
 document.getElementById(
 "commissionerMenuButton"
 ).textContent=
 "Commissioner";
-
 document.getElementById(
 "pinInput"
 ).value="";
-
 document.getElementById(
 "search"
 ).value="";
-
 document.getElementById(
 "playerList"
 ).innerHTML="";
-
 document.getElementById(
 "loginBox"
 ).style.display="none";
-
 }
-
-
-
-/\* =========================================================
-   TEAMS
-   \========================================================= \*/
-
+/* =========================================================
+TEAMS
+========================================================= */
 function loadTeams(){
-
 const dropdown=
 document.getElementById(
 "winningTeam"
 );
-
 dropdown.innerHTML="";
-
 teams.forEach(team=>{
-
 const option=
 document.createElement("option");
-
 option.value=team;
 option.textContent=team;
-
 dropdown.appendChild(option);
-
 });
-
 }
-
-
-
-/\* =========================================================
-   SEARCH PLAYERS
-   \========================================================= \*/
-
+/* =========================================================
+SEARCH PLAYERS
+========================================================= */
 function searchPlayers(){
-
 if(!isCommissioner){
-
 return;
-
 }
-
 const query=
 document.getElementById(
 "search"
 ).value
 .toLowerCase()
 .trim();
-
 const list=
 document.getElementById(
 "playerList"
 );
-
 list.innerHTML="";
-
 if(!query){
-
 return;
-
 }
-
 const soldNames=
 new Set(
 state.history.map(
 x=>x.name
 )
 );
-
 players
 .filter(player=>
 player[0]
@@ -1745,302 +1358,190 @@ player[0]
 !soldNames.has(player[0])
 )
 .forEach(player=>{
-
 const row=
 document.createElement("div");
-
-row\.className="player-row";
-
+row.className="player-row";
 const info=
 document.createElement("div");
-
 info.className="player-info";
-
-info.innerHTML=\`
-
-\<b>${player[0]}\</b>
-
-\<span class="player-team">
+info.innerHTML=`
+<b>${player[0]}</b>
+<span class="player-team">
 ${player[1]}
-\</span>
-
-\<span class="player-pos">
+</span>
+<span class="player-pos">
 ${player[2]}
-\</span>
-
-\`;
-
+</span>
+`;
 const button=
 document.createElement("button");
-
 button.className="gray";
 button.textContent="Nominate";
-
 button.onclick=function(){
-
 nominate(
 player[0],
 player[1],
 player[2]
 );
-
 };
-
-row\.appendChild(info);
-row\.appendChild(button);
+row.appendChild(info);
+row.appendChild(button);
 list.appendChild(row);
-
 });
-
 }
-
-
-
-/\* =========================================================
-   NOMINATE
-   \========================================================= \*/
-
+/* =========================================================
+NOMINATE
+========================================================= */
 async function nominate(
 name,
 teamCode,
 position
 ){
-
 if(!isCommissioner){
-
 return;
-
 }
-
 state.active={
-
-name\:name,
-teamCode\:teamCode,
-position\:position,
-sold\:false
-
+name:name,
+teamCode:teamCode,
+position:position,
+sold:false
 };
-
 document.getElementById(
 "search"
 ).value="";
-
 document.getElementById(
 "playerList"
 ).innerHTML="";
-
 render();
-
 await saveDraft();
-
 }
-
-
-
-/\* =========================================================
-   UN-NOMINATE
-   \========================================================= \*/
-
+/* =========================================================
+UN-NOMINATE
+========================================================= */
 async function unNominate(){
-
 if(!isCommissioner){
-
 return;
-
 }
-
 if(!state.active){
-
 return;
-
 }
-
 if(state.active.sold){
-
 alert(
 "This player has already been sold. Use Undo Last Sale instead."
 );
-
 return;
-
 }
-
 state.active=null;
-
 document.getElementById(
 "search"
 ).value="";
-
 document.getElementById(
 "playerList"
 ).innerHTML="";
-
 render();
-
 await saveDraft();
-
 }
-
-
-
-/\* =========================================================
-   SELL
-   \========================================================= \*/
-
+/* =========================================================
+SELL
+========================================================= */
 async function sellPlayer(){
-
 if(!isCommissioner){
-
 return;
-
 }
-
 if(!state.active){
-
 alert(
 "Nominate a player first."
 );
-
 return;
-
 }
-
 if(state.active.sold){
-
 alert(
 "This player has already been sold."
 );
-
 return;
-
 }
-
 const team=
 document.getElementById(
 "winningTeam"
 ).value;
-
 const bid=
 Number(
 document.getElementById(
 "winningBid"
 ).value
 );
-
 if(!bid || bid<1){
-
 alert(
 "Enter a winning bid."
 );
-
 return;
-
 }
-
 const roster=
 state.rosters[team];
-
 if(roster.length>=16){
-
 alert(
 team+" already has 16 players and is full."
 );
-
 return;
-
 }
-
 const spent=
 roster.reduce(
 (sum,player)=>
 sum+Number(player.price),
 0
 );
-
 const remaining=
 200-spent;
-
 const spotsLeft=
 16-roster.length;
-
 const maxBid=
 remaining-(spotsLeft-1);
-
 if(bid>maxBid){
-
 alert(
 team+
 " can only bid up to $"+
 maxBid
 );
-
 return;
-
 }
-
 const purchase={
-
-name\:state.active.name,
-position\:state.active.position,
-team\:team,
-price\:bid
-
+name:state.active.name,
+position:state.active.position,
+team:team,
+price:bid
 };
-
 state.rosters[team].push(purchase);
 state.history.push(purchase);
-
 state.active={
-
 ...purchase,
-sold\:true
-
+sold:true
 };
-
 document.getElementById(
 "winningBid"
 ).value="";
-
 document.getElementById(
 "search"
 ).value="";
-
 document.getElementById(
 "playerList"
 ).innerHTML="";
-
 render();
-
 await saveDraft();
-
 }
-
-
-
-/\* =========================================================
-   UNDO LAST SALE
-   \========================================================= \*/
-
+/* =========================================================
+UNDO LAST SALE
+========================================================= */
 async function undoLast(){
-
 if(!isCommissioner){
-
 return;
-
 }
-
 if(!state.history.length){
-
 return;
-
 }
-
 const last=
 state.history.pop();
-
 const roster=
 state.rosters[last.team];
-
 const index=
 roster.findIndex(
 player=>
@@ -2048,316 +1549,197 @@ player.name===last.name &&
 Number(player.price)===
 Number(last.price)
 );
-
 if(index>=0){
-
 roster.splice(index,1);
-
 }
-
 state.active=null;
-
 render();
-
 await saveDraft();
-
 }
-
-
-
-/\* =========================================================
-   RESET
-   \========================================================= \*/
-
+/* =========================================================
+RESET
+========================================================= */
 async function resetDraft(){
-
 if(!isCommissioner){
-
 return;
-
 }
-
 const answer=
 confirm(
 "RESET THE ENTIRE DRAFT?"
 );
-
 if(!answer){
-
 return;
-
 }
-
 state=emptyState();
-
 document.getElementById(
 "search"
 ).value="";
-
 document.getElementById(
 "playerList"
 ).innerHTML="";
-
 render();
-
 await saveDraft();
-
 }
-
-
-
-/\* =========================================================
-   TEAM STATUS
-   \========================================================= \*/
-
+/* =========================================================
+TEAM STATUS
+========================================================= */
 function renderTeams(){
-
 const table=
 document.getElementById(
 "teams"
 );
-
 table.innerHTML="";
-
 const teamData=
 teams.map(team=>{
-
 const roster=
 state.rosters[team]||[];
-
 const spent=
 roster.reduce(
 (sum,player)=>
 sum+Number(player.price),
 0
 );
-
 const remaining=
 Math.max(0,200-spent);
-
 const spots=
 16-roster.length;
-
 const maxBid=
-
 remaining===0
 ?0
-\:Math.max(
+:Math.max(
 1,
 remaining-(spots-1)
 );
-
 return{
-
-team\:team,
-maxBid\:maxBid,
-rosterLength\:roster.length
-
+team:team,
+maxBid:maxBid,
+rosterLength:roster.length
 };
-
 });
-
 teamData.sort(
 (a,b)=>
 b.maxBid-a.maxBid
 );
-
 teamData.forEach(data=>{
-
 const row=
 document.createElement("tr");
-
-row\.innerHTML=\`
-
-\<td>
-\<b>${data.team}\</b>
-\</td>
-
-\<td class="money">
+row.innerHTML=`
+<td>
+<b>${data.team}</b>
+</td>
+<td class="money">
 $${data.maxBid}
-\</td>
-
-\`;
-
+</td>
+`;
 table.appendChild(row);
-
 });
-
 }
-
-
-
-/\* =========================================================
-   RECENT DRAFTED PLAYERS
-   \========================================================= \*/
-
+/* =========================================================
+RECENT DRAFTED PLAYERS
+========================================================= */
 function renderHistory(){
-
 const table=
 document.getElementById(
 "history"
 );
-
 table.innerHTML="";
-
 const recentPlayers=
 [...state.history].reverse();
-
 recentPlayers.forEach(
 (player,index)=>{
-
 const row=
 document.createElement("tr");
-
-row\.innerHTML=\`
-
-\<td>
+row.innerHTML=`
+<td>
 ${state.history.length-index}
-\</td>
-
-\<td>
-\<b>${player.name}\</b>
-\</td>
-
-\<td>
+</td>
+<td>
+<b>${player.name}</b>
+</td>
+<td>
 ${player.position}
-\</td>
-
-\<td>
+</td>
+<td>
 ${player.team}
-\</td>
-
-\<td class="money">
+</td>
+<td class="money">
 $${player.price}
-\</td>
-
-\`;
-
+</td>
+`;
 table.appendChild(row);
-
 });
-
 }
-
-
-
-/\* =========================================================
-   ACTIVE PLAYER
-   \========================================================= \*/
-
+/* =========================================================
+ACTIVE PLAYER
+========================================================= */
 function renderActive(){
-
 const name=
 document.getElementById(
 "playerName"
 );
-
 const position=
 document.getElementById(
 "playerPosition"
 );
-
 const sold=
 document.getElementById(
 "soldMessage"
 );
-
 if(!state.active){
-
 name.textContent=
 "No Player Nominated";
-
 position.textContent="—";
 sold.innerHTML="";
-
 return;
-
 }
-
 name.textContent=
 state.active.name;
-
 position.textContent=
 state.active.position;
-
 if(state.active.sold){
-
-sold.innerHTML=\`
-
-\<div class="sold">
-
+sold.innerHTML=`
+<div class="sold">
 SOLD — ${state.active.team}
 — $${state.active.price}
-
-\</div>
-
-\`;
-
+</div>
+`;
 }else{
-
 sold.innerHTML="";
-
 }
-
 }
-
-
-
-/\* =========================================================
-   RENDER
-   \========================================================= \*/
-
+/* =========================================================
+RENDER
+========================================================= */
 function render(){
-
 renderActive();
 renderTeams();
 renderHistory();
-
 if(isCommissioner){
-
 searchPlayers();
-
 }
-
 }
-
-
-
-/\* =========================================================
-   RESTORE COMMISSIONER UI
-   \========================================================= \*/
-
+/* =========================================================
+RESTORE COMMISSIONER UI
+========================================================= */
 function restoreCommissionerMode(){
-
 if(!isCommissioner){
-
 return;
-
 }
-
 document.getElementById(
 "commissioner"
 ).style.display="block";
-
 document.getElementById(
 "commissionerBadge"
 ).style.display="inline-block";
-
 document.getElementById(
 "commissionerMenuButton"
 ).textContent=
 "Exit Commissioner";
-
 loadTeams();
-
 }
-
-
-
-/\* =========================================================
-   BUTTONS
-   \========================================================= \*/
-
+/* =========================================================
+BUTTONS
+========================================================= */
 document
 .getElementById(
 "commissionerMenuButton"
@@ -2366,7 +1748,6 @@ document
 "click",
 toggleCommissionerMenu
 );
-
 document
 .getElementById(
 "loginButton"
@@ -2375,7 +1756,6 @@ document
 "click",
 login
 );
-
 document
 .getElementById(
 "pinInput"
@@ -2383,15 +1763,10 @@ document
 .addEventListener(
 "keydown",
 function(event){
-
 if(event.key==="Enter"){
-
 login();
-
 }
-
 });
-
 document
 .getElementById(
 "search"
@@ -2400,7 +1775,6 @@ document
 "input",
 searchPlayers
 );
-
 document
 .getElementById(
 "sellButton"
@@ -2409,7 +1783,6 @@ document
 "click",
 sellPlayer
 );
-
 document
 .getElementById(
 "unNominateButton"
@@ -2418,7 +1791,6 @@ document
 "click",
 unNominate
 );
-
 document
 .getElementById(
 "undoButton"
@@ -2427,7 +1799,6 @@ document
 "click",
 undoLast
 );
-
 document
 .getElementById(
 "resetButton"
@@ -2436,22 +1807,13 @@ document
 "click",
 resetDraft
 );
-
-
-
-/\* =========================================================
-   START
-   \========================================================= \*/
-
+/* =========================================================
+START
+========================================================= */
 loadTeams();
-
 restoreCommissionerMode();
-
 render();
-
 loadDraft();
-
-\</script>
-
-\</body>
-\</html>
+</script>
+</body>
+</html>
