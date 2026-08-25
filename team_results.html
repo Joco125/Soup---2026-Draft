@@ -151,19 +151,6 @@ color:#32c875
 
 
 /* =========================================================
-   TRADES CARD
-   ========================================================= */
-
-.trades-card{
-background:#11182b;
-border:1px solid #293553;
-border-radius:14px;
-padding:16px;
-margin-top:18px
-}
-
-
-/* =========================================================
    TABLE
    ========================================================= */
 
@@ -398,7 +385,7 @@ Soup 2026 Fantasy Auction Draft
 
 <div class="header-buttons">
 
-
+<a
 href="index.html"
 class="header-button blue"
 >
@@ -441,34 +428,6 @@ Connecting...
 id="teamsGrid"
 class="teams-grid"
 ></div>
-
-
-<!-- =====================================================
-     RECENT TRADES
-     ===================================================== -->
-
-<div class="trades-card">
-
-<h2 style="margin-top:0">
-Recent Trades
-</h2>
-
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Team A</th>
-<th>Team B</th>
-</tr>
-</thead>
-<tbody id="trades"></tbody>
-</table>
-
-<p id="noTrades" class="small">
-No trades yet.
-</p>
-
-</div>
 
 
 </div>
@@ -554,9 +513,7 @@ const SLOT_DEFS = [
 let state={
 
 rosters:{},
-budgetAdjustments:{},
 history:[],
-trades:[],
 active:null
 
 };
@@ -571,9 +528,7 @@ function normalizeState(saved){
 const clean={
 
 rosters:{},
-budgetAdjustments:{},
 history:[],
-trades:[],
 active:null
 
 };
@@ -581,7 +536,6 @@ active:null
 teams.forEach(team=>{
 
 clean.rosters[team]=[];
-clean.budgetAdjustments[team]=0;
 
 });
 
@@ -602,34 +556,10 @@ saved.rosters[team];
 }
 
 
-if(saved && saved.budgetAdjustments){
-
-teams.forEach(team=>{
-
-if(typeof saved.budgetAdjustments[team]==="number"){
-
-clean.budgetAdjustments[team]=
-saved.budgetAdjustments[team];
-
-}
-
-});
-
-}
-
-
 if(saved && Array.isArray(saved.history)){
 
 clean.history=
 saved.history;
-
-}
-
-
-if(saved && Array.isArray(saved.trades)){
-
-clean.trades=
-saved.trades;
 
 }
 
@@ -651,19 +581,18 @@ return clean;
    ASSIGN ROSTER TO SLOTS
    ========================================================= */
 
-function assignRosterToSlots(roster){
+function assignRosterToSlots(roster){ 
+   
+const slots= 
 
-const slots=
-
-SLOT_DEFS.map(def=>({
-
+SLOT_DEFS.map(def=>({ 
+   
 label:def.label,
 accepts:def.accepts,
 className:def.className,
 player:null
 
 }));
-
 
 /* EXACT POSITION SLOTS */
 
@@ -782,58 +711,6 @@ slot.player=player;
 
 
 return slots;
-
-}
-
-
-/* =========================================================
-   TEAM FINANCIALS (matches index.html)
-   ========================================================= */
-
-function getTeamFinancials(team){
-
-const roster=
-state.rosters[team]||[];
-
-const spent=
-roster.reduce(
-(sum,player)=>
-sum+Number(player.price),
-0
-);
-
-const adjustment=
-Number(
-state.budgetAdjustments[team]||0
-);
-
-const remaining=
-Math.max(
-0,
-200-spent-adjustment
-);
-
-const spotsLeft=
-16-roster.length;
-
-const maxBid=
-remaining===0
-?0
-:Math.max(
-1,
-remaining-(spotsLeft-1)
-);
-
-return{
-
-roster:roster,
-spent:spent,
-adjustment:adjustment,
-remaining:remaining,
-spotsLeft:spotsLeft,
-maxBid:maxBid
-
-};
 
 }
 
@@ -1000,128 +877,6 @@ selectedCard.classList.add(
 
 
 /* =========================================================
-   RECENT TRADES
-   ========================================================= */
-
-function describeTradeSide(playerList,cash){
-
-const parts=
-playerList.map(
-player=>player.name
-);
-
-if(cash){
-
-parts.push(
-"$"+cash+" cash"
-);
-
-}
-
-if(!parts.length){
-
-return "nothing";
-
-}
-
-return parts.join(", ");
-
-}
-
-
-function renderTrades(){
-
-const table=
-document.getElementById(
-"trades"
-);
-
-const noTrades=
-document.getElementById(
-"noTrades"
-);
-
-if(!table){
-
-return;
-
-}
-
-table.innerHTML="";
-
-if(!state.trades.length){
-
-if(noTrades){
-
-noTrades.style.display=
-"block";
-
-}
-
-return;
-
-}
-
-if(noTrades){
-
-noTrades.style.display=
-"none";
-
-}
-
-const recentTrades=
-[...state.trades].reverse();
-
-recentTrades.forEach(
-(trade,index)=>{
-
-const row=
-document.createElement(
-"tr"
-);
-
-const sentA=
-describeTradeSide(
-trade.playersFromA,
-trade.cashFromA
-);
-
-const sentB=
-describeTradeSide(
-trade.playersFromB,
-trade.cashFromB
-);
-
-row.innerHTML=`
-
-<td>
-${state.trades.length-index}
-</td>
-
-<td>
-<b>${trade.teamA}</b>
-<div class="small">
-gave: ${sentA}
-</div>
-</td>
-
-<td>
-<b>${trade.teamB}</b>
-<div class="small">
-gave: ${sentB}
-</div>
-</td>
-
-`;
-
-table.appendChild(row);
-
-});
-
-}
-
-
-/* =========================================================
    RENDER
    ========================================================= */
 
@@ -1137,25 +892,33 @@ grid.innerHTML="";
 
 teams.forEach(team=>{
 
-const financials=
-getTeamFinancials(team);
+const roster=
+state.rosters[team]||
+[];
 
 const spent=
-financials.spent;
-
-const adjustment=
-financials.adjustment;
+roster.reduce(
+(sum,player)=>
+sum+Number(player.price),
+0
+);
 
 const remaining=
-financials.remaining;
+200-spent;
 
-const maxBid=
-financials.maxBid;
+const spotsLeft =
+16 - roster.length;
 
+const maxBid =
+remaining === 0
+? 0
+: Math.max(
+1,
+remaining - (spotsLeft - 1)
+);   
+   
 const slots=
-assignRosterToSlots(
-financials.roster
-);
+assignRosterToSlots(roster);
 
 
 const card=
@@ -1180,24 +943,6 @@ document.createElement(
 teamHeader.className=
 "team-card-header";
 
-let tradeLine="";
-
-if(adjustment>0){
-
-tradeLine=
-"Trade cash: <b>-$"+
-adjustment+
-"</b><br>";
-
-}else if(adjustment<0){
-
-tradeLine=
-"Trade cash: <b>+$"+
-(-adjustment)+
-"</b><br>";
-
-}
-
 teamHeader.innerHTML=`
 
 <div class="team-name">
@@ -1207,8 +952,6 @@ ${team}
 <div class="team-budget">
 
 Spent <b>$${spent}</b><br>
-
-${tradeLine}
 
 $${remaining} left<br>
 
@@ -1296,9 +1039,6 @@ card.appendChild(table);
 grid.appendChild(card);
 
 });
-
-
-renderTrades();
 
 
 /*
