@@ -581,18 +581,18 @@ return clean;
    ASSIGN ROSTER TO SLOTS
    ========================================================= */
 
-function assignRosterToSlots(roster){
+function assignRosterToSlots(roster){ 
+   
+const slots= 
+      
+SLOT_DEFS.map(def=>({ 
 
-    const slots =
-        SLOT_DEFS.map(def => ({
-            label: def.label,
-            accepts: def.accepts,
-            className: def.className,
-            player: null
-        }));
-
-    // ...
-}
+label:def.label,
+accepts:def.accepts,
+className:def.className,
+player:null
+      
+}));
 
 /* EXACT POSITION SLOTS */
 
