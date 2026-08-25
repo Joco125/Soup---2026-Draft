@@ -581,17 +581,19 @@ return clean;
    ASSIGN ROSTER TO SLOTS
    ========================================================= */
 
-function assignRosterToSlots(roster){
+function assignRosterToSlots(roster){ 
+   
+const slots= 
 
-    const slots =
-        SLOT_DEFS.map(def => ({
-            label: def.label,
-            accepts: def.accepts,
-            className: def.className,
-            player: null
-        }));
+SLOT_DEFS.map(def=>({ 
+   
+label:def.label,
+accepts:def.accepts,
+className:def.className,
+player:null
 
-
+}));
+                                     
     /* =====================================================
        STEP 1 — FILL NORMAL POSITIONAL SLOTS
        ===================================================== */
