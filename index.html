@@ -196,10 +196,6 @@ color:#ef5350
 display:none;
 flex-shrink:0
 }
-#tradeCard{
-display:none;
-flex-shrink:0
-}
 #loginBox{
 display:none;
 position:absolute;
@@ -252,22 +248,6 @@ flex-wrap:wrap
 }
 .commissioner-buttons button{
 flex:1
-}
-.trade-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px
-}
-.trade-side label{
-display:flex;
-align-items:center;
-gap:10px;
-cursor:pointer;
-width:100%
-}
-.trade-side input[type="checkbox"]{
-width:auto;
-flex-shrink:0
 }
 /* =========================================================
 MOBILE
@@ -339,9 +319,6 @@ height:auto
 flex:none;
 overflow:visible;
 height:auto
-}
-.trade-grid{
-grid-template-columns:1fr
 }
 }
 </style>
@@ -472,75 +449,6 @@ Reset Draft
 </button>
 </div>
 </div>
-<!-- TRADES (COMMISSIONER ONLY) -->
-<div
-class="card"
-id="tradeCard"
->
-<h2 style="margin-top:0">
-Trade Players / Cash
-</h2>
-<div class="controls" style="grid-template-columns:1fr 1fr">
-<select id="tradeTeamA"></select>
-<select id="tradeTeamB"></select>
-</div>
-<br>
-<div class="trade-grid">
-<div class="trade-side">
-<div class="label" id="tradeTeamALabel">
-TEAM A SENDS
-</div>
-<div
-id="tradeTeamARoster"
-class="player-list"
-style="height:160px"
-></div>
-<input
-id="tradeCashFromA"
-type="number"
-min="0"
-placeholder="Cash from Team A ($)"
-style="margin-top:8px"
->
-</div>
-<div class="trade-side">
-<div class="label" id="tradeTeamBLabel">
-TEAM B SENDS
-</div>
-<div
-id="tradeTeamBRoster"
-class="player-list"
-style="height:160px"
-></div>
-<input
-id="tradeCashFromB"
-type="number"
-min="0"
-placeholder="Cash from Team B ($)"
-style="margin-top:8px"
->
-</div>
-</div>
-<br>
-<div class="commissioner-buttons">
-<button
-id="executeTradeButton"
-class="green"
->
-Execute Trade
-</button>
-<button
-id="undoTradeButton"
-class="gray"
->
-Undo Last Trade
-</button>
-</div>
-<p
-id="tradeMessage"
-class="small"
-></p>
-</div>
 <!-- RECENT DRAFTED PLAYERS -->
 <div class="card history-card">
 <h2 style="margin-top:0">
@@ -558,24 +466,6 @@ Recent Drafted Players
 </tr>
 </thead>
 <tbody id="history"></tbody>
-</table>
-</div>
-</div>
-<!-- RECENT TRADES -->
-<div class="card history-card">
-<h2 style="margin-top:0">
-Recent Trades
-</h2>
-<div class="history-table-wrapper">
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Team A</th>
-<th>Team B</th>
-</tr>
-</thead>
-<tbody id="trades"></tbody>
 </table>
 </div>
 </div>
@@ -1165,16 +1055,12 @@ STATE
 ========================================================= */
 function emptyState(){
 const rosters={};
-const budgetAdjustments={};
 teams.forEach(team=>{
 rosters[team]=[];
-budgetAdjustments[team]=0;
 });
 return{
 rosters:rosters,
-budgetAdjustments:budgetAdjustments,
 history:[],
-trades:[],
 active:null
 };
 }
@@ -1189,63 +1075,13 @@ saved.rosters[team];
 }
 });
 }
-if(saved && saved.budgetAdjustments){
-teams.forEach(team=>{
-if(typeof saved.budgetAdjustments[team]==="number"){
-clean.budgetAdjustments[team]=
-saved.budgetAdjustments[team];
-}
-});
-}
 if(saved && Array.isArray(saved.history)){
 clean.history=saved.history;
-}
-if(saved && Array.isArray(saved.trades)){
-clean.trades=saved.trades;
 }
 if(saved && saved.active){
 clean.active=saved.active;
 }
 return clean;
-}
-/* =========================================================
-TEAM FINANCIALS (shared by Team Status + Sell + Trade)
-========================================================= */
-function getTeamFinancials(team){
-const roster=
-state.rosters[team]||[];
-const spent=
-roster.reduce(
-(sum,player)=>
-sum+Number(player.price),
-0
-);
-const adjustment=
-Number(
-state.budgetAdjustments[team]||0
-);
-const remaining=
-Math.max(
-0,
-200-spent-adjustment
-);
-const spotsLeft=
-16-roster.length;
-const maxBid=
-remaining===0
-?0
-:Math.max(
-1,
-remaining-(spotsLeft-1)
-);
-return{
-roster:roster,
-spent:spent,
-adjustment:adjustment,
-remaining:remaining,
-spotsLeft:spotsLeft,
-maxBid:maxBid
-};
 }
 /* =========================================================
 LOAD DRAFT
@@ -1420,9 +1256,6 @@ document.getElementById(
 "commissioner"
 ).style.display="block";
 document.getElementById(
-"tradeCard"
-).style.display="block";
-document.getElementById(
 "commissionerBadge"
 ).style.display="inline-block";
 /* Change button to Exit Commissioner */
@@ -1434,9 +1267,7 @@ document.getElementById(
 "loginMessage"
 ).textContent="";
 loadTeams();
-loadTradeTeams();
 searchPlayers();
-renderTradePanel();
 render();
 }else{
 document.getElementById(
@@ -1456,9 +1287,6 @@ localStorage.removeItem(
 );
 document.getElementById(
 "commissioner"
-).style.display="none";
-document.getElementById(
-"tradeCard"
 ).style.display="none";
 document.getElementById(
 "commissionerBadge"
@@ -1661,13 +1489,23 @@ team+" already has 16 players and is full."
 );
 return;
 }
-const financials=
-getTeamFinancials(team);
-if(bid>financials.maxBid){
+const spent=
+roster.reduce(
+(sum,player)=>
+sum+Number(player.price),
+0
+);
+const remaining=
+200-spent;
+const spotsLeft=
+16-roster.length;
+const maxBid=
+remaining-(spotsLeft-1);
+if(bid>maxBid){
 alert(
 team+
 " can only bid up to $"+
-financials.maxBid
+maxBid
 );
 return;
 }
@@ -1748,350 +1586,6 @@ render();
 await saveDraft();
 }
 /* =========================================================
-TRADES
-========================================================= */
-function loadTradeTeams(){
-const teamA=
-document.getElementById(
-"tradeTeamA"
-);
-const teamB=
-document.getElementById(
-"tradeTeamB"
-);
-if(!teamA || !teamB){
-return;
-}
-teamA.innerHTML="";
-teamB.innerHTML="";
-teams.forEach(team=>{
-const optionA=
-document.createElement("option");
-optionA.value=team;
-optionA.textContent=team;
-teamA.appendChild(optionA);
-const optionB=
-document.createElement("option");
-optionB.value=team;
-optionB.textContent=team;
-teamB.appendChild(optionB);
-});
-if(teams.length>1){
-teamB.value=teams[1];
-}
-}
-function renderTradeRosterList(team,containerId){
-const container=
-document.getElementById(
-containerId
-);
-if(!container){
-return;
-}
-container.innerHTML="";
-const roster=
-state.rosters[team]||[];
-if(!roster.length){
-container.innerHTML=
-'<div class="small" style="padding:8px 0">No players on this roster yet.</div>';
-return;
-}
-roster.forEach((player,index)=>{
-const row=
-document.createElement("div");
-row.className="player-row";
-const label=
-document.createElement("label");
-const checkbox=
-document.createElement("input");
-checkbox.type="checkbox";
-checkbox.value=String(index);
-checkbox.className="trade-checkbox";
-checkbox.dataset.team=team;
-const info=
-document.createElement("span");
-info.innerHTML=
-"<b>"+player.name+"</b> "+
-'<span class="player-pos">'+
-player.position+
-"</span> "+
-'<span class="player-team">$'+
-player.price+
-"</span>";
-label.appendChild(checkbox);
-label.appendChild(info);
-row.appendChild(label);
-container.appendChild(row);
-});
-}
-function renderTradePanel(){
-if(!isCommissioner){
-return;
-}
-const teamASelect=
-document.getElementById(
-"tradeTeamA"
-);
-const teamBSelect=
-document.getElementById(
-"tradeTeamB"
-);
-if(!teamASelect || !teamBSelect){
-return;
-}
-const teamA=teamASelect.value;
-const teamB=teamBSelect.value;
-document.getElementById(
-"tradeTeamALabel"
-).textContent=
-(teamA?teamA:"TEAM A")+
-" SENDS";
-document.getElementById(
-"tradeTeamBLabel"
-).textContent=
-(teamB?teamB:"TEAM B")+
-" SENDS";
-renderTradeRosterList(
-teamA,
-"tradeTeamARoster"
-);
-renderTradeRosterList(
-teamB,
-"tradeTeamBRoster"
-);
-}
-async function executeTrade(){
-if(!isCommissioner){
-return;
-}
-const message=
-document.getElementById(
-"tradeMessage"
-);
-message.textContent="";
-const teamA=
-document.getElementById(
-"tradeTeamA"
-).value;
-const teamB=
-document.getElementById(
-"tradeTeamB"
-).value;
-if(!teamA || !teamB || teamA===teamB){
-message.textContent=
-"Choose two different teams.";
-return;
-}
-const rosterA=
-state.rosters[teamA]||[];
-const rosterB=
-state.rosters[teamB]||[];
-const checkedA=
-Array.from(
-document.querySelectorAll(
-'.trade-checkbox[data-team="'+
-CSS.escape(teamA)+
-'"]:checked'
-)
-).map(box=>Number(box.value));
-const checkedB=
-Array.from(
-document.querySelectorAll(
-'.trade-checkbox[data-team="'+
-CSS.escape(teamB)+
-'"]:checked'
-)
-).map(box=>Number(box.value));
-const cashFromA=
-Number(
-document.getElementById(
-"tradeCashFromA"
-).value
-)||0;
-const cashFromB=
-Number(
-document.getElementById(
-"tradeCashFromB"
-).value
-)||0;
-if(cashFromA<0 || cashFromB<0){
-message.textContent=
-"Cash amounts cannot be negative.";
-return;
-}
-if(!checkedA.length &&
-!checkedB.length &&
-!cashFromA &&
-!cashFromB){
-message.textContent=
-"Select at least one player or enter a cash amount.";
-return;
-}
-const playersFromA=
-checkedA
-.map(index=>rosterA[index])
-.filter(Boolean);
-const playersFromB=
-checkedB
-.map(index=>rosterB[index])
-.filter(Boolean);
-/* SIMULATE RESULTING ROSTERS */
-const newRosterA=
-rosterA
-.filter((player,index)=>
-!checkedA.includes(index)
-)
-.concat(playersFromB);
-const newRosterB=
-rosterB
-.filter((player,index)=>
-!checkedB.includes(index)
-)
-.concat(playersFromA);
-if(newRosterA.length>16 ||
-newRosterB.length>16){
-message.textContent=
-"That trade would put a team over the 16 player roster limit.";
-return;
-}
-const currentAdjA=
-Number(
-state.budgetAdjustments[teamA]||0
-);
-const currentAdjB=
-Number(
-state.budgetAdjustments[teamB]||0
-);
-const newAdjA=
-currentAdjA+cashFromA-cashFromB;
-const newAdjB=
-currentAdjB+cashFromB-cashFromA;
-const spentA=
-newRosterA.reduce(
-(sum,player)=>
-sum+Number(player.price),
-0
-);
-const spentB=
-newRosterB.reduce(
-(sum,player)=>
-sum+Number(player.price),
-0
-);
-const remainingA=
-200-spentA-newAdjA;
-const remainingB=
-200-spentB-newAdjB;
-const spotsLeftA=
-16-newRosterA.length;
-const spotsLeftB=
-16-newRosterB.length;
-if(remainingA<Math.max(spotsLeftA,0) ||
-remainingB<Math.max(spotsLeftB,0)){
-message.textContent=
-"That trade would leave a team without enough budget to fill its remaining roster spots.";
-return;
-}
-/* APPLY THE TRADE */
-playersFromA.forEach(player=>{
-player.team=teamB;
-});
-playersFromB.forEach(player=>{
-player.team=teamA;
-});
-state.rosters[teamA]=newRosterA;
-state.rosters[teamB]=newRosterB;
-state.budgetAdjustments[teamA]=newAdjA;
-state.budgetAdjustments[teamB]=newAdjB;
-state.trades.push({
-teamA:teamA,
-teamB:teamB,
-playersFromA:
-playersFromA.map(player=>({
-name:player.name,
-position:player.position,
-price:player.price
-})),
-playersFromB:
-playersFromB.map(player=>({
-name:player.name,
-position:player.position,
-price:player.price
-})),
-cashFromA:cashFromA,
-cashFromB:cashFromB
-});
-document.getElementById(
-"tradeCashFromA"
-).value="";
-document.getElementById(
-"tradeCashFromB"
-).value="";
-render();
-renderTradePanel();
-await saveDraft();
-}
-async function undoLastTrade(){
-if(!isCommissioner){
-return;
-}
-if(!state.trades.length){
-return;
-}
-const last=
-state.trades.pop();
-const teamA=last.teamA;
-const teamB=last.teamB;
-function pullBack(fromTeam,list){
-const roster=
-state.rosters[fromTeam]||[];
-const removed=[];
-list.forEach(entry=>{
-const index=
-roster.findIndex(player=>
-player.name===entry.name &&
-Number(player.price)===
-Number(entry.price)
-);
-if(index>=0){
-removed.push(
-roster.splice(index,1)[0]
-);
-}
-});
-return removed;
-}
-/* players from A currently sit on teamB's roster */
-const backToA=
-pullBack(teamB,last.playersFromA);
-/* players from B currently sit on teamA's roster */
-const backToB=
-pullBack(teamA,last.playersFromB);
-backToA.forEach(player=>{
-player.team=teamA;
-});
-backToB.forEach(player=>{
-player.team=teamB;
-});
-state.rosters[teamA]=
-(state.rosters[teamA]||[])
-.concat(backToA);
-state.rosters[teamB]=
-(state.rosters[teamB]||[])
-.concat(backToB);
-state.budgetAdjustments[teamA]=
-Number(
-state.budgetAdjustments[teamA]||0
-)-last.cashFromA+last.cashFromB;
-state.budgetAdjustments[teamB]=
-Number(
-state.budgetAdjustments[teamB]||0
-)-last.cashFromB+last.cashFromA;
-render();
-renderTradePanel();
-await saveDraft();
-}
-/* =========================================================
 TEAM STATUS
 ========================================================= */
 function renderTeams(){
@@ -2102,11 +1596,29 @@ document.getElementById(
 table.innerHTML="";
 const teamData=
 teams.map(team=>{
-const financials=
-getTeamFinancials(team);
+const roster=
+state.rosters[team]||[];
+const spent=
+roster.reduce(
+(sum,player)=>
+sum+Number(player.price),
+0
+);
+const remaining=
+Math.max(0,200-spent);
+const spots=
+16-roster.length;
+const maxBid=
+remaining===0
+?0
+:Math.max(
+1,
+remaining-(spots-1)
+);
 return{
 team:team,
-maxBid:financials.maxBid
+maxBid:maxBid,
+rosterLength:roster.length
 };
 });
 teamData.sort(
@@ -2163,67 +1675,6 @@ table.appendChild(row);
 });
 }
 /* =========================================================
-RECENT TRADES
-========================================================= */
-function renderTrades(){
-const table=
-document.getElementById(
-"trades"
-);
-if(!table){
-return;
-}
-table.innerHTML="";
-const recentTrades=
-[...state.trades].reverse();
-recentTrades.forEach(
-(trade,index)=>{
-const row=
-document.createElement("tr");
-const sentA=
-describeTradeSide(
-trade.playersFromA,
-trade.cashFromA
-);
-const sentB=
-describeTradeSide(
-trade.playersFromB,
-trade.cashFromB
-);
-row.innerHTML=`
-<td>
-${state.trades.length-index}
-</td>
-<td>
-<b>${trade.teamA}</b>
-<div class="small">
-gave: ${sentA}
-</div>
-</td>
-<td>
-<b>${trade.teamB}</b>
-<div class="small">
-gave: ${sentB}
-</div>
-</td>
-`;
-table.appendChild(row);
-});
-}
-function describeTradeSide(playerList,cash){
-const parts=
-playerList.map(
-player=>player.name
-);
-if(cash){
-parts.push("$"+cash+" cash");
-}
-if(!parts.length){
-return "nothing";
-}
-return parts.join(", ");
-}
-/* =========================================================
 ACTIVE PLAYER
 ========================================================= */
 function renderActive(){
@@ -2268,7 +1719,6 @@ function render(){
 renderActive();
 renderTeams();
 renderHistory();
-renderTrades();
 if(isCommissioner){
 searchPlayers();
 }
@@ -2284,9 +1734,6 @@ document.getElementById(
 "commissioner"
 ).style.display="block";
 document.getElementById(
-"tradeCard"
-).style.display="block";
-document.getElementById(
 "commissionerBadge"
 ).style.display="inline-block";
 document.getElementById(
@@ -2294,7 +1741,6 @@ document.getElementById(
 ).textContent=
 "Exit Commissioner";
 loadTeams();
-loadTradeTeams();
 }
 /* =========================================================
 BUTTONS
@@ -2366,43 +1812,10 @@ document
 "click",
 resetDraft
 );
-document
-.getElementById(
-"tradeTeamA"
-)
-.addEventListener(
-"change",
-renderTradePanel
-);
-document
-.getElementById(
-"tradeTeamB"
-)
-.addEventListener(
-"change",
-renderTradePanel
-);
-document
-.getElementById(
-"executeTradeButton"
-)
-.addEventListener(
-"click",
-executeTrade
-);
-document
-.getElementById(
-"undoTradeButton"
-)
-.addEventListener(
-"click",
-undoLastTrade
-);
 /* =========================================================
 START
 ========================================================= */
 loadTeams();
-loadTradeTeams();
 restoreCommissionerMode();
 render();
 loadDraft();
