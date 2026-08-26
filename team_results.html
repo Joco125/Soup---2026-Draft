@@ -477,7 +477,7 @@ const teams = [
    16 ROSTER SLOTS
    ========================================================= */
 
-const SLOT_DEFS = [
+const BASE_SLOT_DEFS = [
 
 {label:"QB",accepts:["QB"],className:"slot-qb"},
 {label:"QB",accepts:["QB"],className:"slot-qb"},
@@ -491,19 +491,73 @@ const SLOT_DEFS = [
 {label:"TE",accepts:["TE"],className:"slot-te"},
 
 {label:"FLEX",accepts:["RB","WR","TE"],className:"slot-flex"},
-{label:"FLEX",accepts:["RB","WR","TE"],className:"slot-flex"},
-
-{label:"K",accepts:["K"],className:"slot-k"},
-
-{label:"D",accepts:["DST"],className:"slot-d"},
-
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"},
-{label:"BENCH",accepts:["QB","RB","WR","TE","K","DST"],className:"slot-bench"}
+{label:"FLEX",accepts:["RB","WR","TE"],className:"slot-flex"}
 
 ];
+
+
+/*
+Build this team's 16 slots.
+
+K and D only get their own dedicated slot if
+the team actually drafted one. Otherwise that
+slot becomes an extra BENCH spot instead, so
+every drafted player still has somewhere to
+show up, and every team still shows exactly
+16 slots total.
+*/
+
+function buildSlotDefs(roster){
+
+const slots=
+BASE_SLOT_DEFS.slice();
+
+const hasKicker=
+roster.some(player=>
+player.position==="K"
+);
+
+const hasDefense=
+roster.some(player=>
+player.position==="DST"
+);
+
+if(hasKicker){
+
+slots.push({
+label:"K",
+accepts:["K"],
+className:"slot-k"
+});
+
+}
+
+if(hasDefense){
+
+slots.push({
+label:"D",
+accepts:["DST"],
+className:"slot-d"
+});
+
+}
+
+const benchCount=
+16-slots.length;
+
+for(let i=0;i<benchCount;i++){
+
+slots.push({
+label:"BENCH",
+accepts:["QB","RB","WR","TE","K","DST"],
+className:"slot-bench"
+});
+
+}
+
+return slots;
+
+}
 
 
 /* =========================================================
@@ -631,7 +685,7 @@ function assignRosterToSlots(roster){
    
 const slots= 
 
-SLOT_DEFS.map(def=>({ 
+buildSlotDefs(roster).map(def=>({ 
    
 label:def.label,
 accepts:def.accepts,
