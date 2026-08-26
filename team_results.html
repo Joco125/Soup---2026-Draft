@@ -477,38 +477,6 @@ const teams = [
    16 ROSTER SLOTS
    ========================================================= */
 
-const BASE_SLOT_DEFS = [
-
-{label:"QB",accepts:["QB"],className:"slot-qb"},
-{label:"QB",accepts:["QB"],className:"slot-qb"},
-
-{label:"WR",accepts:["WR"],className:"slot-wr"},
-{label:"WR",accepts:["WR"],className:"slot-wr"},
-
-{label:"RB",accepts:["RB"],className:"slot-rb"},
-{label:"RB",accepts:["RB"],className:"slot-rb"},
-
-{label:"TE",accepts:["TE"],className:"slot-te"},
-
-{label:"FLEX",accepts:["RB","WR","TE"],className:"slot-flex"},
-{label:"FLEX",accepts:["RB","WR","TE"],className:"slot-flex"}
-
-];
-
-
-/*
-Build this team's 16 slots.
-
-K and D only get their own dedicated slot if
-the team actually drafted one. Otherwise that
-slot becomes an extra BENCH spot instead, so
-every drafted player still has somewhere to
-show up, and every team still shows exactly
-16 slots total.
-*/
-
-function buildSlotDefs(roster){
-
 const SLOT_DEFS = [
 
 {label:"QB",accepts:["QB"],className:"slot-qb"},
