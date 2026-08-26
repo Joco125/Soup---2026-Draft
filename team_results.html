@@ -951,6 +951,9 @@ Number(
 state.budgetAdjustments[team]||0
 );
 
+const displaySpent=
+spent+adjustment;
+
 const remaining=
 200-spent-adjustment;
 
@@ -999,7 +1002,7 @@ ${team}
 
 <div class="team-budget">
 
-Spent <b>$${spent}</b><br>
+Spent <b>$${displaySpent}</b><br>
 
 $${remaining} left<br>
 
