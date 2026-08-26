@@ -514,6 +514,7 @@ let state={
 
 rosters:{},
 budgetAdjustments:{},
+spentByTeam:{},
 history:[],
 active:null
 
@@ -530,6 +531,7 @@ const clean={
 
 rosters:{},
 budgetAdjustments:{},
+spentByTeam:{},
 history:[],
 active:null
 
@@ -573,6 +575,31 @@ saved.budgetAdjustments[team];
 });
 
 }
+
+
+teams.forEach(team=>{
+
+if(
+saved &&
+saved.spentByTeam &&
+typeof saved.spentByTeam[team]==="number"
+){
+
+clean.spentByTeam[team]=
+saved.spentByTeam[team];
+
+}else{
+
+clean.spentByTeam[team]=
+clean.rosters[team].reduce(
+(sum,player)=>
+sum+Number(player.price),
+0
+);
+
+}
+
+});
 
 
 if(saved && Array.isArray(saved.history)){
@@ -912,14 +939,11 @@ grid.innerHTML="";
 teams.forEach(team=>{
 
 const roster=
-state.rosters[team]||
-[];
+state.rosters[team]||[];
 
 const spent=
-roster.reduce(
-(sum,player)=>
-sum+Number(player.price),
-0
+Number(
+state.spentByTeam[team]||0
 );
 
 const adjustment=
