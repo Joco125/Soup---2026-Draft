@@ -1060,13 +1060,16 @@ STATE
 function emptyState(){
 const rosters={};
 const budgetAdjustments={};
+const spentByTeam={};
 teams.forEach(team=>{
 rosters[team]=[];
 budgetAdjustments[team]=0;
+spentByTeam[team]=0;
 });
 return{
 rosters:rosters,
 budgetAdjustments:budgetAdjustments,
+spentByTeam:spentByTeam,
 history:[],
 active:null
 };
@@ -1080,6 +1083,30 @@ if(Array.isArray(saved.rosters[team])){
 clean.rosters[team]=
 saved.rosters[team];
 }
+});
+}
+if(saved && saved.spentByTeam){
+teams.forEach(team=>{
+if(typeof saved.spentByTeam[team]==="number"){
+clean.spentByTeam[team]=
+saved.spentByTeam[team];
+}else{
+clean.spentByTeam[team]=
+clean.rosters[team].reduce(
+(sum,player)=>
+sum+Number(player.price),
+0
+);
+}
+});
+}else{
+teams.forEach(team=>{
+clean.spentByTeam[team]=
+clean.rosters[team].reduce(
+(sum,player)=>
+sum+Number(player.price),
+0
+);
 });
 }
 if(saved && saved.budgetAdjustments){
@@ -1505,10 +1532,8 @@ team+" already has 16 players and is full."
 return;
 }
 const spent=
-roster.reduce(
-(sum,player)=>
-sum+Number(player.price),
-0
+Number(
+state.spentByTeam[team]||0
 );
 const adjustment=
 Number(
@@ -1536,6 +1561,8 @@ price:bid
 };
 state.rosters[team].push(purchase);
 state.history.push(purchase);
+state.spentByTeam[team]=
+Number(state.spentByTeam[team]||0)+bid;
 state.active={
 ...purchase,
 sold:true
@@ -1576,6 +1603,8 @@ Number(last.price)
 if(index>=0){
 roster.splice(index,1);
 }
+state.spentByTeam[last.team]=
+Number(state.spentByTeam[last.team]||0)-Number(last.price);
 state.active=null;
 render();
 await saveDraft();
@@ -1618,10 +1647,8 @@ teams.map(team=>{
 const roster=
 state.rosters[team]||[];
 const spent=
-roster.reduce(
-(sum,player)=>
-sum+Number(player.price),
-0
+Number(
+state.spentByTeam[team]||0
 );
 const adjustment=
 Number(
