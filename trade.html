@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Soup 2026 - Trade Center</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+box-sizing:border-box
+}
+
+html,body{
+margin:0;
+width:100%;
+min-height:100%;
+background:#0b1020;
+color:#fff;
+font-family:Arial,sans-serif
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header{
+padding:15px 30px;
+background:#11182b;
+border-bottom:1px solid #293553;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap
+}
+
+h1{
+margin:0;
+font-size:25px
+}
+
+.small{
+color:#9da9c0;
+font-size:12px
+}
+
+.header-buttons{
+display:flex;
+align-items:center;
+gap:10px
+}
+
+.status{
+padding:8px 12px;
+border-radius:20px;
+background:#26324d;
+color:#9da9c0;
+font-size:13px
+}
+
+.online{
+color:#32c875
+}
+
+.error{
+color:#ef5350
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px
+}
+
+.card{
+background:#11182b;
+border:1px solid #293553;
+border-radius:14px;
+padding:18px;
+margin-bottom:18px
+}
+
+input,select{
+width:100%;
+background:#0b1020;
+color:#fff;
+border:1px solid #293553;
+border-radius:8px;
+padding:11px
+}
+
+button,
+a.blue{
+border:0;
+border-radius:8px;
+padding:10px 15px;
+font-weight:bold;
+cursor:pointer
+}
+
+a.blue{
+background:#4f8cff;
+color:white;
+text-decoration:none;
+display:inline-block;
+text-align:center
+}
+
+.green{
+background:#32c875;
+color:white;
+width:100%;
+padding:14px;
+font-size:16px
+}
+
+.gray{
+background:#26324d;
+color:white
+}
+
+.label{
+color:#9da9c0;
+font-size:13px;
+font-weight:bold;
+letter-spacing:1px;
+margin-bottom:6px;
+display:block
+}
+
+.trade-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px
+}
+
+.team-picker{
+margin-bottom:14px
+}
+
+.roster-list{
+height:220px;
+overflow:auto;
+border:1px solid #293553;
+border-radius:8px;
+padding:6px
+}
+
+.player-row{
+display:flex;
+align-items:center;
+gap:10px;
+padding:9px 8px;
+border-bottom:1px solid #293553;
+cursor:pointer
+}
+
+.player-row:last-child{
+border-bottom:none
+}
+
+.player-row input[type="checkbox"]{
+width:auto;
+flex-shrink:0
+}
+
+.player-pos{
+color:#4f8cff;
+font-size:12px;
+font-weight:bold
+}
+
+.player-price{
+color:#9da9c0;
+font-size:13px;
+margin-left:auto
+}
+
+.empty-roster{
+color:#697792;
+font-size:13px;
+padding:10px 4px
+}
+
+.cash-input{
+margin-top:10px
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+min-height:20px
+}
+
+.message.error{
+color:#ef5350
+}
+
+.message.success{
+color:#32c875
+}
+
+.small-note{
+color:#697792;
+font-size:12px;
+margin-top:6px
+}
+
+#gate{
+max-width:400px;
+margin:60px auto
+}
+
+#tradeArea{
+display:none
+}
+
+@media(max-width:800px){
+
+.trade-grid{
+grid-template-columns:1fr
+}
+
+.container{
+padding:12px
+}
+
+header{
+padding:12px 14px
+}
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<header>
+
+<div>
+<h1>🔁 Trade Center</h1>
+<div class="small">
+Soup 2026 Fantasy Auction Draft
+</div>
+</div>
+
+<div class="header-buttons">
+<a href="index.html" class="blue">Back to Draft</a>
+<span id="connection" class="status">Connecting...</span>
+</div>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- =====================================================
+     ACCESS GATE (shown if not in Commissioner Mode)
+     ===================================================== -->
+
+<div id="gate" class="card">
+
+<h3 style="margin-top:0">Commissioner Login</h3>
+
+<input id="pinInput" type="password" placeholder="Commissioner PIN">
+<br><br>
+<button id="loginButton" class="green">Enter</button>
+<p id="loginMessage" class="small"></p>
+
+</div>
+
+
+<!-- =====================================================
+     TRADE AREA (shown once commissioner)
+     ===================================================== -->
+
+<div id="tradeArea">
+
+<div class="card">
+
+<div class="trade-grid">
+
+<div>
+<div class="team-picker">
+<span class="label">TEAM A</span>
+<select id="teamASelect"></select>
+</div>
+<span class="label" id="teamALabel">SENDS</span>
+<div id="teamARoster" class="roster-list"></div>
+<input id="cashFromA" class="cash-input" type="number" min="0" placeholder="Cash from Team A ($)">
+</div>
+
+<div>
+<div class="team-picker">
+<span class="label">TEAM B</span>
+<select id="teamBSelect"></select>
+</div>
+<span class="label" id="teamBLabel">SENDS</span>
+<div id="teamBRoster" class="roster-list"></div>
+<input id="cashFromB" class="cash-input" type="number" min="0" placeholder="Cash from Team B ($)">
+</div>
+
+</div>
+
+<br>
+
+<button id="executeButton" class="green">Execute Trade</button>
+
+<p id="tradeMessage" class="message"></p>
+
+<p class="small-note">
+Rosters shown here were loaded when you opened this page.
+If the draft has moved since then, click Refresh below before trading.
+</p>
+
+<button id="refreshButton" class="gray" style="width:100%;margin-top:6px">
+Refresh Rosters
+</button>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+   ========================================================= */
+
+const SUPABASE_URL =
+"https://hbwszhzcbmlqidkppzoe.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_JT3NCra2viuuGm3jJFCF-g_pc_1X3VK";
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =========================================================
+   COMMISSIONER PIN
+   ========================================================= */
+
+const COMMISSIONER_PIN = "0125";
+
+let isCommissioner =
+localStorage.getItem("commissionerMode") === "true";
+
+
+/* =========================================================
+   TEAMS
+   ========================================================= */
+
+const teams = [
+
+"Joco",
+"Bij",
+"Steguin",
+"Mike Gabbay",
+"Allie + Ikey",
+"Jack + Ike B",
+"Ben",
+"Dave",
+"Jeff",
+"Lati"
+
+];
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+function emptyState(){
+
+const rosters={};
+const budgetAdjustments={};
+
+teams.forEach(team=>{
+rosters[team]=[];
+budgetAdjustments[team]=0;
+});
+
+return{
+rosters:rosters,
+budgetAdjustments:budgetAdjustments,
+history:[],
+active:null
+};
+
+}
+
+let state=emptyState();
+
+function normalizeState(saved){
+
+const clean=emptyState();
+
+if(saved && saved.rosters){
+teams.forEach(team=>{
+if(Array.isArray(saved.rosters[team])){
+clean.rosters[team]=saved.rosters[team];
+}
+});
+}
+
+if(saved && saved.budgetAdjustments){
+teams.forEach(team=>{
+if(typeof saved.budgetAdjustments[team]==="number"){
+clean.budgetAdjustments[team]=saved.budgetAdjustments[team];
+}
+});
+}
+
+if(saved && Array.isArray(saved.history)){
+clean.history=saved.history;
+}
+
+if(saved && saved.active){
+clean.active=saved.active;
+}
+
+return clean;
+
+}
+
+
+/* =========================================================
+   CONNECTION
+   ========================================================= */
+
+function setConnection(text,isError){
+
+const element=document.getElementById("connection");
+element.textContent=text;
+element.classList.remove("online");
+element.classList.remove("error");
+
+if(isError){
+element.classList.add("error");
+}else if(text==="LIVE"){
+element.classList.add("online");
+}
+
+}
+
+
+/* =========================================================
+   LOGIN / GATE
+   ========================================================= */
+
+function showTradeArea(){
+
+document.getElementById("gate").style.display="none";
+document.getElementById("tradeArea").style.display="block";
+
+}
+
+function login(){
+
+const entered=
+document.getElementById("pinInput").value;
+
+if(entered===COMMISSIONER_PIN){
+
+isCommissioner=true;
+
+localStorage.setItem(
+"commissionerMode",
+"true"
+);
+
+showTradeArea();
+
+renderRosters();
+
+}else{
+
+document.getElementById(
+"loginMessage"
+).textContent="Incorrect PIN.";
+
+}
+
+}
+
+document
+.getElementById("loginButton")
+.addEventListener("click",login);
+
+document
+.getElementById("pinInput")
+.addEventListener("keydown",function(event){
+if(event.key==="Enter"){
+login();
+}
+});
+
+
+/* =========================================================
+   TEAM SELECTS
+   ========================================================= */
+
+function loadTeamSelects(){
+
+const teamA=document.getElementById("teamASelect");
+const teamB=document.getElementById("teamBSelect");
+
+teamA.innerHTML="";
+teamB.innerHTML="";
+
+teams.forEach(team=>{
+
+const optionA=document.createElement("option");
+optionA.value=team;
+optionA.textContent=team;
+teamA.appendChild(optionA);
+
+const optionB=document.createElement("option");
+optionB.value=team;
+optionB.textContent=team;
+teamB.appendChild(optionB);
+
+});
+
+if(teams.length>1){
+teamB.value=teams[1];
+}
+
+}
+
+
+/* =========================================================
+   RENDER ROSTER CHECKLISTS
+   ========================================================= */
+
+function renderRosterList(team,containerId){
+
+const container=document.getElementById(containerId);
+container.innerHTML="";
+
+const roster=state.rosters[team]||[];
+
+if(!roster.length){
+container.innerHTML=
+'<div class="empty-roster">No players drafted yet.</div>';
+return;
+}
+
+roster.forEach(player=>{
+
+const row=document.createElement("label");
+row.className="player-row";
+
+const checkbox=document.createElement("input");
+checkbox.type="checkbox";
+checkbox.className="trade-checkbox";
+checkbox.dataset.team=team;
+checkbox.dataset.name=player.name;
+checkbox.dataset.price=player.price;
+
+const name=document.createElement("span");
+name.innerHTML="<b>"+player.name+"</b>";
+
+const pos=document.createElement("span");
+pos.className="player-pos";
+pos.textContent=player.position;
+
+const price=document.createElement("span");
+price.className="player-price";
+price.textContent="$"+player.price;
+
+row.appendChild(checkbox);
+row.appendChild(name);
+row.appendChild(pos);
+row.appendChild(price);
+
+container.appendChild(row);
+
+});
+
+}
+
+function renderRosters(){
+
+const teamA=document.getElementById("teamASelect").value;
+const teamB=document.getElementById("teamBSelect").value;
+
+document.getElementById("teamALabel").textContent=
+(teamA||"TEAM A")+" SENDS";
+
+document.getElementById("teamBLabel").textContent=
+(teamB||"TEAM B")+" SENDS";
+
+renderRosterList(teamA,"teamARoster");
+renderRosterList(teamB,"teamBRoster");
+
+document.getElementById("tradeMessage").textContent="";
+document.getElementById("tradeMessage").className="message";
+
+}
+
+
+/* =========================================================
+   LOAD STATE FROM SUPABASE
+   ========================================================= */
+
+async function loadState(){
+
+const{data,error}=
+await supabaseClient
+.from("draft_state")
+.select("state")
+.eq("draft_code","JCO26")
+.limit(1);
+
+if(error){
+console.error("LOAD ERROR:",error);
+setConnection("DATABASE ERROR",true);
+return;
+}
+
+if(data && data.length && data[0].state){
+state=normalizeState(data[0].state);
+}else{
+state=emptyState();
+}
+
+setConnection("LIVE",false);
+
+if(isCommissioner){
+renderRosters();
+}
+
+}
+
+
+/* =========================================================
+   SAVE STATE TO SUPABASE
+   ========================================================= */
+
+async function saveState(){
+
+const{error}=
+await supabaseClient
+.from("draft_state")
+.update({
+state:state,
+updated_at:new Date().toISOString()
+})
+.eq("id",1);
+
+if(error){
+console.error("SAVE ERROR:",error);
+alert("Could not save the trade. Please try again.");
+return false;
+}
+
+return true;
+
+}
+
+
+/* =========================================================
+   EXECUTE TRADE
+   ========================================================= */
+
+function showMessage(text,isError){
+
+const message=document.getElementById("tradeMessage");
+message.textContent=text;
+message.className="message "+(isError?"error":"success");
+
+}
+
+async function executeTrade(){
+
+const teamA=document.getElementById("teamASelect").value;
+const teamB=document.getElementById("teamBSelect").value;
+
+if(!teamA || !teamB || teamA===teamB){
+showMessage("Choose two different teams.",true);
+return;
+}
+
+const checkedA=
+Array.from(
+document.querySelectorAll(
+'.trade-checkbox[data-team="'+CSS.escape(teamA)+'"]:checked'
+)
+);
+
+const checkedB=
+Array.from(
+document.querySelectorAll(
+'.trade-checkbox[data-team="'+CSS.escape(teamB)+'"]:checked'
+)
+);
+
+const cashFromA=
+Number(document.getElementById("cashFromA").value)||0;
+
+const cashFromB=
+Number(document.getElementById("cashFromB").value)||0;
+
+if(cashFromA<0 || cashFromB<0){
+showMessage("Cash amounts cannot be negative.",true);
+return;
+}
+
+if(!checkedA.length && !checkedB.length && !cashFromA && !cashFromB){
+showMessage("Select at least one player or enter a cash amount.",true);
+return;
+}
+
+const rosterA=state.rosters[teamA]||[];
+const rosterB=state.rosters[teamB]||[];
+
+/* MATCH SELECTED CHECKBOXES BACK TO ACTUAL PLAYER OBJECTS
+   BY NAME + PRICE (SAFER THAN RELYING ON LIST POSITION) */
+
+function findPlayers(roster,checkedBoxes){
+const found=[];
+checkedBoxes.forEach(box=>{
+const index=
+roster.findIndex(player=>
+player.name===box.dataset.name &&
+Number(player.price)===Number(box.dataset.price)
+);
+if(index>=0){
+found.push(index);
+}
+});
+return found;
+}
+
+const indexesA=findPlayers(rosterA,checkedA);
+const indexesB=findPlayers(rosterB,checkedB);
+
+if(indexesA.length!==checkedA.length ||
+indexesB.length!==checkedB.length){
+showMessage(
+"Some selected players no longer match this roster. Click Refresh Rosters and try again.",
+true
+);
+return;
+}
+
+const playersFromA=
+indexesA.map(index=>rosterA[index]);
+
+const playersFromB=
+indexesB.map(index=>rosterB[index]);
+
+const newRosterA=
+rosterA
+.filter((player,index)=>!indexesA.includes(index))
+.concat(playersFromB);
+
+const newRosterB=
+rosterB
+.filter((player,index)=>!indexesB.includes(index))
+.concat(playersFromA);
+
+if(newRosterA.length>16 || newRosterB.length>16){
+showMessage(
+"That trade would put a team over the 16 player roster limit.",
+true
+);
+return;
+}
+
+const currentAdjA=
+Number(state.budgetAdjustments[teamA]||0);
+
+const currentAdjB=
+Number(state.budgetAdjustments[teamB]||0);
+
+const newAdjA=currentAdjA+cashFromA-cashFromB;
+const newAdjB=currentAdjB+cashFromB-cashFromA;
+
+const spentA=
+newRosterA.reduce((sum,player)=>sum+Number(player.price),0);
+
+const spentB=
+newRosterB.reduce((sum,player)=>sum+Number(player.price),0);
+
+const remainingA=200-spentA-newAdjA;
+const remainingB=200-spentB-newAdjB;
+
+const spotsLeftA=16-newRosterA.length;
+const spotsLeftB=16-newRosterB.length;
+
+if(remainingA<Math.max(spotsLeftA,0) ||
+remainingB<Math.max(spotsLeftB,0)){
+showMessage(
+"That trade would leave a team without enough budget to fill its remaining roster spots.",
+true
+);
+return;
+}
+
+/* APPLY */
+
+playersFromA.forEach(player=>{
+player.team=teamB;
+});
+
+playersFromB.forEach(player=>{
+player.team=teamA;
+});
+
+state.rosters[teamA]=newRosterA;
+state.rosters[teamB]=newRosterB;
+state.budgetAdjustments[teamA]=newAdjA;
+state.budgetAdjustments[teamB]=newAdjB;
+
+document.getElementById("cashFromA").value="";
+document.getElementById("cashFromB").value="";
+
+const saved=await saveState();
+
+if(saved){
+showMessage("Trade complete.",false);
+renderRosters();
+}
+
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+document
+.getElementById("teamASelect")
+.addEventListener("change",renderRosters);
+
+document
+.getElementById("teamBSelect")
+.addEventListener("change",renderRosters);
+
+document
+.getElementById("executeButton")
+.addEventListener("click",executeTrade);
+
+document
+.getElementById("refreshButton")
+.addEventListener("click",loadState);
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+loadTeamSelects();
+
+if(isCommissioner){
+showTradeArea();
+}
+
+loadState();
+
+</script>
+
+</body>
+</html>
