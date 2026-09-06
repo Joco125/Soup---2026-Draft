@@ -483,9 +483,12 @@ Recent Drafted Players
 <!-- RIGHT SIDE -->
 <div class="right-column">
 <div class="card team-card">
+<div style="display:flex;justify-content:space-between;align-items:center">
 <h2 style="margin-top:0">
 Team Status
 </h2>
+<span id="onTheClock" class="status"></span>
+</div>
 <div class="team-table-wrapper">
 <table>
 <thead>
@@ -541,6 +544,18 @@ const teams = [
 "Dave",
 "Jeff",
 "Lati"
+];
+const nominationOrder = [
+"Bij",
+"Jeff",
+"Allie + Ikey",
+"Steguin",
+"Joco",
+"Dave",
+"Jack + Ike B",
+"Lati",
+"Ben",
+"Mike Gabbay"
 ];
 /* =========================================================
 PLAYERS
@@ -1642,6 +1657,21 @@ await saveDraft();
 /* =========================================================
 TEAM STATUS
 ========================================================= */
+function getOnTheClock(){
+let count=state.history.length;
+let index=count%nominationOrder.length;
+let attempts=0;
+while(attempts<nominationOrder.length){
+const team=nominationOrder[index];
+const roster=state.rosters[team]||[];
+if(roster.length<16){
+return team;
+}
+index=(index+1)%nominationOrder.length;
+attempts++;
+}
+return null;
+}
 function renderTeams(){
 const table=
 document.getElementById(
@@ -1771,12 +1801,29 @@ sold.innerHTML="";
 /* =========================================================
 RENDER
 ========================================================= */
+function renderOnTheClock(){
+const badge=
+document.getElementById(
+"onTheClock"
+);
+const team=
+getOnTheClock();
+if(team){
+badge.textContent=
+"ON THE CLOCK: "+team;
+}else{
+badge.textContent=
+"DRAFT COMPLETE";
+}
+}
 function render(){
 renderActive();
 renderTeams();
 renderHistory();
+renderOnTheClock();
 if(isCommissioner){
 searchPlayers();
+}
 }
 }
 /* =========================================================
